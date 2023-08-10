@@ -1,5 +1,4 @@
 import React, { FC } from "react";
-import ReactDOM from "react-dom";
 import {
   GameModeRule,
   GameMode,
@@ -19,8 +18,8 @@ interface SchulteTableProps {
   numbers: number[] | undefined;
   gridSize: GridSize;
   endGame: () => void;
-  startGame: () => void;
   gameMode: GameMode;
+  handleStart: () => void;
 }
 
 const SchulteTable: FC<SchulteTableProps> = (props) => {
@@ -31,7 +30,7 @@ const SchulteTable: FC<SchulteTableProps> = (props) => {
     numbers,
     gridSize,
     endGame,
-    startGame,
+    handleStart,
     gameMode,
   } = props;
 
@@ -65,8 +64,7 @@ const SchulteTable: FC<SchulteTableProps> = (props) => {
   const handleTile = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     pressedNumber: number,
-    setPlayAnimation: React.Dispatch<React.SetStateAction<boolean>>,
-    tileInstance: React.ReactInstance | null | undefined
+    setPlayAnimation: React.Dispatch<React.SetStateAction<boolean>>
   ): void => {
     if (gameState !== "Playing" || !numbers) {
       return;
@@ -74,12 +72,6 @@ const SchulteTable: FC<SchulteTableProps> = (props) => {
 
     if (gameMode === GameMode.Memory) {
       setPlayAnimation(true);
-      const tileElement = ReactDOM.findDOMNode(tileInstance);
-      console.log(tileElement);
-      console.log(tileInstance);
-      tileElement?.addEventListener("animationend", () =>
-        setPlayAnimation(false)
-      );
     }
 
     if (pressedNumber !== expectedNumber) {
@@ -118,8 +110,8 @@ const SchulteTable: FC<SchulteTableProps> = (props) => {
       {!numbers || gameState === "NotStarted"
         ? orderedTable()
         : numbers.map(tileWithStandardPropsGiven)}
-      {gameState !== "Playing" && (
-        <button className="tableReplay" onClick={startGame}>
+      {(gameState !== "Playing" || gameState !== "") && (
+        <button className="tableReplay" onClick={handleStart}>
           {gameState === "NotStarted" ? <PlaySvg /> : <ReplaySvg />}
         </button>
       )}

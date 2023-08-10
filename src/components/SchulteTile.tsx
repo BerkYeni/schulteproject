@@ -9,8 +9,7 @@ interface SchulteTileProps {
   handleTile: (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     pressedNumber: number,
-    setPlayAnimation: React.Dispatch<React.SetStateAction<boolean>>,
-    tileInstance: React.ReactInstance | null | undefined
+    setPlayAnimation: React.Dispatch<React.SetStateAction<boolean>>
   ) => void;
 }
 
@@ -18,10 +17,6 @@ const SchulteTile: FC<SchulteTileProps> = (props) => {
   const { gameMode, tileNumber, expectedNumber, gameState, handleTile } = props;
 
   const [playAnimation, setPlayAnimation] = useState<boolean>(false);
-
-  const thisTileInstance = this;
-  console.log(this);
-  console.log(thisTileInstance);
 
   const GameModeStyleRule =
     gameMode === GameMode.Reverse
@@ -34,9 +29,7 @@ const SchulteTile: FC<SchulteTileProps> = (props) => {
           ? "clicked"
           : "unclicked"
       }`}
-      onClick={(event) =>
-        handleTile(event, tileNumber, setPlayAnimation, thisTileInstance)
-      }
+      onClick={(event) => handleTile(event, tileNumber, setPlayAnimation)}
     >
       <div
         className={`${
@@ -48,11 +41,14 @@ const SchulteTile: FC<SchulteTileProps> = (props) => {
         } ${
           // for testing purposes
           gameMode === GameMode.Memory
-            ? playAnimation
-              ? "revealTileShortly"
-              : "hidden"
+            ? tileNumber >= expectedNumber
+              ? playAnimation
+                ? "revealTileShortly transparent"
+                : "hidden"
+              : ""
             : ""
         }`}
+        onAnimationEnd={() => setPlayAnimation(false)}
       >
         {tileNumber}
       </div>

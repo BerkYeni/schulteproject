@@ -8,7 +8,7 @@ interface ControlPanelProps {
   setRoundStartTimestamp: React.Dispatch<
     React.SetStateAction<number | undefined>
   >;
-  startGame: () => void;
+  handleStart: () => void;
   setDisplayOnlyTable: React.Dispatch<React.SetStateAction<boolean>>;
   hidden: boolean;
   setGridSize: React.Dispatch<React.SetStateAction<GridSize>>;
@@ -20,17 +20,13 @@ const ControlPanel: FC<ControlPanelProps> = (props) => {
   const {
     gameState,
     setGameState,
-    startGame,
+    handleStart,
     setDisplayOnlyTable,
     hidden,
     setGridSize,
     resetGame,
     changeGameMode,
   } = props;
-
-  const handleStartGame = () => {
-    startGame();
-  };
 
   const handleToggleVisibility = () => {
     setDisplayOnlyTable(
@@ -90,12 +86,12 @@ const ControlPanel: FC<ControlPanelProps> = (props) => {
 
         <div className="playAgainContainer">
           {gameState === "NotStarted" && (
-            <button className="playAgain" onClick={handleStartGame}>
+            <button className="playAgain" onClick={handleStart}>
               Start
             </button>
           )}
           {gameState === "Completed" && (
-            <button className="playAgain" onClick={handleStartGame}>
+            <button className="playAgain" onClick={handleStart}>
               Play Again
             </button>
           )}

@@ -207,14 +207,21 @@ button:hover {
 }
 
 .revealTileShortly {
-  animation: reveal 1s;
+  animation: reveal 3s;
 }
 
 @keyframes reveal {
   0% {
     opacity: 1;
   }
+  70% {
+    opacity: 1;
+  }
   100% {
     opacity: 0;
   }
+}
+
+.transparent {
+  opacity: 0;
 }

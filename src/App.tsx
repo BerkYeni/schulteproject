@@ -6,8 +6,8 @@ import Statistics from "./components/Statistics";
 import { GameMode, GameState, GridSize, MatchRecord } from "./interfaces";
 import { gridSizeToArray, shuffleInPlace } from "./utils";
 
-// TODO: i have to research about how to work with css animations in react,
-// the animations aren't working correctly.
+// TODO: reveal tiles at countdown in memory gamemode.
+// TODO: hide the play button accordingly.
 // TODO: implement memory game mode, it's gonna need a timer and it has to reveal the number
 // if the selected tile is the wrong one.
 // TODO: implement game mode property for match record type and change matches info accordingly
@@ -15,6 +15,7 @@ import { gridSizeToArray, shuffleInPlace } from "./utils";
 // TODO: consider adding a "linear" gamemode, where
 // numbers are in a 1x16 grid for example.
 
+// misc: memory game modes animation is flawed in many ways, meybe revisit.
 // misc: instead of making reverse a gamemode, add a direction setting.
 // misc: refactor the gamemode code, try to decouple different gamemodes.
 // misc: refactor in general.
@@ -103,6 +104,17 @@ const App = () => {
     setMatches((previousMatches) => [...previousMatches, record]);
   };
 
+  const handleStart = (): void => {
+    if (gameMode === GameMode.Memory) {
+      setGameState("Countdown");
+      setTimeout(() => {
+        startGame();
+      }, 3000);
+      return;
+    }
+    startGame();
+  };
+
   // const setExpectedNumberWithGameMode = () => {
   //   if (!numbers) return;
   //   switch (gameMode) {
@@ -137,7 +149,7 @@ const App = () => {
         gameState={gameState}
         setGameState={setGameState}
         setRoundStartTimestamp={setRoundStartTimestamp}
-        startGame={startGame}
+        handleStart={handleStart}
         setDisplayOnlyTable={setDisplayOnlyTable}
         setGridSize={setGridSize}
         hidden={displayOnlyTable}
@@ -152,7 +164,7 @@ const App = () => {
           numbers={numbers}
           gridSize={gridSize}
           endGame={endGame}
-          startGame={startGame}
+          handleStart={handleStart}
           gameMode={gameMode}
         />
       </div>

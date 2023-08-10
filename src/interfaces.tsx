@@ -1,4 +1,4 @@
-export type GameState = "NotStarted" | "Playing" | "Completed";
+export type GameState = "NotStarted" | "Countdown" | "Playing" | "Completed";
 export enum GridSize {
   Size3x3 = 9,
   Size4x4 = 16,
