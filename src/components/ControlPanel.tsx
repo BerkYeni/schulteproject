@@ -69,6 +69,7 @@ const ControlPanel: FC<ControlPanelProps> = (props) => {
   return (
     <>
       <button
+        id="exposePanelsButton"
         className={`exposePanels tile unclicked ${!hidden && "hidden"}`}
         onClick={handleToggleVisibility}
       >

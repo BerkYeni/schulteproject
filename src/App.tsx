@@ -6,15 +6,7 @@ import Statistics from "./components/Statistics";
 import { GameMode, GameState, GridSize, MatchRecord } from "./interfaces";
 import { gridSizeToArray, shuffleInPlace } from "./utils";
 
-// TODO: reveal tiles at countdown in memory gamemode.
-// TODO: hide the play button accordingly.
-// TODO: implement memory game mode, it's gonna need a timer and it has to reveal the number
-// if the selected tile is the wrong one.
-// TODO: implement game mode property for match record type and change matches info accordingly
-// TODO: add new game modes: reaction, memory, reverse, vanilla...
-// TODO: consider adding a "linear" gamemode, where
-// numbers are in a 1x16 grid for example.
-
+// misc: add a "linear" gamemode, where numbers are in a 1x16 grid for example.
 // misc: memory game modes animation is flawed in many ways, meybe revisit.
 // misc: instead of making reverse a gamemode, add a direction setting.
 // misc: refactor the gamemode code, try to decouple different gamemodes.
@@ -24,6 +16,7 @@ import { gridSizeToArray, shuffleInPlace } from "./utils";
 // misc: add help features, accessibility features...
 // misc: add indicator for the expected value.
 // misc: add indicator for current game settings (grid size, gamemode etc).
+// misc: make selected game settings buttons styled differently.
 // misc: make selected game settings styled differently.
 
 export const GameStateContext = createContext<GameState>("NotStarted");
@@ -85,7 +78,9 @@ const App = () => {
 
   const startGame = (): void => {
     resetGame();
-    shuffleTable();
+    if (gameMode !== GameMode.Memory) {
+      shuffleTable();
+    }
     setGameState("Playing");
     setRoundStartTimestamp(new Date().getTime());
   };
@@ -106,6 +101,7 @@ const App = () => {
 
   const handleStart = (): void => {
     if (gameMode === GameMode.Memory) {
+      shuffleTable();
       setGameState("Countdown");
       setTimeout(() => {
         startGame();

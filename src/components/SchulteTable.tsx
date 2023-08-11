@@ -110,7 +110,7 @@ const SchulteTable: FC<SchulteTableProps> = (props) => {
       {!numbers || gameState === "NotStarted"
         ? orderedTable()
         : numbers.map(tileWithStandardPropsGiven)}
-      {(gameState !== "Playing" || gameState !== "") && (
+      {(gameState === "NotStarted" || gameState === "Completed") && (
         <button className="tableReplay" onClick={handleStart}>
           {gameState === "NotStarted" ? <PlaySvg /> : <ReplaySvg />}
         </button>

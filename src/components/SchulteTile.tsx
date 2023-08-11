@@ -18,6 +18,12 @@ const SchulteTile: FC<SchulteTileProps> = (props) => {
 
   const [playAnimation, setPlayAnimation] = useState<boolean>(false);
 
+  if (gameState === "Completed") {
+    if (playAnimation === true) {
+      setPlayAnimation(false);
+    }
+  }
+
   const GameModeStyleRule =
     gameMode === GameMode.Reverse
       ? tileNumber > expectedNumber
@@ -41,10 +47,12 @@ const SchulteTile: FC<SchulteTileProps> = (props) => {
         } ${
           // for testing purposes
           gameMode === GameMode.Memory
-            ? tileNumber >= expectedNumber
-              ? playAnimation
-                ? "revealTileShortly transparent"
-                : "hidden"
+            ? gameState === "Playing"
+              ? tileNumber >= expectedNumber
+                ? playAnimation
+                  ? "revealTileShortly transparent"
+                  : "hidden"
+                : ""
               : ""
             : ""
         }`}
