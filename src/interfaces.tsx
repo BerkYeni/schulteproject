@@ -4,6 +4,21 @@ export enum GridSize {
   Size4x4 = 16,
   Size5x5 = 25,
 }
+export interface Table {
+  state: GameState;
+  numbers: number[];
+  gridSize: GridSize;
+  expectedNumber: number;
+}
+// TODO: make base action state
+export interface InputNumberAction {
+  type: "InputNumber";
+  inputtedNumber: number;
+}
+export interface StartGameAction {
+  type: "Start";
+}
+export type TableAction = InputNumberAction | StartGameAction;
 export interface MatchRecord {
   gridSize: GridSize;
   durationInMilliseconds: number;
