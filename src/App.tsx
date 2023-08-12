@@ -53,6 +53,8 @@ const App = () => {
   );
   const [gameMode, setGameMode] = useState<GameMode>(GameMode.Vanilla);
 
+  // testing
+
   const resetExpectedNumber = (): void => {
     // setExpectedNumber(Math.min(...gridSizeToArray(gridSize)));
     const orderedNumbers = gridSizeToArray(gridSize);
