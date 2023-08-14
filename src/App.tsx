@@ -8,6 +8,7 @@ import {
   GameState,
   GridSize,
   MatchRecord,
+  StartGameAction,
   Table,
   TableAction,
 } from "./interfaces";
@@ -76,99 +77,117 @@ const App = () => {
     };
   };
 
-  // TODO: impl
   const tableReducer = (tableState: Table, tableAction: TableAction): Table => {
     const { expectedNumber, gridSize, numbers, state } = tableState;
     switch (tableAction.type) {
       case "Start":
-        return tableState;
+        if (state === "Playing") {
+          break;
+        }
+        return { ...tableState, state: "Playing" };
+
+      case "Restart":
+        if (state !== "Completed") {
+          break;
+        }
+        shuffleInPlace(numbers);
+        return {
+          ...tableState,
+          numbers: numbers,
+          state: "Playing",
+          expectedNumber: Math.min(...numbers),
+        };
+
+      case "InputNumber":
+        if (state !== "Playing") {
+          break;
+        }
+        if (tableAction.inputtedNumber !== expectedNumber) {
+          break;
+        }
+        // win condition
+        if (expectedNumber === Math.max(...numbers)) {
+          return {
+            ...tableState,
+            state: "Completed",
+            expectedNumber: expectedNumber + 1,
+          };
+        }
+        // increment expected number when inputted correct number
+        return {
+          ...tableState,
+          expectedNumber: expectedNumber + 1,
+        };
+
       default:
-        return tableState;
+        throw new Error("Unexpected table action.");
     }
+
+    return tableState;
   };
 
   const [table, dispatch] = useReducer(tableReducer, initializeTableState());
 
-  const resetExpectedNumber = (): void => {
-    // setExpectedNumber(Math.min(...gridSizeToArray(gridSize)));
-    const orderedNumbers = gridSizeToArray(gridSize);
-    switch (gameMode) {
-      case GameMode.Vanilla:
-      case GameMode.Reaction:
-      case GameMode.Memory:
-        setExpectedNumber(Math.min(...orderedNumbers));
-        break;
-      case GameMode.Reverse:
-        setExpectedNumber(Math.max(...orderedNumbers));
-        console.log(expectedNumber);
-        break;
-    }
-  };
-
-  const shuffleTable = (): void =>
-    setNumbers(shuffleInPlace(gridSizeToArray(gridSize)));
-
-  const resetGame = (): void => {
-    resetExpectedNumber();
-  };
-
-  const startGame = (): void => {
-    resetGame();
-    if (gameMode !== GameMode.Memory) {
-      shuffleTable();
-    }
-    setGameState("Playing");
-    setRoundStartTimestamp(new Date().getTime());
-  };
-
-  const endGame = (): void => {
-    setGameState("Completed");
-    if (!roundStartTimestamp)
-      throw new Error("Round start time can't be undefined.");
-    const temporaryRoundTime = new Date().getTime() - roundStartTimestamp;
-    // setCurrentRoundTime(temporaryRoundTime);
-    const record: MatchRecord = {
-      durationInMilliseconds: temporaryRoundTime,
-      gridSize: gridSize,
-      gameMode: gameMode,
-    };
-    setMatches((previousMatches) => [...previousMatches, record]);
-  };
-
-  const handleStart = (): void => {
-    if (gameMode === GameMode.Memory) {
-      shuffleTable();
-      setGameState("Countdown");
-      setTimeout(() => {
-        startGame();
-      }, 3000);
-      return;
-    }
-    startGame();
-  };
-
-  // const setExpectedNumberWithGameMode = () => {
-  //   if (!numbers) return;
+  // const resetExpectedNumber = (): void => {
+  //   // setExpectedNumber(Math.min(...gridSizeToArray(gridSize)));
+  //   const orderedNumbers = gridSizeToArray(gridSize);
   //   switch (gameMode) {
   //     case GameMode.Vanilla:
-  //       setExpectedNumber(Math.min(...numbers));
+  //     case GameMode.Reaction:
+  //     case GameMode.Memory:
+  //       setExpectedNumber(Math.min(...orderedNumbers));
   //       break;
   //     case GameMode.Reverse:
-  //       setExpectedNumber(Math.max(...numbers));
+  //       setExpectedNumber(Math.max(...orderedNumbers));
   //       console.log(expectedNumber);
-  //       break;
-  //     case GameMode.Reaction:
-  //       setExpectedNumber(Math.min(...numbers));
-  //       break;
-  //     case GameMode.Memory:
-  //       setExpectedNumber(Math.min(...numbers));
   //       break;
   //   }
   // };
 
+  // const shuffleTable = (): void =>
+  //   setNumbers(shuffleInPlace(gridSizeToArray(gridSize)));
+
+  // const resetGame = (): void => {
+  //   resetExpectedNumber();
+  // };
+
+  // const startGame = (): void => {
+  //   resetGame();
+  //   if (gameMode !== GameMode.Memory) {
+  //     shuffleTable();
+  //   }
+  //   setGameState("Playing");
+  //   setRoundStartTimestamp(new Date().getTime());
+  // };
+
+  // const endGame = (): void => {
+  //   setGameState("Completed");
+  //   if (!roundStartTimestamp)
+  //     throw new Error("Round start time can't be undefined.");
+  //   const temporaryRoundTime = new Date().getTime() - roundStartTimestamp;
+  //   // setCurrentRoundTime(temporaryRoundTime);
+  //   const record: MatchRecord = {
+  //     durationInMilliseconds: temporaryRoundTime,
+  //     gridSize: gridSize,
+  //     gameMode: gameMode,
+  //   };
+  //   setMatches((previousMatches) => [...previousMatches, record]);
+  // };
+
+  // const handleStart = (): void => {
+  //   if (gameMode === GameMode.Memory) {
+  //     shuffleTable();
+  //     setGameState("Countdown");
+  //     setTimeout(() => {
+  //       startGame();
+  //     }, 3000);
+  //     return;
+  //   }
+  //   startGame();
+  // };
+
   const changeGameMode = (gameMode: GameMode): void => {
     setGameMode(gameMode);
-    // setExpectedNumberWithGameMode();
   };
 
   useEffect(() => {
@@ -178,14 +197,15 @@ const App = () => {
   return (
     <div className="App">
       <ControlPanel
-        gameState={gameState}
-        setGameState={setGameState}
+        // gameState={gameState}
+        // setGameState={setGameState}
+        // handleStart={handleStart}
+        // setGridSize={setGridSize}
+        // resetGame={resetGame}
+        onStart={() => dispatch({ type: "Start" })}
         setRoundStartTimestamp={setRoundStartTimestamp}
-        handleStart={handleStart}
         setDisplayOnlyTable={setDisplayOnlyTable}
-        setGridSize={setGridSize}
         hidden={displayOnlyTable}
-        resetGame={resetGame}
         changeGameMode={changeGameMode}
       />
       <div className="tableContainer">

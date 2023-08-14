@@ -18,7 +18,13 @@ export interface InputNumberAction {
 export interface StartGameAction {
   type: "Start";
 }
-export type TableAction = InputNumberAction | StartGameAction;
+export interface RestartGameAction {
+  type: "Restart";
+}
+export type TableAction =
+  | InputNumberAction
+  | StartGameAction
+  | RestartGameAction;
 export interface MatchRecord {
   gridSize: GridSize;
   durationInMilliseconds: number;
