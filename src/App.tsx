@@ -53,7 +53,7 @@ const App = () => {
   const [roundStartTimestamp, setRoundStartTimestamp] = useState<
     number | undefined
   >();
-  const [displayOnlyTable, setDisplayOnlyTable] = useState<boolean>(false);
+  const [onlyDisplayTable, setOnlyDisplayTable] = useState<boolean>(false);
   const [gameMode, setGameMode] = useState<GameMode>(GameMode.Vanilla);
 
   // // direction
@@ -203,21 +203,25 @@ const App = () => {
         // setGridSize={setGridSize}
         // resetGame={resetGame}
         onStart={() => dispatch({ type: "Start" })}
+        gameState={table.state}
         setRoundStartTimestamp={setRoundStartTimestamp}
-        setDisplayOnlyTable={setDisplayOnlyTable}
-        hidden={displayOnlyTable}
+        setOnlyDisplayTable={setOnlyDisplayTable}
+        hidden={onlyDisplayTable}
         changeGameMode={changeGameMode}
       />
       <div className="tableContainer">
         <SchulteTable
-          gameState={gameState}
-          expectedNumber={expectedNumber}
-          setExpectedNumber={setExpectedNumber}
-          numbers={numbers}
-          gridSize={gridSize}
-          endGame={endGame}
-          handleStart={handleStart}
-          gameMode={gameMode}
+          // expectedNumber={expectedNumber}
+          // setExpectedNumber={setExpectedNumber}
+          // endGame={endGame}
+          // gameMode={gameMode}
+          gameState={table.state}
+          numbers={table.numbers}
+          gridSize={table.gridSize}
+          onStart={() => dispatch({ type: "Start" })}
+          onNumberInput={(inputtedNumber: number) =>
+            dispatch({ type: "InputNumber", inputtedNumber: inputtedNumber })
+          }
         />
       </div>
       <GameModeContext.Provider value={gameMode}>
@@ -225,7 +229,7 @@ const App = () => {
           <MatchesContext.Provider value={matches}>
             <SetMatchesContext.Provider value={setMatches}>
               <GameStateContext.Provider value={gameState}>
-                <Statistics hidden={displayOnlyTable} />
+                <Statistics hidden={onlyDisplayTable} />
               </GameStateContext.Provider>
             </SetMatchesContext.Provider>
           </MatchesContext.Provider>

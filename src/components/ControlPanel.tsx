@@ -3,68 +3,71 @@ import { GameMode, GameState, GridSize } from "../interfaces";
 import { gameModeToDisplay, gridSizeToDisplay } from "../utils";
 
 interface ControlPanelProps {
+  // setGameState: React.Dispatch<React.SetStateAction<GameState>>;
+  // handleStart: () => void;
+  // setGridSize: React.Dispatch<React.SetStateAction<GridSize>>;
+  // resetGame: () => void;
+
   gameState: GameState;
-  setGameState: React.Dispatch<React.SetStateAction<GameState>>;
   setRoundStartTimestamp: React.Dispatch<
     React.SetStateAction<number | undefined>
   >;
-  handleStart: () => void;
-  setDisplayOnlyTable: React.Dispatch<React.SetStateAction<boolean>>;
+  setOnlyDisplayTable: React.Dispatch<React.SetStateAction<boolean>>;
   hidden: boolean;
-  setGridSize: React.Dispatch<React.SetStateAction<GridSize>>;
-  resetGame: () => void;
   changeGameMode: (gameMode: GameMode) => void;
+  onStart: () => void;
 }
 
 const ControlPanel: FC<ControlPanelProps> = (props) => {
   const {
+    // setGameState,
+    // handleStart,
+    // setGridSize,
+    // resetGame,
     gameState,
-    setGameState,
-    handleStart,
-    setDisplayOnlyTable,
+    setOnlyDisplayTable,
     hidden,
-    setGridSize,
-    resetGame,
     changeGameMode,
+    onStart,
   } = props;
 
   const handleToggleVisibility = () => {
-    setDisplayOnlyTable(
-      (previousDisplayOnlyTable) => !previousDisplayOnlyTable
+    setOnlyDisplayTable(
+      (previousOnlyDisplayTable) => !previousOnlyDisplayTable
     );
   };
 
-  const handleGridSizeSetting = (gridSize: GridSize): void => {
-    switch (gameState) {
-      case "Playing":
-        return;
-      case "NotStarted":
-        break;
-      case "Completed":
-        // TODO: change game state to not started
-        setGameState("NotStarted");
-        resetGame();
-        break;
-    }
+  // TODO: come back to this
+  // const handleGridSizeSetting = (gridSize: GridSize): void => {
+  //   switch (gameState) {
+  //     case "Playing":
+  //       return;
+  //     case "NotStarted":
+  //       break;
+  //     case "Completed":
+  //       // TODO: change game state to not started
+  //       setGameState("NotStarted");
+  //       resetGame();
+  //       break;
+  //   }
 
-    setGridSize(gridSize);
-  };
+  //   setGridSize(gridSize);
+  // };
+  // const handleGameModeSetting = (gameMode: GameMode): void => {
+  //   switch (gameState) {
+  //     case "Playing":
+  //       return;
+  //     case "NotStarted":
+  //       break;
+  //     case "Completed":
+  //       // TODO: change game state to not started
+  //       setGameState("NotStarted");
+  //       resetGame();
+  //       break;
+  //   }
 
-  const handleGameModeSetting = (gameMode: GameMode): void => {
-    switch (gameState) {
-      case "Playing":
-        return;
-      case "NotStarted":
-        break;
-      case "Completed":
-        // TODO: change game state to not started
-        setGameState("NotStarted");
-        resetGame();
-        break;
-    }
-
-    changeGameMode(gameMode);
-  };
+  //   changeGameMode(gameMode);
+  // };
 
   return (
     <>
@@ -87,18 +90,18 @@ const ControlPanel: FC<ControlPanelProps> = (props) => {
 
         <div className="playAgainContainer">
           {gameState === "NotStarted" && (
-            <button className="playAgain" onClick={handleStart}>
+            <button className="playAgain" onClick={onStart}>
               Start
             </button>
           )}
           {gameState === "Completed" && (
-            <button className="playAgain" onClick={handleStart}>
+            <button className="playAgain" onClick={onStart}>
               Play Again
             </button>
           )}
         </div>
 
-        <div className="gameSettings">
+        {/* <div className="gameSettings">
           <div className="gridSetting">
             <button onClick={() => handleGridSizeSetting(GridSize.Size3x3)}>
               {gridSizeToDisplay(GridSize.Size3x3)}
@@ -125,7 +128,7 @@ const ControlPanel: FC<ControlPanelProps> = (props) => {
               {gameModeToDisplay(GameMode.Reaction)}
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   );
