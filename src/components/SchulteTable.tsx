@@ -15,7 +15,7 @@ interface SchulteTableProps {
   gameState: GameState;
   // expectedNumber: number;
   // setExpectedNumber: React.Dispatch<React.SetStateAction<number>>;
-  numbers: number[];
+  tiles: number[];
   gridSize: GridSize;
   // endGame: () => void;
   // gameMode: GameMode;
@@ -29,7 +29,7 @@ const SchulteTable: FC<SchulteTableProps> = (props) => {
     gameState,
     // expectedNumber,
     // setExpectedNumber,
-    numbers,
+    tiles,
     gridSize,
     // endGame,
     // handleStart,
@@ -42,26 +42,26 @@ const SchulteTable: FC<SchulteTableProps> = (props) => {
   //   [GameMode.Vanilla]: {
   //     expectedNumberSetter: (previousExpectedNumber) =>
   //       previousExpectedNumber + 1,
-  //     winCondition: (pressedNumber, numbers, expectedNumber) =>
-  //       pressedNumber === Math.max(...numbers),
+  //     winCondition: (pressedNumber, tiles, expectedNumber) =>
+  //       pressedNumber === Math.max(...tiles),
   //   },
   //   [GameMode.Reverse]: {
   //     expectedNumberSetter: (previousExpectedNumber) =>
   //       previousExpectedNumber - 1,
-  //     winCondition: (pressedNumber, numbers, expectedNumber) =>
-  //       pressedNumber === Math.min(...numbers),
+  //     winCondition: (pressedNumber, tiles, expectedNumber) =>
+  //       pressedNumber === Math.min(...tiles),
   //   },
   //   [GameMode.Reaction]: {
   //     expectedNumberSetter: (previousExpectedNumber) =>
   //       previousExpectedNumber + 1,
-  //     winCondition: (pressedNumber, numbers, expectedNumber) =>
-  //       pressedNumber === Math.max(...numbers),
+  //     winCondition: (pressedNumber, tiles, expectedNumber) =>
+  //       pressedNumber === Math.max(...tiles),
   //   },
   //   [GameMode.Memory]: {
   //     expectedNumberSetter: (previousExpectedNumber) =>
   //       previousExpectedNumber + 1,
-  //     winCondition: (pressedNumber, numbers, expectedNumber) =>
-  //       pressedNumber === Math.max(...numbers),
+  //     winCondition: (pressedNumber, tiles, expectedNumber) =>
+  //       pressedNumber === Math.max(...tiles),
   //   },
   // };
 
@@ -70,7 +70,7 @@ const SchulteTable: FC<SchulteTableProps> = (props) => {
   //   pressedNumber: number,
   //   setPlayAnimation: React.Dispatch<React.SetStateAction<boolean>>
   // ): void => {
-  //   if (gameState !== "Playing" || !numbers) {
+  //   if (gameState !== "Playing" || !tiles) {
   //     return;
   //   }
 
@@ -84,7 +84,7 @@ const SchulteTable: FC<SchulteTableProps> = (props) => {
   //   const rules = GameModeRules[gameMode];
 
   //   // win condition
-  //   if (rules.winCondition(pressedNumber, numbers, expectedNumber)) {
+  //   if (rules.winCondition(pressedNumber, tiles, expectedNumber)) {
   //     endGame();
   //   }
 
@@ -107,14 +107,14 @@ const SchulteTable: FC<SchulteTableProps> = (props) => {
   const orderedTable = () =>
     gridSizeToArray(gridSize).map(tileWithStandardPropsGiven);
 
-  // const actualTable = () => numbers.map(tileWithStandardPropsGiven);
+  // const actualTable = () => tiles.map(tileWithStandardPropsGiven);
 
   return (
     <div className={`schulteTable ${gridSizeToCss(gridSize)}`}>
-      {numbers.map(tileWithStandardPropsGiven)}
-      {/* {!numbers || gameState === "NotStarted"
+      {tiles.map(tileWithStandardPropsGiven)}
+      {/* {!tiles || gameState === "NotStarted"
         ? orderedTable()
-        : numbers.map(tileWithStandardPropsGiven)} */}
+        : tiles.map(tileWithStandardPropsGiven)} */}
       {(gameState === "NotStarted" || gameState === "Completed") && (
         <button className="tableReplay" onClick={onStart}>
           {gameState === "NotStarted" ? <PlaySvg /> : <ReplaySvg />}

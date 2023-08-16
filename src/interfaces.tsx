@@ -4,13 +4,18 @@ export enum GridSize {
   Size4x4 = 16,
   Size5x5 = 25,
 }
+export interface Tile {
+  value: number;
+  checked: boolean;
+}
 export interface Table {
   state: GameState;
-  numbers: number[];
+  tiles: Tile[];
   gridSize: GridSize;
   expectedNumber: number;
 }
 // TODO: make base action state
+// note: these should be enum prolly
 export interface InputNumberAction {
   type: "InputNumber";
   inputtedNumber: number;
@@ -55,7 +60,7 @@ export const gameModeToDisplayLookUp: { [key in GameMode]: string } = {
 export interface GameModeRule {
   winCondition: (
     pressedNumber: number,
-    numbers: number[],
+    tiles: number[],
     expectedNumber: number
   ) => boolean;
   expectedNumberSetter: (previousExpectedNumber: number) => number;

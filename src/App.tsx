@@ -11,8 +11,14 @@ import {
   StartGameAction,
   Table,
   TableAction,
+  Tile,
 } from "./interfaces";
-import { gridSizeToArray, shuffleInPlace } from "./utils";
+import {
+  gridSizeToArray,
+  numbersFromTiles,
+  shuffleInPlace,
+  tileArray,
+} from "./utils";
 
 // misc: add a "linear" gamemode, where numbers are in a 1x16 grid for example.
 // misc: memory game modes animation is flawed in many ways, meybe revisit.
@@ -58,7 +64,7 @@ const App = () => {
 
   // // direction
   // const [gameState, setGameState] = useState<GameState>("NotStarted");
-  // const [numbers, setNumbers] = useState<number[] | undefined>();
+  // const [tiles, setNumbers] = useState<number[] | undefined>();
   // // don't know if i need grid size
   // const [gridSize, setGridSize] = useState<GridSize>(GridSize.Size4x4);
   // const [expectedNumber, setExpectedNumber] = useState<number>(
@@ -67,10 +73,10 @@ const App = () => {
 
   const initializeTableState = (): Table => {
     const gridSize = GridSize.Size4x4;
-    const numbers = gridSizeToArray(gridSize);
-    const expectedNumber = Math.min(...numbers);
+    const tiles = tileArray(gridSize);
+    const expectedNumber = Math.min(...numbersFromTiles(tiles));
     return {
-      numbers: numbers,
+      tiles: tiles,
       expectedNumber: expectedNumber,
       gridSize: gridSize,
       state: "NotStarted",
@@ -78,24 +84,25 @@ const App = () => {
   };
 
   const tableReducer = (tableState: Table, tableAction: TableAction): Table => {
-    const { expectedNumber, gridSize, numbers, state } = tableState;
+    const { expectedNumber, gridSize, tiles, state } = tableState;
     switch (tableAction.type) {
       case "Start":
-        if (state === "Playing") {
+        if (state !== "NotStarted") {
           break;
         }
-        return { ...tableState, state: "Playing" };
+        shuffleInPlace(tiles);
+        return { ...tableState, state: "Playing", tiles: tiles };
 
       case "Restart":
         if (state !== "Completed") {
           break;
         }
-        shuffleInPlace(numbers);
+        shuffleInPlace(tiles);
         return {
           ...tableState,
-          numbers: numbers,
+          tiles: tiles,
           state: "Playing",
-          expectedNumber: Math.min(...numbers),
+          expectedNumber: Math.min(...numbersFromTiles(tiles)),
         };
 
       case "InputNumber":
@@ -106,7 +113,8 @@ const App = () => {
           break;
         }
         // win condition
-        if (expectedNumber === Math.max(...numbers)) {
+        // if (expectedNumber === Math.max(...tiles)) {
+        if (tiles.every((tile) => tile.checked)) {
           return {
             ...tableState,
             state: "Completed",
@@ -114,6 +122,14 @@ const App = () => {
           };
         }
         // increment expected number when inputted correct number
+        // make the corresponding tile checked
+        const tile = tiles.find(
+          (tile) => tile.value === tableAction.inputtedNumber
+        );
+        if (!tile)
+          throw new Error("Failed to find inputted number, tile value match.");
+        tile.checked = true;
+
         return {
           ...tableState,
           expectedNumber: expectedNumber + 1,
@@ -216,7 +232,7 @@ const App = () => {
           // endGame={endGame}
           // gameMode={gameMode}
           gameState={table.state}
-          numbers={table.numbers}
+          tiles={table.tiles}
           gridSize={table.gridSize}
           onStart={() => dispatch({ type: "Start" })}
           onNumberInput={(inputtedNumber: number) =>
@@ -225,10 +241,10 @@ const App = () => {
         />
       </div>
       <GameModeContext.Provider value={gameMode}>
-        <GridSizeContext.Provider value={gridSize}>
+        <GridSizeContext.Provider value={table.gridSize}>
           <MatchesContext.Provider value={matches}>
             <SetMatchesContext.Provider value={setMatches}>
-              <GameStateContext.Provider value={gameState}>
+              <GameStateContext.Provider value={table.state}>
                 <Statistics hidden={onlyDisplayTable} />
               </GameStateContext.Provider>
             </SetMatchesContext.Provider>

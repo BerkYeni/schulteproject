@@ -2,6 +2,7 @@ import {
   GameMode,
   GridSize,
   MatchRecord,
+  Tile,
   gameModeToDisplayLookUp,
   gridSizeToCssLookUp,
   gridSizeToDisplayLookUp,
@@ -39,6 +40,14 @@ export const gridSizeToCss = (gridSize: GridSize) =>
 
 export const gridSizeToDisplay = (gridSize: GridSize) =>
   gridSizeToDisplayLookUp[gridSize];
+
+export const tileArray = (gridSize: GridSize) =>
+  gridSizeToArray(gridSize).map(
+    (number): Tile => ({ value: number, checked: false })
+  );
+
+export const numbersFromTiles = (tiles: Tile[]) =>
+  tiles.map((tile) => tile.value);
 
 export const last = <T,>(arr: T[]): T | undefined => arr[arr.length - 1];
 
