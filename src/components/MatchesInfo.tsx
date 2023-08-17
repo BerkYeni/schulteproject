@@ -1,10 +1,5 @@
 import React, { FC, useContext, useState } from "react";
-import {
-  GameModeContext,
-  GridSizeContext,
-  MatchesContext,
-  SetMatchesContext,
-} from "../App";
+import { GridSizeContext, MatchesContext } from "../App";
 import {
   findLastPlayed,
   findPersonalBestRecord,
@@ -12,23 +7,20 @@ import {
   formatMatchDuration,
   gameModeToDisplay,
   gridSizeToDisplay,
-  last,
 } from "../utils";
-import { GameMode, GridSize, MatchRecord } from "../interfaces";
+import { GridSize, MatchRecord } from "../interfaces";
 import { Match } from "@testing-library/react";
 
 interface MatchesInfoProps {}
 
 const MatchesInfo: FC<MatchesInfoProps> = (props) => {
   const matches = useContext(MatchesContext);
-  const setMatches = useContext(SetMatchesContext);
   const gridSize = useContext(GridSizeContext);
-  const gameMode = useContext(GameModeContext);
 
-  const handleReset = () => {
-    if (!setMatches) throw new Error("setMatches must not be null");
-    setMatches([]);
-  };
+  // const handleReset = () => {
+  //   if (!setMatches) throw new Error("setMatches must not be null");
+  //   setMatches([]);
+  // };
 
   // TODO: find a better word than settings, settings sounds technical,
   // apply the same strategy as changing gamemode name 'classic' to 'vanilla'
