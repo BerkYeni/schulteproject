@@ -32,7 +32,7 @@ import {
 // misc: add indicator for current game settings (grid size, gamemode etc).
 // misc: make selected game settings buttons styled differently.
 // misc: make selected game settings styled differently.
-// misc: change mini icon
+// misc: change mini icon/favicon
 
 export const tableContext = createContext<Table | null>(null);
 export const MatchesContext = createContext<MatchRecord[] | null>(null);
