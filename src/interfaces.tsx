@@ -11,7 +11,6 @@ export interface Tile {
 export interface Table {
   state: GameState;
   tiles: Tile[];
-  gridSize: GridSize;
   expectedNumber: number;
 }
 // TODO: make base action state
@@ -30,6 +29,15 @@ export type TableAction =
   | InputNumberAction
   | StartGameAction
   | RestartGameAction;
+export interface MarkStartAction {
+  type: "Mark";
+}
+export interface SaveRecordAction {
+  type: "SaveRecord";
+}
+export type MatchRecordAction =
+  | MarkStartAction
+  | SaveRecordAction
 export interface MatchRecord {
   gridSize: GridSize;
   durationInMilliseconds: number;

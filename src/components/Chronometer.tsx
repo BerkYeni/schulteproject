@@ -1,5 +1,5 @@
 import React, { FC, useContext, useEffect, useState } from "react";
-import { GameStateContext, MatchesContext } from "../App";
+import { MatchesContext } from "../App";
 import { formatMatchDuration } from "../utils";
 
 // TODO: make chronometer into a class or a closure
@@ -7,8 +7,7 @@ import { formatMatchDuration } from "../utils";
 interface ChronometerProps {}
 
 const Chronometer: FC<ChronometerProps> = (props) => {
-  const matches = useContext(MatchesContext);
-  const gameState = useContext(GameStateContext);
+  const lastMatchTimeResult = useContext(LastMatchTimeResultContext);
   const [seconds, setSeconds] = useState<number>(0);
 
   const initiateChronometer = () => {
@@ -50,7 +49,7 @@ const Chronometer: FC<ChronometerProps> = (props) => {
           case "Completed":
             return (
               <span>
-                {formatMatchDuration(matches[matches.length - 1])} seconds
+                {formatMatchDuration(lastMatchTimeResult)} seconds
               </span>
             );
         }

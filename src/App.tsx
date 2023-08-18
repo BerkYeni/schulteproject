@@ -8,6 +8,7 @@ import {
   GameState,
   GridSize,
   MatchRecord,
+  MatchRecordAction,
   StartGameAction,
   Table,
   TableAction,
@@ -52,11 +53,12 @@ const App = () => {
   const [matches, setMatches] = useState<MatchRecord[]>(() =>
     getMatchesFromLocalStorage(matchesKey)
   );
-  const [roundStartTimestamp, setRoundStartTimestamp] = useState<
-    number | undefined
-  >();
+  // const [roundStartTimestamp, setRoundStartTimestamp] = useState<
+  //   number | undefined
+  // >();
   const [hidePanels, setHidePanels] = useState<boolean>(false);
   const [gameMode, setGameMode] = useState<GameMode>(GameMode.Vanilla);
+  const [gridSize, setGridSize] = useState<GridSize>(GridSize.Size3x3);
 
   // // direction
   // const [gameState, setGameState] = useState<GameState>("NotStarted");
@@ -67,14 +69,43 @@ const App = () => {
   //   Math.min(...gridSizeToArray(gridSize))
   // );
 
-  const initializeTableState = (): Table => {
-    const gridSize = GridSize.Size4x4;
+  const matchRecordReducer = (
+    roundStartTimestampState: null | number,
+    matchRecordAction: MatchRecordAction
+  ): null | number => {
+    switch (matchRecordAction.type) {
+      case "Mark":
+        if (roundStartTimestampState)
+          throw new Error(
+            "Tried to mark start time when it was already marked."
+          );
+        return new Date().getTime();
+      case "SaveRecord":
+        if (!roundStartTimestampState)
+          throw new Error("Tried to save record without marking.");
+        matches.push({
+          durationInMilliseconds:
+            new Date().getTime() - roundStartTimestampState,
+          gameMode: gameMode,
+          gridSize: gridSize,
+        });
+        return null;
+      default:
+        throw new Error("Unexpected match record action.");
+    }
+  };
+
+  const [roundStartTimestamp, matchRecordDispatch] = useReducer(
+    matchRecordReducer,
+    null
+  );
+
+  const initializeTableState = (gridSize: GridSize): Table => {
     const tiles = tileArray(gridSize);
     const expectedNumber = Math.min(...numbersFromTiles(tiles));
     return {
       tiles: tiles,
       expectedNumber: expectedNumber,
-      gridSize: gridSize,
       state: "NotStarted",
     };
   };
@@ -86,6 +117,7 @@ const App = () => {
         if (state !== "NotStarted") {
           break;
         }
+        matchRecordDispatch({ type: "Mark" });
         shuffleInPlace(tiles);
         return { ...tableState, state: "Playing", tiles: tiles };
 
@@ -93,6 +125,7 @@ const App = () => {
         if (state !== "Completed") {
           break;
         }
+        matchRecordDispatch({ type: "Mark" });
         shuffleInPlace(tiles);
         return {
           ...tableState,
@@ -111,6 +144,7 @@ const App = () => {
         // win condition
         // if (expectedNumber === Math.max(...tiles)) {
         if (tiles.every((tile) => tile.checked)) {
+          matchRecordDispatch({type: "SaveRecord"})
           return {
             ...tableState,
             state: "Completed",
@@ -140,12 +174,7 @@ const App = () => {
 
   const [table, tableDispatch] = useReducer(
     tableReducer,
-    initializeTableState()
-  );
-
-  const [roundStartTimestamp, matchRecordDispatch] = useReducer(
-    matchRecordReducer,
-    null
+    initializeTableState(gridSize)
   );
 
   // const resetExpectedNumber = (): void => {
@@ -210,6 +239,7 @@ const App = () => {
     setGameMode(gameMode);
   };
 
+  // i can get rid of this
   useEffect(() => {
     localStorage.setItem(matchesKey, JSON.stringify(matches));
   }, [matches]);
@@ -228,7 +258,7 @@ const App = () => {
         <SchulteTable
           gameState={table.state}
           tiles={table.tiles}
-          gridSize={table.gridSize}
+          gridSize={gridSize}
           onStart={() => tableDispatch({ type: "Start" })}
           onNumberInput={(inputtedNumber: number) =>
             tableDispatch({
@@ -238,7 +268,7 @@ const App = () => {
           }
         />
       </div>
-      <GridSizeContext.Provider value={table.gridSize}>
+      <GridSizeContext.Provider value={gridSize}>
         <MatchesContext.Provider value={matches}>
           <tableContext.Provider value={table}>
             <Statistics hidden={hidePanels} />
