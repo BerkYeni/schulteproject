@@ -16,6 +16,7 @@ import {
 } from "./interfaces";
 import {
   gridSizeToArray,
+  last,
   numbersFromTiles,
   shuffleInPlace,
   tileArray,
@@ -34,10 +35,6 @@ import {
 // misc: make selected game settings buttons styled differently.
 // misc: make selected game settings styled differently.
 // misc: change mini icon/favicon
-
-export const tableContext = createContext<Table | null>(null);
-export const MatchesContext = createContext<MatchRecord[] | null>(null);
-export const GridSizeContext = createContext<GridSize | null>(null);
 
 export const matchesKey = "matches";
 const getMatchesFromLocalStorage = (matchesKey: string): MatchRecord[] => {
@@ -59,6 +56,9 @@ const App = () => {
   const [hidePanels, setHidePanels] = useState<boolean>(false);
   const [gameMode, setGameMode] = useState<GameMode>(GameMode.Vanilla);
   const [gridSize, setGridSize] = useState<GridSize>(GridSize.Size3x3);
+
+  // TODO: come back to this
+  const resetMatches = () => setMatches([]);
 
   // // direction
   // const [gameState, setGameState] = useState<GameState>("NotStarted");
@@ -144,7 +144,7 @@ const App = () => {
         // win condition
         // if (expectedNumber === Math.max(...tiles)) {
         if (tiles.every((tile) => tile.checked)) {
-          matchRecordDispatch({type: "SaveRecord"})
+          matchRecordDispatch({ type: "SaveRecord" });
           return {
             ...tableState,
             state: "Completed",
@@ -268,13 +268,16 @@ const App = () => {
           }
         />
       </div>
-      <GridSizeContext.Provider value={gridSize}>
-        <MatchesContext.Provider value={matches}>
-          <tableContext.Provider value={table}>
-            <Statistics hidden={hidePanels} />
-          </tableContext.Provider>
-        </MatchesContext.Provider>
-      </GridSizeContext.Provider>
+      <Statistics
+        hidden={hidePanels}
+        chronometerState="Idle"
+        matchesInfoToDisplay={{
+          lastPlayedInSeconds: "testing",
+          personalBestInSeconds: "yea les go",
+          recordCategory: "errrm testing ackhsually",
+        }}
+        onResetMatches={resetMatches}
+      />
     </div>
   );
 };

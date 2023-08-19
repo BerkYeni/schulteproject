@@ -1,13 +1,18 @@
 import React, { FC, useContext, useEffect, useState } from "react";
-import { MatchesContext } from "../App";
 import { formatMatchDuration } from "../utils";
+import { ChronometerState } from "../interfaces";
 
 // TODO: make chronometer into a class or a closure
 
-interface ChronometerProps {}
+let chronometerIntervalId: undefined | NodeJS.Timer = undefined;
+
+interface ChronometerProps {
+  lastPlayedInSeconds: string | undefined;
+  chronometerState: ChronometerState;
+}
 
 const Chronometer: FC<ChronometerProps> = (props) => {
-  const lastMatchTimeResult = useContext(LastMatchTimeResultContext);
+  const { chronometerState, lastPlayedInSeconds } = props;
   const [seconds, setSeconds] = useState<number>(0);
 
   const initiateChronometer = () => {
@@ -20,40 +25,37 @@ const Chronometer: FC<ChronometerProps> = (props) => {
     return interval;
   };
 
-  useEffect(() => {
-    let interval: NodeJS.Timer | undefined;
-    switch (gameState) {
-      case "NotStarted":
-        break;
-
-      case "Playing":
-        interval = initiateChronometer();
-        break;
-
-      case "Completed":
-        clearInterval(interval);
+  switch (chronometerState) {
+    case "Idle":
+      if (chronometerIntervalId !== undefined) {
+        clearInterval(chronometerIntervalId);
         setSeconds(0);
-        break;
-    }
-    return () => clearInterval(interval);
-  }, [gameState]);
+      }
+      break;
+
+    case "Active":
+      if (chronometerIntervalId === undefined) {
+        chronometerIntervalId = initiateChronometer();
+      }
+      break;
+
+    case "DisplayResult":
+      if (chronometerIntervalId !== undefined) {
+        clearInterval(chronometerIntervalId);
+        setSeconds(0);
+      }
+      break;
+  }
 
   return (
     <div className="chronometer">
-      {(() => {
-        switch (gameState) {
-          case "NotStarted":
-            return <div>--</div>;
-          case "Playing":
-            return <span>{seconds} s</span>;
-          case "Completed":
-            return (
-              <span>
-                {formatMatchDuration(lastMatchTimeResult)} seconds
-              </span>
-            );
-        }
-      })()}
+      {chronometerState === "Idle" ? (
+        <span>--</span>
+      ) : chronometerState === "Active" ? (
+        <span>{seconds} s</span>
+      ) : (
+        <span>{lastPlayedInSeconds || "--"} seconds</span>
+      )}
     </div>
   );
 };

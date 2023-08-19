@@ -1,5 +1,4 @@
 import React, { FC, useContext, useState } from "react";
-import { GridSizeContext, MatchesContext } from "../App";
 import {
   findLastPlayed,
   findPersonalBestRecord,
@@ -8,14 +7,19 @@ import {
   gameModeToDisplay,
   gridSizeToDisplay,
 } from "../utils";
-import { GridSize, MatchRecord } from "../interfaces";
+import { GridSize, MatchRecord, matchesInfoToDisplay } from "../interfaces";
 import { Match } from "@testing-library/react";
 
-interface MatchesInfoProps {}
+interface MatchesInfoProps {
+  onResetMatches: () => void;
+  matchesInfoToDisplay: matchesInfoToDisplay;
+}
 
 const MatchesInfo: FC<MatchesInfoProps> = (props) => {
-  const matches = useContext(MatchesContext);
-  const gridSize = useContext(GridSizeContext);
+  const { onResetMatches, matchesInfoToDisplay } = props;
+
+  const { lastPlayedInSeconds, personalBestInSeconds, recordCategory } =
+    matchesInfoToDisplay;
 
   // const handleReset = () => {
   //   if (!setMatches) throw new Error("setMatches must not be null");
@@ -24,32 +28,47 @@ const MatchesInfo: FC<MatchesInfoProps> = (props) => {
 
   // TODO: find a better word than settings, settings sounds technical,
   // apply the same strategy as changing gamemode name 'classic' to 'vanilla'
-  const settingSpecificMatches = findSettingSpecificMatches(
-    matches,
-    gridSize,
-    gameMode
-  );
 
-  const personalBestRecord = findPersonalBestRecord(settingSpecificMatches);
-  const personalBestSeconds = personalBestRecord
-    ? formatMatchDuration(personalBestRecord)
-    : undefined;
+  // const settingSpecificMatches = findSettingSpecificMatches(
+  //   matches,
+  //   gridSize,
+  //   gameMode
+  // );
 
-  // TODO: i might wanna add date to match record type and sort them that way
-  const lastMatchRecord = findLastPlayed(settingSpecificMatches);
-  const lastMatchSeconds = lastMatchRecord
-    ? formatMatchDuration(lastMatchRecord)
-    : undefined;
+  // const personalBestRecord = findPersonalBestRecord(settingSpecificMatches);
+  // const personalBestSeconds = personalBestRecord
+  //   ? formatMatchDuration(personalBestRecord)
+  //   : undefined;
+
+  // // TODO: i might wanna add date to match record type and sort them that way
+  // const lastMatchRecord = findLastPlayed(settingSpecificMatches);
+  // const lastMatchSeconds = lastMatchRecord
+  //   ? formatMatchDuration(lastMatchRecord)
+  //   : undefined;
 
   return (
     <div className="matchesInfo">
-      <button onClick={handleReset}>Reset</button>
+      <button onClick={onResetMatches}>Reset</button>
 
-      <div>{`${gridSizeToDisplay(gridSize)} ${gameModeToDisplay(
+      <div>{recordCategory}</div>
+
+      {!personalBestInSeconds ? (
+        <div>No personal best record.</div>
+      ) : (
+        <div>Personal Best: {personalBestInSeconds} s</div>
+      )}
+
+      {!lastPlayedInSeconds ? (
+        <div>No records yet.</div>
+      ) : (
+        <div>Last Played: {lastPlayedInSeconds} s</div>
+      )}
+
+      {/* <div>{`${gridSizeToDisplay(gridSize)} ${gameModeToDisplay(
         gameMode
-      )}`}</div>
+      )}`}</div> */}
 
-      {settingSpecificMatches.length <= 0 ? (
+      {/* {settingSpecificMatches.length <= 0 ? (
         <div>No records yet.</div>
       ) : (
         <>
@@ -59,7 +78,7 @@ const MatchesInfo: FC<MatchesInfoProps> = (props) => {
             {lastMatchRecord === personalBestRecord && " ⭐"}
           </div>
         </>
-      )}
+      )} */}
     </div>
   );
 };

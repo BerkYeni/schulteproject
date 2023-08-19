@@ -35,9 +35,7 @@ export interface MarkStartAction {
 export interface SaveRecordAction {
   type: "SaveRecord";
 }
-export type MatchRecordAction =
-  | MarkStartAction
-  | SaveRecordAction
+export type MatchRecordAction = MarkStartAction | SaveRecordAction;
 export interface MatchRecord {
   gridSize: GridSize;
   durationInMilliseconds: number;
@@ -72,4 +70,10 @@ export interface GameModeRule {
     expectedNumber: number
   ) => boolean;
   expectedNumberSetter: (previousExpectedNumber: number) => number;
+}
+export type ChronometerState = "Idle" | "Active" | "DisplayResult";
+export interface matchesInfoToDisplay {
+  recordCategory: string;
+  personalBestInSeconds: string | undefined;
+  lastPlayedInSeconds: string | undefined;
 }
