@@ -18,7 +18,7 @@ interface MatchesInfoProps {
 const MatchesInfo: FC<MatchesInfoProps> = (props) => {
   const { onResetMatches, matchesInfoToDisplay } = props;
 
-  const { lastPlayedInSeconds, personalBestInSeconds, recordCategory } =
+  const { lastPlayedRecord, personalBestRecord, recordCategoryToDisplay } =
     matchesInfoToDisplay;
 
   // const handleReset = () => {
@@ -46,23 +46,36 @@ const MatchesInfo: FC<MatchesInfoProps> = (props) => {
   //   ? formatMatchDuration(lastMatchRecord)
   //   : undefined;
 
+  const Records: FC = (props) => {
+    if (!(personalBestRecord && lastPlayedRecord)) {
+      return <div>No records yet.</div>;
+    }
+
+    const isPersonalBest =
+      personalBestRecord.durationInMilliseconds ===
+      lastPlayedRecord.durationInMilliseconds;
+
+    const personalBestInSeconds = formatMatchDuration(personalBestRecord);
+    const lastPlayedInSeconds = formatMatchDuration(lastPlayedRecord);
+
+    return (
+      <>
+        <div>Personal Best: {personalBestInSeconds} s</div>
+
+        <div>
+          Last Played: {lastPlayedInSeconds} s {isPersonalBest && " ⭐"}
+        </div>
+      </>
+    );
+  };
+
   return (
     <div className="matchesInfo">
       <button onClick={onResetMatches}>Reset</button>
 
-      <div>{recordCategory}</div>
+      <div>{recordCategoryToDisplay}</div>
 
-      {!personalBestInSeconds ? (
-        <div>No personal best record.</div>
-      ) : (
-        <div>Personal Best: {personalBestInSeconds} s</div>
-      )}
-
-      {!lastPlayedInSeconds ? (
-        <div>No records yet.</div>
-      ) : (
-        <div>Last Played: {lastPlayedInSeconds} s</div>
-      )}
+      <Records />
 
       {/* <div>{`${gridSizeToDisplay(gridSize)} ${gameModeToDisplay(
         gameMode

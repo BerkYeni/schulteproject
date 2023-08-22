@@ -1,12 +1,4 @@
-import {
-  GameMode,
-  GridSize,
-  MatchRecord,
-  Tile,
-  gameModeToDisplayLookUp,
-  gridSizeToCssLookUp,
-  gridSizeToDisplayLookUp,
-} from "./interfaces";
+import { GameMode, GridSize, MatchRecord, Tile } from "./interfaces";
 
 export const shuffleInPlace = (array: any[]) => {
   return array.sort(() => Math.random() - 0.5);
@@ -35,9 +27,19 @@ export const numberArray = (
 export const gridSizeToArray = (gridSize: GridSize) =>
   numberArray(1, gridSize + 1, 1);
 
+const gridSizeToCssLookUp: { [key in GridSize]: string } = {
+  [GridSize.Size3x3]: "grid3x3",
+  [GridSize.Size4x4]: "grid4x4",
+  [GridSize.Size5x5]: "grid5x5",
+};
 export const gridSizeToCss = (gridSize: GridSize) =>
   gridSizeToCssLookUp[gridSize];
 
+const gridSizeToDisplayLookUp: { [key in GridSize]: string } = {
+  [GridSize.Size3x3]: "3 x 3",
+  [GridSize.Size4x4]: "4 x 4",
+  [GridSize.Size5x5]: "5 x 5",
+};
 export const gridSizeToDisplay = (gridSize: GridSize) =>
   gridSizeToDisplayLookUp[gridSize];
 
@@ -72,5 +74,11 @@ export const findSettingSpecificMatches = (
     (match) => match.gridSize === gridSize && match.gameMode === gameMode
   );
 
+const gameModeToDisplayLookUp: { [key in GameMode]: string } = {
+  [GameMode.Vanilla]: "Vanilla",
+  [GameMode.Reverse]: "Reverse",
+  [GameMode.Memory]: "Memory",
+  [GameMode.Reaction]: "Reaction",
+};
 export const gameModeToDisplay = (gameMode: GameMode) =>
   gameModeToDisplayLookUp[gameMode];

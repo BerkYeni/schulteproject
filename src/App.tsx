@@ -15,7 +15,9 @@ import {
   Tile,
 } from "./interfaces";
 import {
+  gameModeToDisplay,
   gridSizeToArray,
+  gridSizeToDisplay,
   last,
   numbersFromTiles,
   shuffleInPlace,
@@ -69,6 +71,7 @@ const App = () => {
   //   Math.min(...gridSizeToArray(gridSize))
   // );
 
+  // TODO: convert this to something else, make roundStartTimeStamp a Date.
   const matchRecordReducer = (
     roundStartTimestampState: null | number,
     matchRecordAction: MatchRecordAction
@@ -88,6 +91,7 @@ const App = () => {
             new Date().getTime() - roundStartTimestampState,
           gameMode: gameMode,
           gridSize: gridSize,
+          startTime; 
         });
         return null;
       default:
@@ -272,9 +276,11 @@ const App = () => {
         hidden={hidePanels}
         chronometerState="Idle"
         matchesInfoToDisplay={{
-          lastPlayedInSeconds: "testing",
-          personalBestInSeconds: "yea les go",
-          recordCategory: "errrm testing ackhsually",
+          lastPlayedRecord: last(matches),
+          personalBestRecord: last(matches),
+          recordCategoryToDisplay: `${gameModeToDisplay(
+            gameMode
+          )} ${gridSizeToDisplay(gridSize)}`,
         }}
         onResetMatches={resetMatches}
       />

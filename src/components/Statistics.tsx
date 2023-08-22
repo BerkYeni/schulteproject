@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import Chronometer from "./Chronometer";
 import MatchesInfo from "./MatchesInfo";
 import { ChronometerState, matchesInfoToDisplay } from "../interfaces";
+import { findLastPlayed, formatMatchDuration } from "../utils";
 
 interface StatisticsProps {
   hidden: boolean;
@@ -14,11 +15,18 @@ const Statistics: FC<StatisticsProps> = (props) => {
   const { hidden, chronometerState, onResetMatches, matchesInfoToDisplay } =
     props;
 
+  const { lastPlayedRecord } = matchesInfoToDisplay;
+
+  let lastPlayedInSeconds;
+  if (lastPlayedRecord) {
+    lastPlayedInSeconds = formatMatchDuration(lastPlayedRecord);
+  }
+
   return (
     <div className={`statistics ${hidden && "hidden"}`}>
       <Chronometer
         chronometerState={chronometerState}
-        lastPlayedInSeconds={matchesInfoToDisplay.lastPlayedInSeconds}
+        lastPlayedInSeconds={lastPlayedInSeconds}
       />
       <MatchesInfo
         matchesInfoToDisplay={matchesInfoToDisplay}
