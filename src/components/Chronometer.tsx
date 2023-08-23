@@ -25,16 +25,21 @@ const Chronometer: FC<ChronometerProps> = (props) => {
     return interval;
   };
 
+  useEffect(() => {
+    console.log(seconds);
+  }, [seconds]);
+
   switch (chronometerState) {
     case "Idle":
       if (chronometerIntervalId !== undefined) {
         clearInterval(chronometerIntervalId);
-        setSeconds(0);
+        setSeconds((previousSeconds) => 0);
       }
       break;
 
     case "Active":
       if (chronometerIntervalId === undefined) {
+        setSeconds((previousSeconds) => 0);
         chronometerIntervalId = initiateChronometer();
       }
       break;
@@ -42,7 +47,8 @@ const Chronometer: FC<ChronometerProps> = (props) => {
     case "DisplayResult":
       if (chronometerIntervalId !== undefined) {
         clearInterval(chronometerIntervalId);
-        setSeconds(0);
+        chronometerIntervalId = undefined;
+        setSeconds((previousSeconds) => 0);
       }
       break;
   }

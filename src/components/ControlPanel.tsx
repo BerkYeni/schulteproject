@@ -8,6 +8,7 @@ interface ControlPanelProps {
   hidden: boolean;
   changeGameMode: (gameMode: GameMode) => void;
   onStart: () => void;
+  onRestart: () => void;
 }
 
 const ControlPanel: FC<ControlPanelProps> = (props) => {
@@ -18,6 +19,7 @@ const ControlPanel: FC<ControlPanelProps> = (props) => {
     hidden,
     changeGameMode,
     onStart,
+    onRestart,
   } = props;
 
   return (
@@ -46,7 +48,7 @@ const ControlPanel: FC<ControlPanelProps> = (props) => {
             </button>
           )}
           {gameState === "Completed" && (
-            <button className="playAgain" onClick={onStart}>
+            <button className="playAgain" onClick={onRestart}>
               Play Again
             </button>
           )}

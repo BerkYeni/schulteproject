@@ -1,4 +1,11 @@
-import { GameMode, GridSize, MatchRecord, Tile } from "./interfaces";
+import {
+  ChronometerState,
+  GameMode,
+  GameState,
+  GridSize,
+  MatchRecord,
+  Tile,
+} from "./interfaces";
 
 export const shuffleInPlace = (array: any[]) => {
   return array.sort(() => Math.random() - 0.5);
@@ -82,3 +89,14 @@ const gameModeToDisplayLookUp: { [key in GameMode]: string } = {
 };
 export const gameModeToDisplay = (gameMode: GameMode) =>
   gameModeToDisplayLookUp[gameMode];
+
+const gameStateToChronometerStateLookup: {
+  [key in GameState]: ChronometerState;
+} = {
+  NotStarted: "Idle",
+  Playing: "Active",
+  Completed: "DisplayResult",
+  Countdown: "Idle",
+};
+export const gameStateToChronometerState = (gameState: GameState) =>
+  gameStateToChronometerStateLookup[gameState];

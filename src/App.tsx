@@ -16,6 +16,7 @@ import {
 } from "./interfaces";
 import {
   gameModeToDisplay,
+  gameStateToChronometerState,
   gridSizeToArray,
   gridSizeToDisplay,
   last,
@@ -45,7 +46,12 @@ const getMatchesFromLocalStorage = (matchesKey: string): MatchRecord[] => {
     localStorage.setItem(matchesKey, JSON.stringify([]));
     return [];
   }
-  return JSON.parse(matches) as MatchRecord[];
+  const unconstructed = JSON.parse(matches) as MatchRecord[];
+  const constructed = unconstructed.map((match) => ({
+    ...match,
+    startTime: new Date(match.startTime),
+  }));
+  return constructed as MatchRecord[];
 };
 
 const App = () => {
@@ -73,26 +79,29 @@ const App = () => {
 
   // TODO: convert this to something else, make roundStartTimeStamp a Date.
   const matchRecordReducer = (
-    roundStartTimestampState: null | number,
+    roundStartTimestampState: null | Date,
     matchRecordAction: MatchRecordAction
-  ): null | number => {
+  ): null | Date => {
     switch (matchRecordAction.type) {
       case "Mark":
         if (roundStartTimestampState)
           throw new Error(
             "Tried to mark start time when it was already marked."
           );
-        return new Date().getTime();
+        return new Date();
       case "SaveRecord":
         if (!roundStartTimestampState)
           throw new Error("Tried to save record without marking.");
-        matches.push({
-          durationInMilliseconds:
-            new Date().getTime() - roundStartTimestampState,
-          gameMode: gameMode,
-          gridSize: gridSize,
-          startTime; 
-        });
+        setMatches([
+          ...matches,
+          {
+            durationInMilliseconds:
+              new Date().getTime() - roundStartTimestampState.getTime(),
+            gameMode: gameMode,
+            gridSize: gridSize,
+            startTime: roundStartTimestampState,
+          },
+        ]);
         return null;
       default:
         throw new Error("Unexpected match record action.");
@@ -121,19 +130,19 @@ const App = () => {
         if (state !== "NotStarted") {
           break;
         }
-        matchRecordDispatch({ type: "Mark" });
         shuffleInPlace(tiles);
+        matchRecordDispatch({ type: "Mark" });
         return { ...tableState, state: "Playing", tiles: tiles };
 
       case "Restart":
         if (state !== "Completed") {
           break;
         }
-        matchRecordDispatch({ type: "Mark" });
         shuffleInPlace(tiles);
+        matchRecordDispatch({ type: "Mark" });
         return {
           ...tableState,
-          tiles: tiles,
+          tiles: tiles.map((tile) => ({ ...tile, checked: false })),
           state: "Playing",
           expectedNumber: Math.min(...numbersFromTiles(tiles)),
         };
@@ -248,15 +257,43 @@ const App = () => {
     localStorage.setItem(matchesKey, JSON.stringify(matches));
   }, [matches]);
 
+  let lastPlayedRecord;
+  let personalBestRecord;
+  if (matches.length) {
+    lastPlayedRecord = matches.reduce((previousMatch, currentMatch) =>
+      previousMatch.startTime.getTime() > currentMatch.startTime.getTime()
+        ? previousMatch
+        : currentMatch
+    );
+    personalBestRecord = matches.reduce((previousMatch, currentMatch) =>
+      previousMatch.durationInMilliseconds < currentMatch.durationInMilliseconds
+        ? previousMatch
+        : currentMatch
+    );
+  }
+
   return (
     <div className="App">
       <ControlPanel
         onStart={() => tableDispatch({ type: "Start" })}
+        onRestart={() => tableDispatch({ type: "Restart" })}
         gameState={table.state}
         onExposePanels={() => setHidePanels(false)}
         onHidePanels={() => setHidePanels(true)}
         hidden={hidePanels}
         changeGameMode={changeGameMode}
+      />
+      <Statistics
+        hidden={hidePanels}
+        chronometerState={gameStateToChronometerState(table.state)}
+        matchesInfoToDisplay={{
+          lastPlayedRecord: lastPlayedRecord,
+          personalBestRecord: personalBestRecord,
+          recordCategoryToDisplay: `${gameModeToDisplay(
+            gameMode
+          )} ${gridSizeToDisplay(gridSize)}`,
+        }}
+        onResetMatches={resetMatches}
       />
       <div className="tableContainer">
         <SchulteTable
@@ -264,6 +301,7 @@ const App = () => {
           tiles={table.tiles}
           gridSize={gridSize}
           onStart={() => tableDispatch({ type: "Start" })}
+          onRestart={() => tableDispatch({ type: "Restart" })}
           onNumberInput={(inputtedNumber: number) =>
             tableDispatch({
               type: "InputNumber",
@@ -272,18 +310,6 @@ const App = () => {
           }
         />
       </div>
-      <Statistics
-        hidden={hidePanels}
-        chronometerState="Idle"
-        matchesInfoToDisplay={{
-          lastPlayedRecord: last(matches),
-          personalBestRecord: last(matches),
-          recordCategoryToDisplay: `${gameModeToDisplay(
-            gameMode
-          )} ${gridSizeToDisplay(gridSize)}`,
-        }}
-        onResetMatches={resetMatches}
-      />
     </div>
   );
 };

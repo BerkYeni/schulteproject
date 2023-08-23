@@ -10,11 +10,13 @@ interface SchulteTableProps {
   tiles: Tile[];
   gridSize: GridSize;
   onStart: () => void;
+  onRestart: () => void;
   onNumberInput: (inputtedNumber: number) => void;
 }
 
 const SchulteTable: FC<SchulteTableProps> = (props) => {
-  const { gameState, tiles, gridSize, onStart, onNumberInput } = props;
+  const { gameState, tiles, gridSize, onStart, onNumberInput, onRestart } =
+    props;
 
   const tileWithStandardPropsGiven = (tile: Tile, index: number) => {
     return (
@@ -31,7 +33,10 @@ const SchulteTable: FC<SchulteTableProps> = (props) => {
       {tiles.map(tileWithStandardPropsGiven)}
 
       {(gameState === "NotStarted" || gameState === "Completed") && (
-        <button className="tableReplay" onClick={onStart}>
+        <button
+          className="tableReplay"
+          onClick={gameState === "NotStarted" ? onStart : onRestart}
+        >
           {gameState === "NotStarted" ? <PlaySvg /> : <ReplaySvg />}
         </button>
       )}
