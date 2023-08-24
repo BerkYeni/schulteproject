@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import Chronometer from "./Chronometer";
 import MatchesInfo from "./MatchesInfo";
 import { ChronometerState, matchesInfoToDisplay } from "../interfaces";
-import { findLastPlayed, formatMatchDuration } from "../utils";
+import { formatMatchDuration } from "../utils";
 
 interface StatisticsProps {
   hidden: boolean;

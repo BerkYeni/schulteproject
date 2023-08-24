@@ -1,8 +1,5 @@
-import React, { FC, useContext, useEffect, useState } from "react";
-import { formatMatchDuration } from "../utils";
+import React, { FC, useState } from "react";
 import { ChronometerState } from "../interfaces";
-
-// TODO: make chronometer into a class or a closure
 
 let chronometerIntervalId: undefined | NodeJS.Timer = undefined;
 
@@ -18,6 +15,7 @@ const Chronometer: FC<ChronometerProps> = (props) => {
   const initiateChronometer = () => {
     const interval = setInterval(() => {
       setSeconds((previousSeconds) => {
+        console.log(previousSeconds);
         return previousSeconds + 1;
       });
     }, 1000);
@@ -25,30 +23,24 @@ const Chronometer: FC<ChronometerProps> = (props) => {
     return interval;
   };
 
-  useEffect(() => {
-    console.log(seconds);
-  }, [seconds]);
-
   switch (chronometerState) {
     case "Idle":
+    case "DisplayResult":
       if (chronometerIntervalId !== undefined) {
         clearInterval(chronometerIntervalId);
+        chronometerIntervalId = undefined;
+      }
+      if (seconds !== 0) {
         setSeconds((previousSeconds) => 0);
       }
       break;
 
     case "Active":
       if (chronometerIntervalId === undefined) {
-        setSeconds((previousSeconds) => 0);
+        if (seconds !== 0) {
+          setSeconds((previousSeconds) => 0);
+        }
         chronometerIntervalId = initiateChronometer();
-      }
-      break;
-
-    case "DisplayResult":
-      if (chronometerIntervalId !== undefined) {
-        clearInterval(chronometerIntervalId);
-        chronometerIntervalId = undefined;
-        setSeconds((previousSeconds) => 0);
       }
       break;
   }

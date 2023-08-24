@@ -1,5 +1,6 @@
 import React, { FC } from "react";
-import { GameMode, GameState } from "../interfaces";
+import { GameMode, GameState, GridSize } from "../interfaces";
+import { gridSizeToDisplay } from "../utils";
 
 interface ControlPanelProps {
   gameState: GameState;
@@ -9,6 +10,7 @@ interface ControlPanelProps {
   changeGameMode: (gameMode: GameMode) => void;
   onStart: () => void;
   onRestart: () => void;
+  onGridSizeChange: (gridSize: GridSize) => void;
 }
 
 const ControlPanel: FC<ControlPanelProps> = (props) => {
@@ -18,9 +20,14 @@ const ControlPanel: FC<ControlPanelProps> = (props) => {
     onExposePanels,
     hidden,
     changeGameMode,
+    onGridSizeChange,
     onStart,
     onRestart,
   } = props;
+
+  const gridSizeEntries = Object.entries(GridSize).filter(
+    (entry) => !isNaN(Number(entry[1]))
+  );
 
   return (
     <>
@@ -52,6 +59,37 @@ const ControlPanel: FC<ControlPanelProps> = (props) => {
               Play Again
             </button>
           )}
+        </div>
+
+        <div className="gameSettings">
+          <div className="gridSetting">
+            {gridSizeEntries.map()}
+
+            {/* <button onClick={() => handleGridSizeSetting(GridSize.Size3x3)}>
+              {gridSizeToDisplay(GridSize.Size3x3)}
+            </button>
+            <button onClick={() => handleGridSizeSetting(GridSize.Size4x4)}>
+              {gridSizeToDisplay(GridSize.Size4x4)}
+            </button>
+            <button onClick={() => handleGridSizeSetting(GridSize.Size5x5)}>
+              {gridSizeToDisplay(GridSize.Size5x5)}
+            </button>
+          </div>
+
+          <div className="GameModeetting">
+            <button onClick={() => handleGameModeSetting(GameMode.Vanilla)}>
+              {gameModeToDisplay(GameMode.Vanilla)}
+            </button>
+            <button onClick={() => handleGameModeSetting(GameMode.Reverse)}>
+              {gameModeToDisplay(GameMode.Reverse)}
+            </button>
+            <button onClick={() => handleGameModeSetting(GameMode.Memory)}>
+              {gameModeToDisplay(GameMode.Memory)}
+            </button>
+            <button onClick={() => handleGameModeSetting(GameMode.Reaction)}>
+              {gameModeToDisplay(GameMode.Reaction)}
+            </button> */}
+          </div>
         </div>
       </div>
     </>

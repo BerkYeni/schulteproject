@@ -15,6 +15,9 @@ import {
   Tile,
 } from "./interfaces";
 import {
+  findLastPlayedRecord,
+  findPersonalBestRecord,
+  findSettingSpecificMatches,
   gameModeToDisplay,
   gameStateToChronometerState,
   gridSizeToArray,
@@ -63,7 +66,7 @@ const App = () => {
   // >();
   const [hidePanels, setHidePanels] = useState<boolean>(false);
   const [gameMode, setGameMode] = useState<GameMode>(GameMode.Vanilla);
-  const [gridSize, setGridSize] = useState<GridSize>(GridSize.Size3x3);
+  const [gridSize, setGridSize] = useState<GridSize>(GridSize.Size4x4);
 
   // TODO: come back to this
   const resetMatches = () => setMatches([]);
@@ -257,20 +260,14 @@ const App = () => {
     localStorage.setItem(matchesKey, JSON.stringify(matches));
   }, [matches]);
 
-  let lastPlayedRecord;
-  let personalBestRecord;
-  if (matches.length) {
-    lastPlayedRecord = matches.reduce((previousMatch, currentMatch) =>
-      previousMatch.startTime.getTime() > currentMatch.startTime.getTime()
-        ? previousMatch
-        : currentMatch
-    );
-    personalBestRecord = matches.reduce((previousMatch, currentMatch) =>
-      previousMatch.durationInMilliseconds < currentMatch.durationInMilliseconds
-        ? previousMatch
-        : currentMatch
-    );
-  }
+  const settingSpecificMatches = findSettingSpecificMatches(
+    matches,
+    gridSize,
+    gameMode
+  );
+
+  const lastPlayedRecord = findLastPlayedRecord(settingSpecificMatches);
+  const personalBestRecord = findPersonalBestRecord(settingSpecificMatches);
 
   return (
     <div className="App">
@@ -283,6 +280,7 @@ const App = () => {
         hidden={hidePanels}
         changeGameMode={changeGameMode}
       />
+
       <Statistics
         hidden={hidePanels}
         chronometerState={gameStateToChronometerState(table.state)}
@@ -295,6 +293,7 @@ const App = () => {
         }}
         onResetMatches={resetMatches}
       />
+
       <div className="tableContainer">
         <SchulteTable
           gameState={table.state}

@@ -1,14 +1,6 @@
-import React, { FC, useContext, useState } from "react";
-import {
-  findLastPlayed,
-  findPersonalBestRecord,
-  findSettingSpecificMatches,
-  formatMatchDuration,
-  gameModeToDisplay,
-  gridSizeToDisplay,
-} from "../utils";
-import { GridSize, MatchRecord, matchesInfoToDisplay } from "../interfaces";
-import { Match } from "@testing-library/react";
+import React, { FC } from "react";
+import { formatMatchDuration } from "../utils";
+import { matchesInfoToDisplay } from "../interfaces";
 
 interface MatchesInfoProps {
   onResetMatches: () => void;

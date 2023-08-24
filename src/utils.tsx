@@ -60,7 +60,14 @@ export const numbersFromTiles = (tiles: Tile[]) =>
 
 export const last = <T,>(arr: T[]): T | undefined => arr[arr.length - 1];
 
-export const findLastPlayed = (matches: MatchRecord[]) => last(matches);
+export const findLastPlayedRecord = (matches: MatchRecord[]) =>
+  matches.length
+    ? matches.reduce((previousMatch, currentMatch) =>
+        previousMatch.startTime.getTime() > currentMatch.startTime.getTime()
+          ? previousMatch
+          : currentMatch
+      )
+    : undefined;
 
 export const findPersonalBestRecord = (matches: MatchRecord[]) =>
   matches.length
