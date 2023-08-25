@@ -19,15 +19,12 @@ const ControlPanel: FC<ControlPanelProps> = (props) => {
     onHidePanels,
     onExposePanels,
     hidden,
-    changeGameMode,
     onGridSizeChange,
     onStart,
     onRestart,
   } = props;
 
-  const gridSizeEntries = Object.entries(GridSize).filter(
-    (entry) => !isNaN(Number(entry[1]))
-  );
+  const gridSizes = [GridSize.Size3x3, GridSize.Size4x4, GridSize.Size5x5];
 
   return (
     <>
@@ -63,7 +60,11 @@ const ControlPanel: FC<ControlPanelProps> = (props) => {
 
         <div className="gameSettings">
           <div className="gridSetting">
-            {gridSizeEntries.map()}
+            {gridSizes.map((size) => (
+              <button onClick={() => onGridSizeChange(size)}>
+                {gridSizeToDisplay(size)}
+              </button>
+            ))}
 
             {/* <button onClick={() => handleGridSizeSetting(GridSize.Size3x3)}>
               {gridSizeToDisplay(GridSize.Size3x3)}

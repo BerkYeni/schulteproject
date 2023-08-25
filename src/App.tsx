@@ -66,7 +66,7 @@ const App = () => {
   // >();
   const [hidePanels, setHidePanels] = useState<boolean>(false);
   const [gameMode, setGameMode] = useState<GameMode>(GameMode.Vanilla);
-  const [gridSize, setGridSize] = useState<GridSize>(GridSize.Size4x4);
+  // const [gridSize, setGridSize] = useState<GridSize>(GridSize.Size4x4);
 
   // TODO: come back to this
   const resetMatches = () => setMatches([]);
@@ -80,7 +80,7 @@ const App = () => {
   //   Math.min(...gridSizeToArray(gridSize))
   // );
 
-  // TODO: convert this to something else, make roundStartTimeStamp a Date.
+  // TODO: convert this to something else
   const matchRecordReducer = (
     roundStartTimestampState: null | Date,
     matchRecordAction: MatchRecordAction
@@ -101,7 +101,7 @@ const App = () => {
             durationInMilliseconds:
               new Date().getTime() - roundStartTimestampState.getTime(),
             gameMode: gameMode,
-            gridSize: gridSize,
+            gridSize: matchRecordAction.tableSettings.gridSize,
             startTime: roundStartTimestampState,
           },
         ]);
@@ -116,13 +116,15 @@ const App = () => {
     null
   );
 
-  const initializeTableState = (gridSize: GridSize): Table => {
+  const initializeTableState = (): Table => {
+    const gridSize = GridSize.Size4x4;
     const tiles = tileArray(gridSize);
     const expectedNumber = Math.min(...numbersFromTiles(tiles));
     return {
       tiles: tiles,
       expectedNumber: expectedNumber,
       state: "NotStarted",
+      settings: { direction: "Ascending", gridSize: gridSize },
     };
   };
 
@@ -136,6 +138,16 @@ const App = () => {
         shuffleInPlace(tiles);
         matchRecordDispatch({ type: "Mark" });
         return { ...tableState, state: "Playing", tiles: tiles };
+
+      case "ChangeGridSize":
+        if (state !== "NotStarted") {
+          break;
+        }
+        return {
+          ...tableState,
+          tiles: tileArray(tableAction.gridSize),
+          settings: { ...tableState.settings, gridSize: tableAction.gridSize },
+        };
 
       case "Restart":
         if (state !== "Completed") {
@@ -160,7 +172,10 @@ const App = () => {
         // win condition
         // if (expectedNumber === Math.max(...tiles)) {
         if (tiles.every((tile) => tile.checked)) {
-          matchRecordDispatch({ type: "SaveRecord" });
+          matchRecordDispatch({
+            type: "SaveRecord",
+            tableSettings: table.settings,
+          });
           return {
             ...tableState,
             state: "Completed",
@@ -190,7 +205,7 @@ const App = () => {
 
   const [table, tableDispatch] = useReducer(
     tableReducer,
-    initializeTableState(gridSize)
+    initializeTableState()
   );
 
   // const resetExpectedNumber = (): void => {
@@ -255,6 +270,11 @@ const App = () => {
     setGameMode(gameMode);
   };
 
+  const changeGridSize = (gridSize: GridSize): void => {
+    // setGridSize(gridSize);
+    tableDispatch({ type: "ChangeGridSize", gridSize: gridSize });
+  };
+
   // i can get rid of this
   useEffect(() => {
     localStorage.setItem(matchesKey, JSON.stringify(matches));
@@ -262,7 +282,7 @@ const App = () => {
 
   const settingSpecificMatches = findSettingSpecificMatches(
     matches,
-    gridSize,
+    table.settings.gridSize,
     gameMode
   );
 
@@ -278,6 +298,7 @@ const App = () => {
         onExposePanels={() => setHidePanels(false)}
         onHidePanels={() => setHidePanels(true)}
         hidden={hidePanels}
+        onGridSizeChange={changeGridSize}
         changeGameMode={changeGameMode}
       />
 
@@ -289,7 +310,7 @@ const App = () => {
           personalBestRecord: personalBestRecord,
           recordCategoryToDisplay: `${gameModeToDisplay(
             gameMode
-          )} ${gridSizeToDisplay(gridSize)}`,
+          )} ${gridSizeToDisplay(table.settings.gridSize)}`,
         }}
         onResetMatches={resetMatches}
       />
@@ -298,7 +319,7 @@ const App = () => {
         <SchulteTable
           gameState={table.state}
           tiles={table.tiles}
-          gridSize={gridSize}
+          gridSize={table.settings.gridSize}
           onStart={() => tableDispatch({ type: "Start" })}
           onRestart={() => tableDispatch({ type: "Restart" })}
           onNumberInput={(inputtedNumber: number) =>

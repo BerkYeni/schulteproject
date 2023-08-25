@@ -11,10 +11,18 @@ export interface Tile {
   checked: boolean;
 }
 
+export type TableDirection = "Ascending" | "Descending";
+
+export interface TableSettings {
+  gridSize: GridSize;
+  direction: TableDirection;
+}
+
 export interface Table {
   state: GameState;
   tiles: Tile[];
   expectedNumber: number;
+  settings: TableSettings;
 }
 
 // TODO: make base action state
@@ -32,10 +40,16 @@ export interface RestartGameAction {
   type: "Restart";
 }
 
+export interface ChangeGridSizeAction {
+  type: "ChangeGridSize";
+  gridSize: GridSize;
+}
+
 export type TableAction =
   | InputNumberAction
   | StartGameAction
-  | RestartGameAction;
+  | RestartGameAction
+  | ChangeGridSizeAction;
 
 export interface MarkStartAction {
   type: "Mark";
@@ -43,6 +57,7 @@ export interface MarkStartAction {
 
 export interface SaveRecordAction {
   type: "SaveRecord";
+  tableSettings: TableSettings;
 }
 
 export type MatchRecordAction = MarkStartAction | SaveRecordAction;
