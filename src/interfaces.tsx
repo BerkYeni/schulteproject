@@ -67,6 +67,7 @@ export interface MatchRecord {
   durationInMilliseconds: number;
   gameMode: GameMode;
   startTime: Date;
+  direction: TableDirection;
 }
 
 export enum GameMode {

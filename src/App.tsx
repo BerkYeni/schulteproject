@@ -61,24 +61,11 @@ const App = () => {
   const [matches, setMatches] = useState<MatchRecord[]>(() =>
     getMatchesFromLocalStorage(matchesKey)
   );
-  // const [roundStartTimestamp, setRoundStartTimestamp] = useState<
-  //   number | undefined
-  // >();
   const [hidePanels, setHidePanels] = useState<boolean>(false);
   const [gameMode, setGameMode] = useState<GameMode>(GameMode.Vanilla);
-  // const [gridSize, setGridSize] = useState<GridSize>(GridSize.Size4x4);
 
   // TODO: come back to this
   const resetMatches = () => setMatches([]);
-
-  // // direction
-  // const [gameState, setGameState] = useState<GameState>("NotStarted");
-  // const [tiles, setNumbers] = useState<number[] | undefined>();
-  // // don't know if i need grid size
-  // const [gridSize, setGridSize] = useState<GridSize>(GridSize.Size4x4);
-  // const [expectedNumber, setExpectedNumber] = useState<number>(
-  //   Math.min(...gridSizeToArray(gridSize))
-  // );
 
   // TODO: convert this to something else
   const matchRecordReducer = (
@@ -103,6 +90,7 @@ const App = () => {
             gameMode: gameMode,
             gridSize: matchRecordAction.tableSettings.gridSize,
             startTime: roundStartTimestampState,
+            direction: matchRecordAction.tableSettings.direction,
           },
         ]);
         return null;
@@ -170,11 +158,10 @@ const App = () => {
           break;
         }
         // win condition
-        // if (expectedNumber === Math.max(...tiles)) {
         if (tiles.every((tile) => tile.checked)) {
           matchRecordDispatch({
             type: "SaveRecord",
-            tableSettings: table.settings,
+            tableSettings: tableState.settings,
           });
           return {
             ...tableState,
@@ -207,64 +194,6 @@ const App = () => {
     tableReducer,
     initializeTableState()
   );
-
-  // const resetExpectedNumber = (): void => {
-  //   // setExpectedNumber(Math.min(...gridSizeToArray(gridSize)));
-  //   const orderedNumbers = gridSizeToArray(gridSize);
-  //   switch (gameMode) {
-  //     case GameMode.Vanilla:
-  //     case GameMode.Reaction:
-  //     case GameMode.Memory:
-  //       setExpectedNumber(Math.min(...orderedNumbers));
-  //       break;
-  //     case GameMode.Reverse:
-  //       setExpectedNumber(Math.max(...orderedNumbers));
-  //       console.log(expectedNumber);
-  //       break;
-  //   }
-  // };
-
-  // const shuffleTable = (): void =>
-  //   setNumbers(shuffleInPlace(gridSizeToArray(gridSize)));
-
-  // const resetGame = (): void => {
-  //   resetExpectedNumber();
-  // };
-
-  // const startGame = (): void => {
-  //   resetGame();
-  //   if (gameMode !== GameMode.Memory) {
-  //     shuffleTable();
-  //   }
-  //   setGameState("Playing");
-  //   setRoundStartTimestamp(new Date().getTime());
-  // };
-
-  // const endGame = (): void => {
-  //   setGameState("Completed");
-  //   if (!roundStartTimestamp)
-  //     throw new Error("Round start time can't be undefined.");
-  //   const temporaryRoundTime = new Date().getTime() - roundStartTimestamp;
-  //   // setCurrentRoundTime(temporaryRoundTime);
-  //   const record: MatchRecord = {
-  //     durationInMilliseconds: temporaryRoundTime,
-  //     gridSize: gridSize,
-  //     gameMode: gameMode,
-  //   };
-  //   setMatches((previousMatches) => [...previousMatches, record]);
-  // };
-
-  // const handleStart = (): void => {
-  //   if (gameMode === GameMode.Memory) {
-  //     shuffleTable();
-  //     setGameState("Countdown");
-  //     setTimeout(() => {
-  //       startGame();
-  //     }, 3000);
-  //     return;
-  //   }
-  //   startGame();
-  // };
 
   const changeGameMode = (gameMode: GameMode): void => {
     setGameMode(gameMode);
