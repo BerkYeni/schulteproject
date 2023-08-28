@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { GameMode, GameState, GridSize } from "../interfaces";
-import { gridSizeToDisplay } from "../utils";
+import { gameModeToDisplay, gridSizeToDisplay } from "../utils";
 
 interface ControlPanelProps {
   gameState: GameState;
@@ -11,6 +11,7 @@ interface ControlPanelProps {
   onStart: () => void;
   onRestart: () => void;
   onGridSizeChange: (gridSize: GridSize) => void;
+  onGameModeChange: (gameMode: GameMode) => void;
 }
 
 const ControlPanel: FC<ControlPanelProps> = (props) => {
@@ -22,9 +23,11 @@ const ControlPanel: FC<ControlPanelProps> = (props) => {
     onGridSizeChange,
     onStart,
     onRestart,
+    onGameModeChange,
   } = props;
 
   const gridSizes = [GridSize.Size3x3, GridSize.Size4x4, GridSize.Size5x5];
+  const gameModes = [GameMode.Vanilla, GameMode.Reverse];
 
   return (
     <>
@@ -65,8 +68,17 @@ const ControlPanel: FC<ControlPanelProps> = (props) => {
                 {gridSizeToDisplay(size)}
               </button>
             ))}
+          </div>
 
-            {/* <button onClick={() => handleGridSizeSetting(GridSize.Size3x3)}>
+          <div className="GameModeetting">
+            {gameModes.map((mode) => (
+              <button onClick={() => onGameModeChange(mode)}>
+                {gameModeToDisplay(mode)}
+              </button>
+            ))}
+          </div>
+
+          {/* <button onClick={() => handleGridSizeSetting(GridSize.Size3x3)}>
               {gridSizeToDisplay(GridSize.Size3x3)}
             </button>
             <button onClick={() => handleGridSizeSetting(GridSize.Size4x4)}>
@@ -90,7 +102,7 @@ const ControlPanel: FC<ControlPanelProps> = (props) => {
             <button onClick={() => handleGameModeSetting(GameMode.Reaction)}>
               {gameModeToDisplay(GameMode.Reaction)}
             </button> */}
-          </div>
+          {/* </div> */}
         </div>
       </div>
     </>
