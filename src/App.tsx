@@ -38,6 +38,7 @@ import ReactionSchulteTable from "./components/ReactionSchulteTable";
 
 // TODO: fix being able to change game mode while the game is ongoing
 // TODO: add direction and impl
+// TODO: adjust css for mobile
 
 // misc: add a "linear" gamemode, where numbers are in a 1x16 grid for example.
 // misc: memory game modes animation is flawed in many ways, meybe revisit.
