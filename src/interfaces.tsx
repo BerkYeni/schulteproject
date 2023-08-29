@@ -1,3 +1,5 @@
+import React, { ReactNode } from "react";
+
 export type GameState = "NotStarted" | "Countdown" | "Playing" | "Completed";
 
 export enum GridSize {
@@ -45,11 +47,17 @@ export interface ChangeGridSizeAction {
   gridSize: GridSize;
 }
 
+export interface ChangeDirectionAction {
+  type: "ChangeDirection";
+  gridSize: TableDirection;
+}
+
 export type TableAction =
   | InputNumberAction
   | StartGameAction
   | RestartGameAction
-  | ChangeGridSizeAction;
+  | ChangeGridSizeAction
+  | ChangeDirectionAction;
 
 export interface MarkStartAction {
   type: "Mark";
@@ -93,3 +101,9 @@ export interface matchesInfoToDisplay {
   personalBestRecord: MatchRecord | undefined;
   lastPlayedRecord: MatchRecord | undefined;
 }
+
+// export interface GameProfile {
+//   reducer: (tableState: Table, tableAction: TableAction) => Table;
+//   component: React.FC<any>;
+//   // component: ReactNode;
+// }

@@ -1,4 +1,10 @@
-import React, { createContext, useEffect, useReducer, useState } from "react";
+import React, {
+  ReactNode,
+  createContext,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
 import "./App.css";
 import SchulteTable from "./components/SchulteTable";
 import ControlPanel from "./components/ControlPanel";
@@ -31,6 +37,7 @@ import VanillaSchulteTable from "./components/VanillaSchulteTable";
 import ReactionSchulteTable from "./components/ReactionSchulteTable";
 
 // TODO: fix being able to change game mode while the game is ongoing
+// TODO: add direction and impl
 
 // misc: add a "linear" gamemode, where numbers are in a 1x16 grid for example.
 // misc: memory game modes animation is flawed in many ways, meybe revisit.
@@ -197,91 +204,6 @@ const App = () => {
     return tableState;
   };
 
-  const reverseTableReducer = (
-    tableState: Table,
-    tableAction: TableAction
-  ): Table => {
-    const { expectedNumber, tiles, state } = tableState;
-    switch (tableAction.type) {
-      case "Start":
-        if (state !== "NotStarted") {
-          break;
-        }
-        shuffleInPlace(tiles);
-        matchRecordDispatch({ type: "Mark" });
-        const newExpectedNumber = Math.max(
-          ...tableState.tiles.map((tile) => tile.value)
-        );
-        return {
-          ...tableState,
-          state: "Playing",
-          tiles: tiles,
-          expectedNumber: newExpectedNumber,
-        };
-
-      case "ChangeGridSize":
-        if (state !== "NotStarted") {
-          break;
-        }
-        return {
-          ...tableState,
-          tiles: tileArray(tableAction.gridSize),
-          settings: { ...tableState.settings, gridSize: tableAction.gridSize },
-        };
-
-      case "Restart":
-        if (state !== "Completed") {
-          break;
-        }
-        shuffleInPlace(tiles);
-        matchRecordDispatch({ type: "Mark" });
-        return {
-          ...tableState,
-          tiles: tiles.map((tile) => ({ ...tile, checked: false })),
-          state: "Playing",
-          expectedNumber: Math.max(...numbersFromTiles(tiles)),
-        };
-
-      case "InputNumber":
-        if (state !== "Playing") {
-          break;
-        }
-        if (tableAction.inputtedNumber !== expectedNumber) {
-          break;
-        }
-        // win condition
-        if (tiles.every((tile) => tile.checked)) {
-          matchRecordDispatch({
-            type: "SaveRecord",
-            tableSettings: tableState.settings,
-          });
-          return {
-            ...tableState,
-            state: "Completed",
-            expectedNumber: expectedNumber - 1,
-          };
-        }
-        // increment expected number when inputted correct number
-        // make the corresponding tile checked
-        const tile = tiles.find(
-          (tile) => tile.value === tableAction.inputtedNumber
-        );
-        if (!tile)
-          throw new Error("Failed to find inputted number, tile value match.");
-        tile.checked = true;
-
-        return {
-          ...tableState,
-          expectedNumber: expectedNumber - 1,
-        };
-
-      default:
-        throw new Error("Unexpected table action.");
-    }
-
-    return tableState;
-  };
-
   const reactionTableReducer = (
     tableState: Table,
     tableAction: TableAction
@@ -359,14 +281,121 @@ const App = () => {
     return tableState;
   };
 
+  // const gameModeToGameProfile = (gameMode: GameMode): GameProfile => {
+  //   const component = propsGivenSchulteTables(gameMode);
+
+  //   switch (gameMode) {
+  //     case GameMode.Vanilla:
+  //       return { reducer: vanillaTableReducer, component: component };
+
+  //     case GameMode.Reaction:
+  //       return {
+  //         reducer: reactionTableReducer,
+  //         component: component,
+  //       };
+
+  //     default:
+  //       throw new Error("Unexpected gamemode.");
+  //   }
+  // };
+
+  // const gameProfile = gameModeToGameProfile(gameMode);
+
+  const gameModeToTableReducer = (gameMode: GameMode) => {
+    switch (gameMode) {
+      case GameMode.Vanilla:
+        return vanillaTableReducer;
+      case GameMode.Reaction:
+        return reactionTableReducer;
+      default:
+        throw new Error("Unexpected game mode.");
+    }
+  };
+
   const [table, tableDispatch] = useReducer(
-    gameMode === GameMode.Vanilla
-      ? vanillaTableReducer
-      : gameMode === GameMode.Reaction
-      ? reactionTableReducer
-      : reverseTableReducer,
+    gameModeToTableReducer(gameMode),
     initializeTableState()
   );
+
+  const renderGameModeTable = (gameMode: GameMode) => {
+    switch (gameMode) {
+      case GameMode.Vanilla:
+        return (
+          <VanillaSchulteTable
+            gameState={table.state}
+            tiles={table.tiles}
+            gridSize={table.settings.gridSize}
+            onStart={() => tableDispatch({ type: "Start" })}
+            onRestart={() => tableDispatch({ type: "Restart" })}
+            onNumberInput={(inputtedNumber: number) =>
+              tableDispatch({
+                type: "InputNumber",
+                inputtedNumber: inputtedNumber,
+              })
+            }
+          />
+        );
+      case GameMode.Reaction:
+        return (
+          <ReactionSchulteTable
+            gameState={table.state}
+            tiles={table.tiles}
+            gridSize={table.settings.gridSize}
+            onStart={() => tableDispatch({ type: "Start" })}
+            onRestart={() => tableDispatch({ type: "Restart" })}
+            onNumberInput={(inputtedNumber: number) =>
+              tableDispatch({
+                type: "InputNumber",
+                inputtedNumber: inputtedNumber,
+              })
+            }
+            expectedNumber={table.expectedNumber}
+          />
+        );
+    }
+  };
+
+  // const propsGivenSchulteTables = (gameMode: GameMode): ReactNode => {
+  //   switch (gameMode) {
+  //     case GameMode.Vanilla:
+  //       return (
+  //         <VanillaSchulteTable
+  //           gameState={table.state}
+  //           tiles={table.tiles}
+  //           gridSize={table.settings.gridSize}
+  //           onStart={() => tableDispatch({ type: "Start" })}
+  //           onRestart={() => tableDispatch({ type: "Restart" })}
+  //           onNumberInput={(inputtedNumber: number) =>
+  //             tableDispatch({
+  //               type: "InputNumber",
+  //               inputtedNumber: inputtedNumber,
+  //             })
+  //           }
+  //         />
+  //       );
+
+  //     case GameMode.Reaction:
+  //       return (
+  //         <ReactionSchulteTable
+  //           gameState={table.state}
+  //           tiles={table.tiles}
+  //           gridSize={table.settings.gridSize}
+  //           onStart={() => tableDispatch({ type: "Start" })}
+  //           onRestart={() => tableDispatch({ type: "Restart" })}
+  //           onNumberInput={(inputtedNumber: number) =>
+  //             tableDispatch({
+  //               type: "InputNumber",
+  //               inputtedNumber: inputtedNumber,
+  //             })
+  //           }
+  //           expectedNumber={table.expectedNumber}
+  //         />
+  //       );
+
+  //     default:
+  //       throw new Error("Unexpected game mode.");
+  //   }
+  // };
 
   const changeGameMode = (gameMode: GameMode) => {
     if (table.state !== "NotStarted") {
@@ -422,7 +451,8 @@ const App = () => {
       />
 
       <div className="tableContainer">
-        <ReactionSchulteTable
+        {renderGameModeTable(gameMode)}
+        {/* <ReactionSchulteTable
           gameState={table.state}
           tiles={table.tiles}
           gridSize={table.settings.gridSize}
@@ -435,7 +465,7 @@ const App = () => {
             })
           }
           expectedNumber={table.expectedNumber}
-        />
+        /> */}
       </div>
     </div>
   );
