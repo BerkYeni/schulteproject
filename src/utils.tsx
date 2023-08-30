@@ -4,6 +4,7 @@ import {
   GameState,
   GridSize,
   MatchRecord,
+  TableDirection,
   Tile,
 } from "./interfaces";
 
@@ -49,6 +50,13 @@ const gridSizeToDisplayLookUp: { [key in GridSize]: string } = {
 };
 export const gridSizeToDisplay = (gridSize: GridSize) =>
   gridSizeToDisplayLookUp[gridSize];
+
+const directionToDisplayLookUp: { [key in TableDirection]: string } = {
+  Ascending: "Ascending",
+  Descending: "Descending",
+};
+export const directionToDisplay = (direction: TableDirection) =>
+  directionToDisplayLookUp[direction];
 
 export const tileArray = (gridSize: GridSize) =>
   gridSizeToArray(gridSize).map(
@@ -107,3 +115,9 @@ const gameStateToChronometerStateLookup: {
 };
 export const gameStateToChronometerState = (gameState: GameState) =>
   gameStateToChronometerStateLookup[gameState];
+
+export const smallestExpectedNumber = (tiles: Tile[]): number =>
+  Math.min(...numbersFromTiles(tiles));
+
+export const highestExpectedNumber = (tiles: Tile[]): number =>
+  Math.max(...numbersFromTiles(tiles));

@@ -49,7 +49,7 @@ export interface ChangeGridSizeAction {
 
 export interface ChangeDirectionAction {
   type: "ChangeDirection";
-  gridSize: TableDirection;
+  direction: TableDirection;
 }
 
 export type TableAction =

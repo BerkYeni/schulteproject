@@ -18,6 +18,7 @@ import {
   StartGameAction,
   Table,
   TableAction,
+  TableDirection,
   Tile,
 } from "./interfaces";
 import {
@@ -28,17 +29,22 @@ import {
   gameStateToChronometerState,
   gridSizeToArray,
   gridSizeToDisplay,
+  highestExpectedNumber,
   last,
   numbersFromTiles,
   shuffleInPlace,
+  smallestExpectedNumber,
   tileArray,
 } from "./utils";
 import VanillaSchulteTable from "./components/VanillaSchulteTable";
 import ReactionSchulteTable from "./components/ReactionSchulteTable";
 
-// TODO: fix being able to change game mode while the game is ongoing
-// TODO: add direction and impl
-// TODO: adjust css for mobile
+// TODO: fix being able to change game mode while the game is ongoing.
+// TODO: add direction and impl.
+// TODO: adjust css for mobile.
+// TODO: add direction to mathecs info.
+// TODO: consider getting rid of different reducers and hook them up
+// with the vanilla reducer since all of them have the same logic.
 
 // misc: add a "linear" gamemode, where numbers are in a 1x16 grid for example.
 // misc: memory game modes animation is flawed in many ways, meybe revisit.
@@ -119,7 +125,7 @@ const App = () => {
   const initializeTableState = (): Table => {
     const gridSize = GridSize.Size4x4;
     const tiles = tileArray(gridSize);
-    const expectedNumber = Math.min(...numbersFromTiles(tiles));
+    const expectedNumber = smallestExpectedNumber(tiles);
     return {
       tiles: tiles,
       expectedNumber: expectedNumber,
@@ -139,8 +145,18 @@ const App = () => {
           break;
         }
         shuffleInPlace(tiles);
+        // set expected number according to direction
+        const initialExpectedNumber =
+          tableState.settings.direction === "Ascending"
+            ? smallestExpectedNumber(tiles)
+            : highestExpectedNumber(tiles);
         matchRecordDispatch({ type: "Mark" });
-        return { ...tableState, state: "Playing", tiles: tiles };
+        return {
+          ...tableState,
+          state: "Playing",
+          tiles: tiles,
+          expectedNumber: initialExpectedNumber,
+        };
 
       case "ChangeGridSize":
         if (state !== "NotStarted") {
@@ -150,6 +166,18 @@ const App = () => {
           ...tableState,
           tiles: tileArray(tableAction.gridSize),
           settings: { ...tableState.settings, gridSize: tableAction.gridSize },
+        };
+
+      case "ChangeDirection":
+        if (state !== "NotStarted") {
+          break;
+        }
+        return {
+          ...tableState,
+          settings: {
+            ...tableState.settings,
+            direction: tableAction.direction,
+          },
         };
 
       case "Restart":
@@ -184,7 +212,8 @@ const App = () => {
             expectedNumber: expectedNumber + 1,
           };
         }
-        // increment expected number when inputted correct number
+        // increment or decrement expected number when inputted correct number
+        // based on direction
         // make the corresponding tile checked
         const tile = tiles.find(
           (tile) => tile.value === tableAction.inputtedNumber
@@ -193,9 +222,13 @@ const App = () => {
           throw new Error("Failed to find inputted number, tile value match.");
         tile.checked = true;
 
+        const newExpectedNumber =
+          tableState.settings.direction === "Ascending"
+            ? expectedNumber + 1
+            : expectedNumber - 1;
         return {
           ...tableState,
-          expectedNumber: expectedNumber + 1,
+          expectedNumber: newExpectedNumber,
         };
 
       default:
@@ -216,8 +249,18 @@ const App = () => {
           break;
         }
         shuffleInPlace(tiles);
+        // set expected number according to direction
+        const initialExpectedNumber =
+          tableState.settings.direction === "Ascending"
+            ? smallestExpectedNumber(tiles)
+            : highestExpectedNumber(tiles);
         matchRecordDispatch({ type: "Mark" });
-        return { ...tableState, state: "Playing", tiles: tiles };
+        return {
+          ...tableState,
+          state: "Playing",
+          tiles: tiles,
+          expectedNumber: initialExpectedNumber,
+        };
 
       case "ChangeGridSize":
         if (state !== "NotStarted") {
@@ -227,6 +270,18 @@ const App = () => {
           ...tableState,
           tiles: tileArray(tableAction.gridSize),
           settings: { ...tableState.settings, gridSize: tableAction.gridSize },
+        };
+
+      case "ChangeDirection":
+        if (state !== "NotStarted") {
+          break;
+        }
+        return {
+          ...tableState,
+          settings: {
+            ...tableState.settings,
+            direction: tableAction.direction,
+          },
         };
 
       case "Restart":
@@ -270,9 +325,13 @@ const App = () => {
           throw new Error("Failed to find inputted number, tile value match.");
         tile.checked = true;
 
+        const newExpectedNumber =
+          tableState.settings.direction === "Ascending"
+            ? expectedNumber + 1
+            : expectedNumber - 1;
         return {
           ...tableState,
-          expectedNumber: expectedNumber + 1,
+          expectedNumber: newExpectedNumber,
         };
 
       default:
@@ -410,6 +469,10 @@ const App = () => {
     tableDispatch({ type: "ChangeGridSize", gridSize: gridSize });
   };
 
+  const changeDirection = (direction: TableDirection): void => {
+    tableDispatch({ type: "ChangeDirection", direction: direction });
+  };
+
   // i can get rid of this
   useEffect(() => {
     localStorage.setItem(matchesKey, JSON.stringify(matches));
@@ -434,8 +497,8 @@ const App = () => {
         onHidePanels={() => setHidePanels(true)}
         hidden={hidePanels}
         onGridSizeChange={changeGridSize}
-        changeGameMode={changeGameMode}
         onGameModeChange={changeGameMode}
+        onDirectionChange={changeDirection}
       />
 
       <Statistics

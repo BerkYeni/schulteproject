@@ -1,17 +1,21 @@
 import React, { FC } from "react";
-import { GameMode, GameState, GridSize } from "../interfaces";
-import { gameModeToDisplay, gridSizeToDisplay } from "../utils";
+import { GameMode, GameState, GridSize, TableDirection } from "../interfaces";
+import {
+  directionToDisplay,
+  gameModeToDisplay,
+  gridSizeToDisplay,
+} from "../utils";
 
 interface ControlPanelProps {
   gameState: GameState;
   onHidePanels: () => void;
   onExposePanels: () => void;
   hidden: boolean;
-  changeGameMode: (gameMode: GameMode) => void;
   onStart: () => void;
   onRestart: () => void;
   onGridSizeChange: (gridSize: GridSize) => void;
   onGameModeChange: (gameMode: GameMode) => void;
+  onDirectionChange: (direction: TableDirection) => void;
 }
 
 const ControlPanel: FC<ControlPanelProps> = (props) => {
@@ -24,10 +28,12 @@ const ControlPanel: FC<ControlPanelProps> = (props) => {
     onStart,
     onRestart,
     onGameModeChange,
+    onDirectionChange,
   } = props;
 
   const gridSizes = [GridSize.Size3x3, GridSize.Size4x4, GridSize.Size5x5];
   const gameModes = [GameMode.Vanilla, GameMode.Reaction];
+  const directions: TableDirection[] = ["Ascending", "Descending"];
 
   return (
     <>
@@ -62,7 +68,7 @@ const ControlPanel: FC<ControlPanelProps> = (props) => {
         </div>
 
         <div className="gameSettings">
-          <div className="gridSetting">
+          <div className="gridSettings">
             {gridSizes.map((size) => (
               <button onClick={() => onGridSizeChange(size)}>
                 {gridSizeToDisplay(size)}
@@ -70,10 +76,18 @@ const ControlPanel: FC<ControlPanelProps> = (props) => {
             ))}
           </div>
 
-          <div className="GameModeetting">
+          <div className="gameModeSettings">
             {gameModes.map((mode) => (
               <button onClick={() => onGameModeChange(mode)}>
                 {gameModeToDisplay(mode)}
+              </button>
+            ))}
+          </div>
+
+          <div className="directionSettings">
+            {directions.map((direction) => (
+              <button onClick={() => onDirectionChange(direction)}>
+                {directionToDisplay(direction)}
               </button>
             ))}
           </div>
