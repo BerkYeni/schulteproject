@@ -38,6 +38,10 @@ export interface StartGameAction {
   type: "Start";
 }
 
+export interface ResetGameAction {
+  type: "Reset";
+}
+
 export interface RestartGameAction {
   type: "Restart";
 }
@@ -55,6 +59,7 @@ export interface ChangeDirectionAction {
 export type TableAction =
   | InputNumberAction
   | StartGameAction
+  | ResetGameAction
   | RestartGameAction
   | ChangeGridSizeAction
   | ChangeDirectionAction;

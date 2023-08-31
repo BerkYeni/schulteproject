@@ -27,11 +27,13 @@ import {
   findSettingSpecificMatches,
   gameModeToDisplay,
   gameStateToChronometerState,
+  getExpectedNumberOfDirection,
   gridSizeToArray,
   gridSizeToDisplay,
   highestExpectedNumber,
   last,
   numbersFromTiles,
+  progressedExpectedNumberWithDirection,
   shuffleInPlace,
   smallestExpectedNumber,
   tileArray,
@@ -40,7 +42,6 @@ import VanillaSchulteTable from "./components/VanillaSchulteTable";
 import ReactionSchulteTable from "./components/ReactionSchulteTable";
 
 // TODO: fix being able to change game mode while the game is ongoing.
-// TODO: add direction and impl.
 // TODO: adjust css for mobile.
 // TODO: add direction to mathecs info.
 // TODO: consider getting rid of different reducers and hook them up
@@ -122,15 +123,19 @@ const App = () => {
     null
   );
 
-  const initializeTableState = (): Table => {
-    const gridSize = GridSize.Size4x4;
+  const initializeTableState = (
+    gridSize: GridSize = GridSize.Size4x4,
+    direction: TableDirection = "Ascending"
+  ): Table => {
+    // const gridSize = GridSize.Size4x4;
     const tiles = tileArray(gridSize);
-    const expectedNumber = smallestExpectedNumber(tiles);
+    // const direction: TableDirection = "Ascending";
+    const expectedNumber = getExpectedNumberOfDirection(direction, tiles);
     return {
       tiles: tiles,
       expectedNumber: expectedNumber,
       state: "NotStarted",
-      settings: { direction: "Ascending", gridSize: gridSize },
+      settings: { direction: direction, gridSize: gridSize },
     };
   };
 
@@ -138,60 +143,47 @@ const App = () => {
     tableState: Table,
     tableAction: TableAction
   ): Table => {
-    const { expectedNumber, tiles, state } = tableState;
+    const { expectedNumber, tiles, state, settings } = tableState;
+    const { direction, gridSize } = settings;
     switch (tableAction.type) {
       case "Start":
         if (state !== "NotStarted") {
           break;
         }
         shuffleInPlace(tiles);
-        // set expected number according to direction
-        const initialExpectedNumber =
-          tableState.settings.direction === "Ascending"
-            ? smallestExpectedNumber(tiles)
-            : highestExpectedNumber(tiles);
         matchRecordDispatch({ type: "Mark" });
         return {
           ...tableState,
           state: "Playing",
           tiles: tiles,
-          expectedNumber: initialExpectedNumber,
         };
 
       case "ChangeGridSize":
-        if (state !== "NotStarted") {
+        if (!(state === "NotStarted" || state === "Completed")) {
           break;
         }
-        return {
-          ...tableState,
-          tiles: tileArray(tableAction.gridSize),
-          settings: { ...tableState.settings, gridSize: tableAction.gridSize },
-        };
+        return initializeTableState(tableAction.gridSize, direction);
 
       case "ChangeDirection":
-        if (state !== "NotStarted") {
+        if (!(state === "NotStarted" || state === "Completed")) {
           break;
         }
-        return {
-          ...tableState,
-          settings: {
-            ...tableState.settings,
-            direction: tableAction.direction,
-          },
-        };
+        return initializeTableState(gridSize, tableAction.direction);
+
+      case "Reset":
+        if (state !== "Completed") {
+          break;
+        }
+        return initializeTableState(gridSize, direction);
 
       case "Restart":
         if (state !== "Completed") {
           break;
         }
-        shuffleInPlace(tiles);
+        const resettedTable = initializeTableState(gridSize, direction);
+        shuffleInPlace(resettedTable.tiles);
         matchRecordDispatch({ type: "Mark" });
-        return {
-          ...tableState,
-          tiles: tiles.map((tile) => ({ ...tile, checked: false })),
-          state: "Playing",
-          expectedNumber: Math.min(...numbersFromTiles(tiles)),
-        };
+        return { ...resettedTable, state: "Playing" };
 
       case "InputNumber":
         if (state !== "Playing") {
@@ -209,7 +201,10 @@ const App = () => {
           return {
             ...tableState,
             state: "Completed",
-            expectedNumber: expectedNumber + 1,
+            expectedNumber: progressedExpectedNumberWithDirection(
+              direction,
+              expectedNumber
+            ),
           };
         }
         // increment or decrement expected number when inputted correct number
@@ -222,113 +217,10 @@ const App = () => {
           throw new Error("Failed to find inputted number, tile value match.");
         tile.checked = true;
 
-        const newExpectedNumber =
-          tableState.settings.direction === "Ascending"
-            ? expectedNumber + 1
-            : expectedNumber - 1;
-        return {
-          ...tableState,
-          expectedNumber: newExpectedNumber,
-        };
-
-      default:
-        throw new Error("Unexpected table action.");
-    }
-
-    return tableState;
-  };
-
-  const reactionTableReducer = (
-    tableState: Table,
-    tableAction: TableAction
-  ): Table => {
-    const { expectedNumber, tiles, state } = tableState;
-    switch (tableAction.type) {
-      case "Start":
-        if (state !== "NotStarted") {
-          break;
-        }
-        shuffleInPlace(tiles);
-        // set expected number according to direction
-        const initialExpectedNumber =
-          tableState.settings.direction === "Ascending"
-            ? smallestExpectedNumber(tiles)
-            : highestExpectedNumber(tiles);
-        matchRecordDispatch({ type: "Mark" });
-        return {
-          ...tableState,
-          state: "Playing",
-          tiles: tiles,
-          expectedNumber: initialExpectedNumber,
-        };
-
-      case "ChangeGridSize":
-        if (state !== "NotStarted") {
-          break;
-        }
-        return {
-          ...tableState,
-          tiles: tileArray(tableAction.gridSize),
-          settings: { ...tableState.settings, gridSize: tableAction.gridSize },
-        };
-
-      case "ChangeDirection":
-        if (state !== "NotStarted") {
-          break;
-        }
-        return {
-          ...tableState,
-          settings: {
-            ...tableState.settings,
-            direction: tableAction.direction,
-          },
-        };
-
-      case "Restart":
-        if (state !== "Completed") {
-          break;
-        }
-        shuffleInPlace(tiles);
-        matchRecordDispatch({ type: "Mark" });
-        return {
-          ...tableState,
-          tiles: tiles.map((tile) => ({ ...tile, checked: false })),
-          state: "Playing",
-          expectedNumber: Math.min(...numbersFromTiles(tiles)),
-        };
-
-      case "InputNumber":
-        if (state !== "Playing") {
-          break;
-        }
-        if (tableAction.inputtedNumber !== expectedNumber) {
-          break;
-        }
-        // win condition
-        if (tiles.every((tile) => tile.checked)) {
-          matchRecordDispatch({
-            type: "SaveRecord",
-            tableSettings: tableState.settings,
-          });
-          return {
-            ...tableState,
-            state: "Completed",
-            expectedNumber: expectedNumber + 1,
-          };
-        }
-        // increment expected number when inputted correct number
-        // make the corresponding tile checked
-        const tile = tiles.find(
-          (tile) => tile.value === tableAction.inputtedNumber
+        const newExpectedNumber = progressedExpectedNumberWithDirection(
+          direction,
+          expectedNumber
         );
-        if (!tile)
-          throw new Error("Failed to find inputted number, tile value match.");
-        tile.checked = true;
-
-        const newExpectedNumber =
-          tableState.settings.direction === "Ascending"
-            ? expectedNumber + 1
-            : expectedNumber - 1;
         return {
           ...tableState,
           expectedNumber: newExpectedNumber,
@@ -340,6 +232,109 @@ const App = () => {
 
     return tableState;
   };
+
+  // const reactionTableReducer = (
+  //   tableState: Table,
+  //   tableAction: TableAction
+  // ): Table => {
+  //   const { expectedNumber, tiles, state } = tableState;
+  //   switch (tableAction.type) {
+  //     case "Start":
+  //       if (state !== "NotStarted") {
+  //         break;
+  //       }
+  //       shuffleInPlace(tiles);
+  //       // set expected number according to direction
+  //       const initialExpectedNumber =
+  //         tableState.settings.direction === "Ascending"
+  //           ? smallestExpectedNumber(tiles)
+  //           : highestExpectedNumber(tiles);
+  //       matchRecordDispatch({ type: "Mark" });
+  //       return {
+  //         ...tableState,
+  //         state: "Playing",
+  //         tiles: tiles,
+  //         expectedNumber: initialExpectedNumber,
+  //       };
+
+  //     case "ChangeGridSize":
+  //       if (state !== "NotStarted") {
+  //         break;
+  //       }
+  //       return {
+  //         ...tableState,
+  //         tiles: tileArray(tableAction.gridSize),
+  //         settings: { ...tableState.settings, gridSize: tableAction.gridSize },
+  //       };
+
+  //     case "ChangeDirection":
+  //       if (state !== "NotStarted") {
+  //         break;
+  //       }
+  //       return {
+  //         ...tableState,
+  //         settings: {
+  //           ...tableState.settings,
+  //           direction: tableAction.direction,
+  //         },
+  //       };
+
+  //     case "Restart":
+  //       if (state !== "Completed") {
+  //         break;
+  //       }
+  //       shuffleInPlace(tiles);
+  //       matchRecordDispatch({ type: "Mark" });
+  //       return {
+  //         ...tableState,
+  //         tiles: tiles.map((tile) => ({ ...tile, checked: false })),
+  //         state: "Playing",
+  //         expectedNumber: Math.min(...numbersFromTiles(tiles)),
+  //       };
+
+  //     case "InputNumber":
+  //       if (state !== "Playing") {
+  //         break;
+  //       }
+  //       if (tableAction.inputtedNumber !== expectedNumber) {
+  //         break;
+  //       }
+  //       // win condition
+  //       if (tiles.every((tile) => tile.checked)) {
+  //         matchRecordDispatch({
+  //           type: "SaveRecord",
+  //           tableSettings: tableState.settings,
+  //         });
+  //         return {
+  //           ...tableState,
+  //           state: "Completed",
+  //           expectedNumber: expectedNumber + 1,
+  //         };
+  //       }
+  //       // increment expected number when inputted correct number
+  //       // make the corresponding tile checked
+  //       const tile = tiles.find(
+  //         (tile) => tile.value === tableAction.inputtedNumber
+  //       );
+  //       if (!tile)
+  //         throw new Error("Failed to find inputted number, tile value match.");
+  //       tile.checked = true;
+
+  //       const newExpectedNumber =
+  //         tableState.settings.direction === "Ascending"
+  //           ? expectedNumber + 1
+  //           : expectedNumber - 1;
+  //       return {
+  //         ...tableState,
+  //         expectedNumber: newExpectedNumber,
+  //       };
+
+  //     default:
+  //       throw new Error("Unexpected table action.");
+  //   }
+
+  //   return tableState;
+  // };
 
   // const gameModeToGameProfile = (gameMode: GameMode): GameProfile => {
   //   const component = propsGivenSchulteTables(gameMode);
@@ -366,7 +361,8 @@ const App = () => {
       case GameMode.Vanilla:
         return vanillaTableReducer;
       case GameMode.Reaction:
-        return reactionTableReducer;
+        return vanillaTableReducer;
+      // return reactionTableReducer;
       default:
         throw new Error("Unexpected game mode.");
     }
@@ -458,10 +454,11 @@ const App = () => {
   // };
 
   const changeGameMode = (gameMode: GameMode) => {
-    if (table.state !== "NotStarted") {
+    if (table.state !== "NotStarted" && table.state !== "Completed") {
       return;
     }
     setGameMode(gameMode);
+    tableDispatch({ type: "Reset" });
   };
 
   const changeGridSize = (gridSize: GridSize): void => {
@@ -481,7 +478,8 @@ const App = () => {
   const settingSpecificMatches = findSettingSpecificMatches(
     matches,
     table.settings.gridSize,
-    gameMode
+    gameMode,
+    table.settings.direction
   );
 
   const lastPlayedRecord = findLastPlayedRecord(settingSpecificMatches);

@@ -90,10 +90,14 @@ export const findPersonalBestRecord = (matches: MatchRecord[]) =>
 export const findSettingSpecificMatches = (
   matches: MatchRecord[],
   gridSize: GridSize,
-  gameMode: GameMode
+  gameMode: GameMode,
+  direction: TableDirection
 ) =>
   matches.filter(
-    (match) => match.gridSize === gridSize && match.gameMode === gameMode
+    (match) =>
+      match.gridSize === gridSize &&
+      match.gameMode === gameMode &&
+      match.direction === direction
   );
 
 const gameModeToDisplayLookUp: { [key in GameMode]: string } = {
@@ -121,3 +125,16 @@ export const smallestExpectedNumber = (tiles: Tile[]): number =>
 
 export const highestExpectedNumber = (tiles: Tile[]): number =>
   Math.max(...numbersFromTiles(tiles));
+
+export const getExpectedNumberOfDirection = (
+  direction: TableDirection,
+  tiles: Tile[]
+) =>
+  direction === "Ascending"
+    ? smallestExpectedNumber(tiles)
+    : highestExpectedNumber(tiles);
+
+export const progressedExpectedNumberWithDirection = (
+  direction: TableDirection,
+  expectedNumber: number
+) => (direction === "Ascending" ? expectedNumber + 1 : expectedNumber - 1);
