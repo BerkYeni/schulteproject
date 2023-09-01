@@ -15,6 +15,7 @@ import {
   GridSize,
   MatchRecord,
   MatchRecordAction,
+  MemoryTableAction,
   StartGameAction,
   Table,
   TableAction,
@@ -233,136 +234,125 @@ const App = () => {
     return tableState;
   };
 
-  // const reactionTableReducer = (
-  //   tableState: Table,
-  //   tableAction: TableAction
-  // ): Table => {
-  //   const { expectedNumber, tiles, state } = tableState;
-  //   switch (tableAction.type) {
-  //     case "Start":
-  //       if (state !== "NotStarted") {
-  //         break;
-  //       }
-  //       shuffleInPlace(tiles);
-  //       // set expected number according to direction
-  //       const initialExpectedNumber =
-  //         tableState.settings.direction === "Ascending"
-  //           ? smallestExpectedNumber(tiles)
-  //           : highestExpectedNumber(tiles);
-  //       matchRecordDispatch({ type: "Mark" });
-  //       return {
-  //         ...tableState,
-  //         state: "Playing",
-  //         tiles: tiles,
-  //         expectedNumber: initialExpectedNumber,
-  //       };
+  const memoryTableReducer = (
+    tableState: Table,
+    tableAction: MemoryTableAction
+  ): Table => {
+    const { expectedNumber, tiles, state, settings } = tableState;
+    const { direction, gridSize } = settings;
+    const countDownDurationInMilliseconds = 3000;
+    switch (tableAction.type) {
+      case "Start":
+        if (state !== "Countdown") {
+          throw new Error(
+            "Start action on memory table reducer when state wasn't countdown."
+          );
+        }
+        // shuffleInPlace(tiles);
+        matchRecordDispatch({ type: "Mark" });
+        return {
+          ...tableState,
+          state: "Playing",
+          tiles: tiles,
+        };
 
-  //     case "ChangeGridSize":
-  //       if (state !== "NotStarted") {
-  //         break;
-  //       }
-  //       return {
-  //         ...tableState,
-  //         tiles: tileArray(tableAction.gridSize),
-  //         settings: { ...tableState.settings, gridSize: tableAction.gridSize },
-  //       };
+      case "StartCountDown":
+        setTimeout(() => {
+          console.log(tableState.state);
+          startGame();
+          console.log(tableState.state);
+        }, countDownDurationInMilliseconds);
+        shuffleInPlace(tiles);
+        return { ...tableState, state: "Countdown" };
 
-  //     case "ChangeDirection":
-  //       if (state !== "NotStarted") {
-  //         break;
-  //       }
-  //       return {
-  //         ...tableState,
-  //         settings: {
-  //           ...tableState.settings,
-  //           direction: tableAction.direction,
-  //         },
-  //       };
+      case "ChangeGridSize":
+        if (!(state === "NotStarted" || state === "Completed")) {
+          break;
+        }
+        return initializeTableState(tableAction.gridSize, direction);
 
-  //     case "Restart":
-  //       if (state !== "Completed") {
-  //         break;
-  //       }
-  //       shuffleInPlace(tiles);
-  //       matchRecordDispatch({ type: "Mark" });
-  //       return {
-  //         ...tableState,
-  //         tiles: tiles.map((tile) => ({ ...tile, checked: false })),
-  //         state: "Playing",
-  //         expectedNumber: Math.min(...numbersFromTiles(tiles)),
-  //       };
+      case "ChangeDirection":
+        if (!(state === "NotStarted" || state === "Completed")) {
+          break;
+        }
+        return initializeTableState(gridSize, tableAction.direction);
 
-  //     case "InputNumber":
-  //       if (state !== "Playing") {
-  //         break;
-  //       }
-  //       if (tableAction.inputtedNumber !== expectedNumber) {
-  //         break;
-  //       }
-  //       // win condition
-  //       if (tiles.every((tile) => tile.checked)) {
-  //         matchRecordDispatch({
-  //           type: "SaveRecord",
-  //           tableSettings: tableState.settings,
-  //         });
-  //         return {
-  //           ...tableState,
-  //           state: "Completed",
-  //           expectedNumber: expectedNumber + 1,
-  //         };
-  //       }
-  //       // increment expected number when inputted correct number
-  //       // make the corresponding tile checked
-  //       const tile = tiles.find(
-  //         (tile) => tile.value === tableAction.inputtedNumber
-  //       );
-  //       if (!tile)
-  //         throw new Error("Failed to find inputted number, tile value match.");
-  //       tile.checked = true;
+      case "Reset":
+        if (state !== "Completed") {
+          break;
+        }
+        return initializeTableState(gridSize, direction);
 
-  //       const newExpectedNumber =
-  //         tableState.settings.direction === "Ascending"
-  //           ? expectedNumber + 1
-  //           : expectedNumber - 1;
-  //       return {
-  //         ...tableState,
-  //         expectedNumber: newExpectedNumber,
-  //       };
+      case "Restart":
+        if (state !== "Completed") {
+          break;
+        }
+        const resettedTable = initializeTableState(gridSize, direction);
+        shuffleInPlace(resettedTable.tiles);
+        matchRecordDispatch({ type: "Mark" });
+        return { ...resettedTable, state: "Playing" };
 
-  //     default:
-  //       throw new Error("Unexpected table action.");
-  //   }
+      case "InputNumber":
+        if (state !== "Playing") {
+          break;
+        }
+        if (tableAction.inputtedNumber !== expectedNumber) {
+          break;
+        }
+        // win condition
+        if (tiles.every((tile) => tile.checked)) {
+          matchRecordDispatch({
+            type: "SaveRecord",
+            tableSettings: tableState.settings,
+          });
+          return {
+            ...tableState,
+            state: "Completed",
+            expectedNumber: progressedExpectedNumberWithDirection(
+              direction,
+              expectedNumber
+            ),
+          };
+        }
+        // increment or decrement expected number when inputted correct number
+        // based on direction
+        // make the corresponding tile checked
+        const tile = tiles.find(
+          (tile) => tile.value === tableAction.inputtedNumber
+        );
+        if (!tile)
+          throw new Error("Failed to find inputted number, tile value match.");
+        tile.checked = true;
 
-  //   return tableState;
-  // };
+        const newExpectedNumber = progressedExpectedNumberWithDirection(
+          direction,
+          expectedNumber
+        );
+        return {
+          ...tableState,
+          expectedNumber: newExpectedNumber,
+        };
 
-  // const gameModeToGameProfile = (gameMode: GameMode): GameProfile => {
-  //   const component = propsGivenSchulteTables(gameMode);
+      default:
+        throw new Error("Unexpected table action.");
+    }
 
-  //   switch (gameMode) {
-  //     case GameMode.Vanilla:
-  //       return { reducer: vanillaTableReducer, component: component };
+    return tableState;
+  };
 
-  //     case GameMode.Reaction:
-  //       return {
-  //         reducer: reactionTableReducer,
-  //         component: component,
-  //       };
-
-  //     default:
-  //       throw new Error("Unexpected gamemode.");
-  //   }
-  // };
-
-  // const gameProfile = gameModeToGameProfile(gameMode);
-
-  const gameModeToTableReducer = (gameMode: GameMode) => {
+  const gameModeToTableReducer = (
+    gameMode: GameMode
+  ):
+    | ((tableState: Table, tableAction: MemoryTableAction) => Table)
+    | ((tableState: Table, tableAction: TableAction) => Table) => {
     switch (gameMode) {
       case GameMode.Vanilla:
-        return vanillaTableReducer;
       case GameMode.Reaction:
         return vanillaTableReducer;
-      // return reactionTableReducer;
+
+      case GameMode.Memory:
+        return memoryTableReducer;
+
       default:
         throw new Error("Unexpected game mode.");
     }
@@ -372,6 +362,10 @@ const App = () => {
     gameModeToTableReducer(gameMode),
     initializeTableState()
   );
+
+  function startGame() {
+    tableDispatch({ type: "Start" });
+  }
 
   const renderGameModeTable = (gameMode: GameMode) => {
     switch (gameMode) {
@@ -391,6 +385,7 @@ const App = () => {
             }
           />
         );
+
       case GameMode.Reaction:
         return (
           <ReactionSchulteTable
@@ -408,50 +403,25 @@ const App = () => {
             expectedNumber={table.expectedNumber}
           />
         );
+
+      case GameMode.Memory:
+        return (
+          <VanillaSchulteTable
+            gameState={table.state}
+            tiles={table.tiles}
+            gridSize={table.settings.gridSize}
+            onStart={() => tableDispatch({ type: "StartCountDown" })}
+            onRestart={() => tableDispatch({ type: "Restart" })}
+            onNumberInput={(inputtedNumber: number) =>
+              tableDispatch({
+                type: "InputNumber",
+                inputtedNumber: inputtedNumber,
+              })
+            }
+          />
+        );
     }
   };
-
-  // const propsGivenSchulteTables = (gameMode: GameMode): ReactNode => {
-  //   switch (gameMode) {
-  //     case GameMode.Vanilla:
-  //       return (
-  //         <VanillaSchulteTable
-  //           gameState={table.state}
-  //           tiles={table.tiles}
-  //           gridSize={table.settings.gridSize}
-  //           onStart={() => tableDispatch({ type: "Start" })}
-  //           onRestart={() => tableDispatch({ type: "Restart" })}
-  //           onNumberInput={(inputtedNumber: number) =>
-  //             tableDispatch({
-  //               type: "InputNumber",
-  //               inputtedNumber: inputtedNumber,
-  //             })
-  //           }
-  //         />
-  //       );
-
-  //     case GameMode.Reaction:
-  //       return (
-  //         <ReactionSchulteTable
-  //           gameState={table.state}
-  //           tiles={table.tiles}
-  //           gridSize={table.settings.gridSize}
-  //           onStart={() => tableDispatch({ type: "Start" })}
-  //           onRestart={() => tableDispatch({ type: "Restart" })}
-  //           onNumberInput={(inputtedNumber: number) =>
-  //             tableDispatch({
-  //               type: "InputNumber",
-  //               inputtedNumber: inputtedNumber,
-  //             })
-  //           }
-  //           expectedNumber={table.expectedNumber}
-  //         />
-  //       );
-
-  //     default:
-  //       throw new Error("Unexpected game mode.");
-  //   }
-  // };
 
   const changeGameMode = (gameMode: GameMode) => {
     if (table.state !== "NotStarted" && table.state !== "Completed") {
@@ -512,23 +482,7 @@ const App = () => {
         onResetMatches={resetMatches}
       />
 
-      <div className="tableContainer">
-        {renderGameModeTable(gameMode)}
-        {/* <ReactionSchulteTable
-          gameState={table.state}
-          tiles={table.tiles}
-          gridSize={table.settings.gridSize}
-          onStart={() => tableDispatch({ type: "Start" })}
-          onRestart={() => tableDispatch({ type: "Restart" })}
-          onNumberInput={(inputtedNumber: number) =>
-            tableDispatch({
-              type: "InputNumber",
-              inputtedNumber: inputtedNumber,
-            })
-          }
-          expectedNumber={table.expectedNumber}
-        /> */}
-      </div>
+      <div className="tableContainer">{renderGameModeTable(gameMode)}</div>
     </div>
   );
 };

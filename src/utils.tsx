@@ -102,7 +102,6 @@ export const findSettingSpecificMatches = (
 
 const gameModeToDisplayLookUp: { [key in GameMode]: string } = {
   [GameMode.Vanilla]: "Vanilla",
-  [GameMode.Reverse]: "Reverse",
   [GameMode.Memory]: "Memory",
   [GameMode.Reaction]: "Reaction",
 };

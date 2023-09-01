@@ -34,6 +34,10 @@ export interface InputNumberAction {
   inputtedNumber: number;
 }
 
+export interface StartCountDownAction {
+  type: "StartCountDown";
+}
+
 export interface StartGameAction {
   type: "Start";
 }
@@ -64,6 +68,15 @@ export type TableAction =
   | ChangeGridSizeAction
   | ChangeDirectionAction;
 
+export type MemoryTableAction =
+  | InputNumberAction
+  | StartCountDownAction
+  | StartGameAction
+  | ResetGameAction
+  | RestartGameAction
+  | ChangeGridSizeAction
+  | ChangeDirectionAction;
+
 export interface MarkStartAction {
   type: "Mark";
 }
@@ -85,7 +98,6 @@ export interface MatchRecord {
 
 export enum GameMode {
   Vanilla,
-  Reverse,
   Memory,
   Reaction,
 }
