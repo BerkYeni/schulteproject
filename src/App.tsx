@@ -15,7 +15,9 @@ import {
   GridSize,
   MatchRecord,
   MatchRecordAction,
+  MemoryTable,
   MemoryTableAction,
+  MemoryTile,
   StartGameAction,
   Table,
   TableAction,
@@ -33,6 +35,7 @@ import {
   gridSizeToDisplay,
   highestExpectedNumber,
   last,
+  memoryTileArray,
   numbersFromTiles,
   progressedExpectedNumberWithDirection,
   shuffleInPlace,
@@ -41,12 +44,14 @@ import {
 } from "./utils";
 import VanillaSchulteTable from "./components/VanillaSchulteTable";
 import ReactionSchulteTable from "./components/ReactionSchulteTable";
+import MemorySchulteTable from "./components/MemorySchulteTable";
 
 // TODO: fix being able to change game mode while the game is ongoing.
 // TODO: adjust css for mobile.
 // TODO: add direction to mathecs info.
 // TODO: consider getting rid of different reducers and hook them up
 // with the vanilla reducer since all of them have the same logic.
+// TODO: change button click to mouse down instead of up
 
 // misc: add a "linear" gamemode, where numbers are in a 1x16 grid for example.
 // misc: memory game modes animation is flawed in many ways, meybe revisit.
@@ -61,6 +66,7 @@ import ReactionSchulteTable from "./components/ReactionSchulteTable";
 // misc: make selected game settings buttons styled differently.
 // misc: make selected game settings styled differently.
 // misc: change mini icon/favicon
+// misc: change background color when panels are hidden
 
 export const matchesKey = "matches";
 const getMatchesFromLocalStorage = (matchesKey: string): MatchRecord[] => {
@@ -234,10 +240,24 @@ const App = () => {
     return tableState;
   };
 
+  const initializeMemoryTableState = (
+    gridSize: GridSize = GridSize.Size4x4,
+    direction: TableDirection = "Ascending"
+  ): MemoryTable => {
+    const tiles = memoryTileArray(gridSize);
+    const expectedNumber = getExpectedNumberOfDirection(direction, tiles);
+    return {
+      tiles: tiles,
+      expectedNumber: expectedNumber,
+      state: "NotStarted",
+      settings: { direction: direction, gridSize: gridSize },
+    };
+  };
+
   const memoryTableReducer = (
-    tableState: Table,
+    tableState: MemoryTable,
     tableAction: MemoryTableAction
-  ): Table => {
+  ): MemoryTable => {
     const { expectedNumber, tiles, state, settings } = tableState;
     const { direction, gridSize } = settings;
     const countDownDurationInMilliseconds = 3000;
@@ -257,37 +277,33 @@ const App = () => {
         };
 
       case "StartCountDown":
-        setTimeout(() => {
-          console.log(tableState.state);
-          startGame();
-          console.log(tableState.state);
-        }, countDownDurationInMilliseconds);
         shuffleInPlace(tiles);
+        // after the countdown ends, start game is called with useEffect
         return { ...tableState, state: "Countdown" };
 
       case "ChangeGridSize":
         if (!(state === "NotStarted" || state === "Completed")) {
           break;
         }
-        return initializeTableState(tableAction.gridSize, direction);
+        return initializeMemoryTableState(tableAction.gridSize, direction);
 
       case "ChangeDirection":
         if (!(state === "NotStarted" || state === "Completed")) {
           break;
         }
-        return initializeTableState(gridSize, tableAction.direction);
+        return initializeMemoryTableState(gridSize, tableAction.direction);
 
       case "Reset":
         if (state !== "Completed") {
           break;
         }
-        return initializeTableState(gridSize, direction);
+        return initializeMemoryTableState(gridSize, direction);
 
       case "Restart":
         if (state !== "Completed") {
           break;
         }
-        const resettedTable = initializeTableState(gridSize, direction);
+        const resettedTable = initializeMemoryTableState(gridSize, direction);
         shuffleInPlace(resettedTable.tiles);
         matchRecordDispatch({ type: "Mark" });
         return { ...resettedTable, state: "Playing" };
@@ -343,7 +359,7 @@ const App = () => {
   const gameModeToTableReducer = (
     gameMode: GameMode
   ):
-    | ((tableState: Table, tableAction: MemoryTableAction) => Table)
+    | ((tableState: MemoryTable, tableAction: MemoryTableAction) => Table)
     | ((tableState: Table, tableAction: TableAction) => Table) => {
     switch (gameMode) {
       case GameMode.Vanilla:
@@ -406,7 +422,7 @@ const App = () => {
 
       case GameMode.Memory:
         return (
-          <VanillaSchulteTable
+          <MemorySchulteTable
             gameState={table.state}
             tiles={table.tiles}
             gridSize={table.settings.gridSize}
@@ -444,6 +460,15 @@ const App = () => {
   useEffect(() => {
     localStorage.setItem(matchesKey, JSON.stringify(matches));
   }, [matches]);
+
+  useEffect(() => {
+    if (table.state !== "Countdown") {
+      return;
+    }
+    setTimeout(() => {
+      tableDispatch({ type: "Start" });
+    }, 3000);
+  }, [table]);
 
   const settingSpecificMatches = findSettingSpecificMatches(
     matches,
