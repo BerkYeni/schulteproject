@@ -13,13 +13,6 @@ export interface Tile {
   checked: boolean;
 }
 
-export interface MemoryTile {
-  value: number;
-  checked: boolean;
-  animationIsPlaying: boolean;
-  timeoutId: NodeJS.Timeout | null;
-}
-
 export type TableDirection = "Ascending" | "Descending";
 
 export interface TableSettings {
@@ -30,13 +23,6 @@ export interface TableSettings {
 export interface Table {
   state: GameState;
   tiles: Tile[];
-  expectedNumber: number;
-  settings: TableSettings;
-}
-
-export interface MemoryTable {
-  state: GameState;
-  tiles: MemoryTile[];
   expectedNumber: number;
   settings: TableSettings;
 }
@@ -131,6 +117,11 @@ export interface matchesInfoToDisplay {
   recordCategoryToDisplay: string;
   personalBestRecord: MatchRecord | undefined;
   lastPlayedRecord: MatchRecord | undefined;
+}
+
+export interface MemoryTileAnimationTracker {
+  value: number;
+  timeoutId: NodeJS.Timeout | undefined;
 }
 
 // export interface GameProfile {

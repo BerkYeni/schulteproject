@@ -15,9 +15,8 @@ import {
   GridSize,
   MatchRecord,
   MatchRecordAction,
-  MemoryTable,
   MemoryTableAction,
-  MemoryTile,
+  MemoryTileAnimationTracker,
   StartGameAction,
   Table,
   TableAction,
@@ -35,7 +34,6 @@ import {
   gridSizeToDisplay,
   highestExpectedNumber,
   last,
-  memoryTileArray,
   numbersFromTiles,
   progressedExpectedNumberWithDirection,
   shuffleInPlace,
@@ -240,24 +238,10 @@ const App = () => {
     return tableState;
   };
 
-  const initializeMemoryTableState = (
-    gridSize: GridSize = GridSize.Size4x4,
-    direction: TableDirection = "Ascending"
-  ): MemoryTable => {
-    const tiles = memoryTileArray(gridSize);
-    const expectedNumber = getExpectedNumberOfDirection(direction, tiles);
-    return {
-      tiles: tiles,
-      expectedNumber: expectedNumber,
-      state: "NotStarted",
-      settings: { direction: direction, gridSize: gridSize },
-    };
-  };
-
   const memoryTableReducer = (
-    tableState: MemoryTable,
+    tableState: Table,
     tableAction: MemoryTableAction
-  ): MemoryTable => {
+  ): Table => {
     const { expectedNumber, tiles, state, settings } = tableState;
     const { direction, gridSize } = settings;
     const countDownDurationInMilliseconds = 3000;
@@ -285,25 +269,25 @@ const App = () => {
         if (!(state === "NotStarted" || state === "Completed")) {
           break;
         }
-        return initializeMemoryTableState(tableAction.gridSize, direction);
+        return initializeTableState(tableAction.gridSize, direction);
 
       case "ChangeDirection":
         if (!(state === "NotStarted" || state === "Completed")) {
           break;
         }
-        return initializeMemoryTableState(gridSize, tableAction.direction);
+        return initializeTableState(gridSize, tableAction.direction);
 
       case "Reset":
         if (state !== "Completed") {
           break;
         }
-        return initializeMemoryTableState(gridSize, direction);
+        return initializeTableState(gridSize, direction);
 
       case "Restart":
         if (state !== "Completed") {
           break;
         }
-        const resettedTable = initializeMemoryTableState(gridSize, direction);
+        const resettedTable = initializeTableState(gridSize, direction);
         shuffleInPlace(resettedTable.tiles);
         matchRecordDispatch({ type: "Mark" });
         return { ...resettedTable, state: "Playing" };
@@ -313,7 +297,23 @@ const App = () => {
           break;
         }
         if (tableAction.inputtedNumber !== expectedNumber) {
-          break;
+          setTileAnimationTracker((previousTracker) => {
+            const timeoutId = setTimeout(() => {
+              setTileAnimationTracker((previousTracker) => {
+                previousTracker[tableAction.inputtedNumber] = {
+                  timeoutId: undefined,
+                  value: previousTracker[tableAction.inputtedNumber].value,
+                };
+                return previousTracker;
+              });
+            }, 1000);
+            previousTracker[tableAction.inputtedNumber] = {
+              timeoutId: timeoutId,
+              value: previousTracker[tableAction.inputtedNumber].value,
+            };
+            return previousTracker;
+          });
+          // break;
         }
         // win condition
         if (tiles.every((tile) => tile.checked)) {
@@ -359,7 +359,7 @@ const App = () => {
   const gameModeToTableReducer = (
     gameMode: GameMode
   ):
-    | ((tableState: MemoryTable, tableAction: MemoryTableAction) => Table)
+    | ((tableState: Table, tableAction: MemoryTableAction) => Table)
     | ((tableState: Table, tableAction: TableAction) => Table) => {
     switch (gameMode) {
       case GameMode.Vanilla:
@@ -378,6 +378,20 @@ const App = () => {
     gameModeToTableReducer(gameMode),
     initializeTableState()
   );
+
+  const animationTracker = (tiles: Tile[]): MemoryTileAnimationTracker[] =>
+    tiles.map((tile) => ({
+      value: tile.value,
+      timeoutId: undefined,
+    }));
+
+  const [tileAnimationTracker, setTileAnimationTracker] = useState(
+    animationTracker(table.tiles)
+  );
+
+  useEffect(() => {
+    setTileAnimationTracker(animationTracker(table.tiles));
+  }, [table.tiles]);
 
   function startGame() {
     tableDispatch({ type: "Start" });

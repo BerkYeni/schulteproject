@@ -1,5 +1,10 @@
-import React, { FC, useState } from "react";
-import { GameState, GridSize, Tile } from "../interfaces";
+import React, { FC, useEffect, useState } from "react";
+import {
+  GameState,
+  GridSize,
+  MemoryTileAnimationTracker,
+  Tile,
+} from "../interfaces";
 import ReplaySvg from "./ReplaySvg";
 import PlaySvg from "./PlaySvg";
 import { gridSizeToCss } from "../utils";
@@ -18,7 +23,19 @@ const MemorySchulteTable: FC<MemorySchulteTableProps> = (props) => {
   const { gameState, tiles, gridSize, onStart, onNumberInput, onRestart } =
     props;
 
-  // const [tileAnimationTracker, setTileAnimationTracker] = useState({})
+  // const animationTracker = (tiles: Tile[]): MemoryTileAnimationTracker[] =>
+  //   tiles.map((tile) => ({
+  //     value: tile.value,
+  //     timeoutId: undefined,
+  //   }));
+
+  // const [tileAnimationTracker, setTileAnimationTracker] = useState(
+  //   animationTracker(tiles)
+  // );
+
+  // useEffect(() => {
+  //   setTileAnimationTracker(animationTracker(tiles));
+  // }, [tiles]);
 
   const tileWithStandardPropsGiven = (
     tile: Tile,
