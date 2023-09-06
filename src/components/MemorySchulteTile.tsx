@@ -14,7 +14,7 @@ const MemorySchulteTile: FC<MemorySchulteTileProps> = (props) => {
   return (
     <button
       className={`tile ${tile.checked ? "clicked" : "unclicked"}`}
-      onClick={() => onClick(tile)}
+      onMouseDown={() => onClick(tile)}
     >
       <div
         className={

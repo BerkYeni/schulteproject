@@ -44,11 +44,11 @@ import VanillaSchulteTable from "./components/VanillaSchulteTable";
 import ReactionSchulteTable from "./components/ReactionSchulteTable";
 import MemorySchulteTable from "./components/MemorySchulteTable";
 
-// TODO: fix being able to change game mode while the game is ongoing.
+// TODO: implement memory table reducer, either find a way to
+// implement async dispatch or find a different way to impl.
+// TODO: do general cleaning.
 // TODO: adjust css for mobile.
 // TODO: add direction to mathecs info.
-// TODO: consider getting rid of different reducers and hook them up
-// with the vanilla reducer since all of them have the same logic.
 // TODO: change button click to mouse down instead of up
 
 // misc: add a "linear" gamemode, where numbers are in a 1x16 grid for example.
@@ -126,6 +126,16 @@ const App = () => {
   const [roundStartTimestamp, matchRecordDispatch] = useReducer(
     matchRecordReducer,
     null
+  );
+
+  const animationTracker = (tiles: Tile[]): MemoryTileAnimationTracker[] =>
+    tiles.map((tile) => ({
+      value: tile.value,
+      timeoutId: undefined,
+    }));
+
+  const [tileAnimationTracker, setTileAnimationTracker] = useState(
+    animationTracker(tileArray(GridSize.Size4x4))
   );
 
   const initializeTableState = (
@@ -296,6 +306,7 @@ const App = () => {
         if (state !== "Playing") {
           break;
         }
+        // if the number is wrong, set an animation tracker
         if (tableAction.inputtedNumber !== expectedNumber) {
           setTileAnimationTracker((previousTracker) => {
             const timeoutId = setTimeout(() => {
@@ -313,7 +324,7 @@ const App = () => {
             };
             return previousTracker;
           });
-          // break;
+          break;
         }
         // win condition
         if (tiles.every((tile) => tile.checked)) {
@@ -377,16 +388,6 @@ const App = () => {
   const [table, tableDispatch] = useReducer(
     gameModeToTableReducer(gameMode),
     initializeTableState()
-  );
-
-  const animationTracker = (tiles: Tile[]): MemoryTileAnimationTracker[] =>
-    tiles.map((tile) => ({
-      value: tile.value,
-      timeoutId: undefined,
-    }));
-
-  const [tileAnimationTracker, setTileAnimationTracker] = useState(
-    animationTracker(table.tiles)
   );
 
   useEffect(() => {

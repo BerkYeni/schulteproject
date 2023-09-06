@@ -13,7 +13,7 @@ const ReactionSchulteTile: FC<ReactionSchulteTileProps> = (props) => {
   return (
     <button
       className={`tile ${tile.checked ? "clicked" : "unclicked"}`}
-      onClick={onClick}
+      onMouseDown={onClick}
     >
       <div
         className={

@@ -12,7 +12,7 @@ const VanillaSchulteTile: FC<VanillaSchulteTileProps> = (props) => {
   return (
     <button
       className={`tile ${tile.checked ? "clicked" : "unclicked"}`}
-      onClick={onClick}
+      onMouseDown={onClick}
     >
       <div className={``}>{tile.value}</div>
     </button>
