@@ -27,8 +27,6 @@ export interface Table {
   settings: TableSettings;
 }
 
-// TODO: make base action state
-// note: these should be enum prolly
 export interface InputNumberAction {
   type: "InputNumber";
   inputtedNumber: number;
@@ -123,9 +121,3 @@ export interface MemoryTileAnimationTracker {
   value: number;
   timeoutId: NodeJS.Timeout | undefined;
 }
-
-// export interface GameProfile {
-//   reducer: (tableState: Table, tableAction: TableAction) => Table;
-//   component: React.FC<any>;
-//   // component: ReactNode;
-// }

@@ -91,32 +91,6 @@ const ControlPanel: FC<ControlPanelProps> = (props) => {
               </button>
             ))}
           </div>
-
-          {/* <button onClick={() => handleGridSizeSetting(GridSize.Size3x3)}>
-              {gridSizeToDisplay(GridSize.Size3x3)}
-            </button>
-            <button onClick={() => handleGridSizeSetting(GridSize.Size4x4)}>
-              {gridSizeToDisplay(GridSize.Size4x4)}
-            </button>
-            <button onClick={() => handleGridSizeSetting(GridSize.Size5x5)}>
-              {gridSizeToDisplay(GridSize.Size5x5)}
-            </button>
-          </div>
-
-          <div className="GameModeetting">
-            <button onClick={() => handleGameModeSetting(GameMode.Vanilla)}>
-              {gameModeToDisplay(GameMode.Vanilla)}
-            </button>
-            <button onClick={() => handleGameModeSetting(GameMode.Reverse)}>
-              {gameModeToDisplay(GameMode.Reverse)}
-            </button>
-            <button onClick={() => handleGameModeSetting(GameMode.Memory)}>
-              {gameModeToDisplay(GameMode.Memory)}
-            </button>
-            <button onClick={() => handleGameModeSetting(GameMode.Reaction)}>
-              {gameModeToDisplay(GameMode.Reaction)}
-            </button> */}
-          {/* </div> */}
         </div>
       </div>
     </>

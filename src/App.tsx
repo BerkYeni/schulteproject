@@ -1,43 +1,30 @@
-import React, {
-  ReactNode,
-  createContext,
-  useEffect,
-  useReducer,
-  useState,
-} from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import "./App.css";
-import SchulteTable from "./components/SchulteTable";
 import ControlPanel from "./components/ControlPanel";
 import Statistics from "./components/Statistics";
 import {
   GameMode,
-  GameState,
   GridSize,
   MatchRecord,
   MatchRecordAction,
   MemoryTableAction,
   MemoryTileAnimationTracker,
-  StartGameAction,
   Table,
   TableAction,
   TableDirection,
   Tile,
 } from "./interfaces";
 import {
+  directionToDisplay,
   findLastPlayedRecord,
   findPersonalBestRecord,
   findSettingSpecificMatches,
   gameModeToDisplay,
   gameStateToChronometerState,
   getExpectedNumberOfDirection,
-  gridSizeToArray,
   gridSizeToDisplay,
-  highestExpectedNumber,
-  last,
-  numbersFromTiles,
   progressedExpectedNumberWithDirection,
   shuffleInPlace,
-  smallestExpectedNumber,
   tileArray,
 } from "./utils";
 import VanillaSchulteTable from "./components/VanillaSchulteTable";
@@ -46,10 +33,8 @@ import MemorySchulteTable from "./components/MemorySchulteTable";
 
 // TODO: implement memory table reducer, either find a way to
 // implement async dispatch or find a different way to impl.
-// TODO: do general cleaning.
+// TODO: implement chronometer countdown
 // TODO: adjust css for mobile.
-// TODO: add direction to mathecs info.
-// TODO: change button click to mouse down instead of up
 
 // misc: add a "linear" gamemode, where numbers are in a 1x16 grid for example.
 // misc: memory game modes animation is flawed in many ways, meybe revisit.
@@ -91,7 +76,6 @@ const App = () => {
   // TODO: come back to this
   const resetMatches = () => setMatches([]);
 
-  // TODO: convert this to something else
   const matchRecordReducer = (
     roundStartTimestampState: null | Date,
     matchRecordAction: MatchRecordAction
@@ -142,9 +126,7 @@ const App = () => {
     gridSize: GridSize = GridSize.Size4x4,
     direction: TableDirection = "Ascending"
   ): Table => {
-    // const gridSize = GridSize.Size4x4;
     const tiles = tileArray(gridSize);
-    // const direction: TableDirection = "Ascending";
     const expectedNumber = getExpectedNumberOfDirection(direction, tiles);
     return {
       tiles: tiles,
@@ -394,10 +376,6 @@ const App = () => {
     setTileAnimationTracker(animationTracker(table.tiles));
   }, [table.tiles]);
 
-  function startGame() {
-    tableDispatch({ type: "Start" });
-  }
-
   const renderGameModeTable = (gameMode: GameMode) => {
     switch (gameMode) {
       case GameMode.Vanilla:
@@ -463,7 +441,6 @@ const App = () => {
   };
 
   const changeGridSize = (gridSize: GridSize): void => {
-    // setGridSize(gridSize);
     tableDispatch({ type: "ChangeGridSize", gridSize: gridSize });
   };
 
@@ -517,7 +494,9 @@ const App = () => {
           personalBestRecord: personalBestRecord,
           recordCategoryToDisplay: `${gameModeToDisplay(
             gameMode
-          )} ${gridSizeToDisplay(table.settings.gridSize)}`,
+          )} ${gridSizeToDisplay(table.settings.gridSize)} ${directionToDisplay(
+            table.settings.direction
+          )}`,
         }}
         onResetMatches={resetMatches}
       />
