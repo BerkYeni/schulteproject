@@ -1,81 +1,43 @@
 .App {
-  /* display: flex; */
-  /* justify-content: space-between; */
-  /* align-items: center; */
-
+  font-size: x-large;
+  text-align: center;
+  display: flex;
   height: 100vh;
   width: 100vw;
-
-  text-align: center;
-  font-size: x-large;
-  background-color: #ede4ff;
-  color: white;
-}
-
-/* TODO: consider getting rid of the container and making schulte table position absolute */
-.tableContainer {
-  /* flex: 60%; */
-
-  height: 100%;
-  width: 93vmin;
-  margin-left: auto;
-  margin-right: auto;
-  /* display: flex; */
-  /* align-items: center;
-  justify-content: center; */
-}
-
-.schulteTable {
-  position: relative;
-  width: 93vmin;
-  height: 93vmin;
-  margin-left: -10px;
-  margin-top: 1.75vmin;
-
-  display: grid;
-  row-gap: 1.75vmin;
-  column-gap: 1.75vmin;
-  padding: 1.75vmin;
-  border-radius: 2.625vmin;
-  background-color: #a076f9;
-}
-
-.controlPanel {
-  position: absolute;
-  height: 100%;
-  width: 20vw;
-
-  display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-direction: column;
-  background-color: #855de0;
-}
-
-.statistics {
-  position: absolute;
-  right: 0;
-  height: 100%;
-  width: 20vw;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: #855de0;
+  background-color: #ede4ff;
+  color: white;
 }
 
 button {
   font-size: x-large;
   border: 1px solid black;
   font-size: xx-large;
-  border-radius: 2.625vmin;
+  border-radius: 15px;
   cursor: pointer;
   background-color: #d7bbf5;
 }
 
 button:hover {
   background-color: #f3d1d1;
+}
+
+.schulteTable {
+  /*   flex: 60%; */
+  /* margin: auto; */
+  position: relative;
+  display: grid;
+  /* grid-template-rows: auto auto auto auto;
+  grid-template-columns: auto auto auto auto; */
+  width: 600px;
+  height: 600px;
+  max-width: 600px;
+  row-gap: 10px;
+  column-gap: 10px;
+  padding: 10px;
+  background-color: #a076f9;
+  border-radius: 15px;
 }
 
 .grid3x3 {
@@ -91,6 +53,13 @@ button:hover {
 .grid5x5 {
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+}
+
+.tile {
+  /* border: 1px solid black;
+  font-size: xx-large;
+  border-radius: 15px;
+  cursor: pointer; */
 }
 
 .unclicked {
@@ -110,11 +79,37 @@ button:hover {
   background-color: #6528f7;
 }
 
+.controlPanel {
+  position: absolute;
+  background-color: #855de0;
+  height: 100%;
+  /* flex: 20%; */
+  width: 20vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .playAgain {
   width: 210px;
   height: 70px;
   padding: 20px 0px;
   cursor: pointer;
+}
+
+.statistics {
+  position: absolute;
+  transform: translate(-100%, 0);
+  left: 100%;
+  background-color: #855de0;
+  height: 100%;
+  width: 20vw;
+  /* flex: 20%; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .chronometer {
@@ -151,6 +146,14 @@ button:hover {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.tableContainer {
+  flex: 60%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .exposePanels {
