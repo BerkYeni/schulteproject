@@ -54,7 +54,7 @@ const ControlPanel: FC<ControlPanelProps> = (props) => {
           </button>
         </div>
 
-        <div className="playAgainContainer">
+        {/* <div className="playAgainContainer">
           {gameState === "NotStarted" && (
             <button className="playAgain" onClick={onStart}>
               Start
@@ -65,7 +65,7 @@ const ControlPanel: FC<ControlPanelProps> = (props) => {
               Play Again
             </button>
           )}
-        </div>
+        </div> */}
 
         <div className="gameSettings">
           <div className="gridSettings">

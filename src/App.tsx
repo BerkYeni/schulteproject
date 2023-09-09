@@ -48,8 +48,12 @@ import MemorySchulteTable from "./components/MemorySchulteTable";
 // misc: add indicator for current game settings (grid size, gamemode etc).
 // misc: make selected game settings buttons styled differently.
 // misc: make selected game settings styled differently.
-// misc: change mini icon/favicon
-// misc: change background color when panels are hidden
+// misc: change mini icon/favicon.
+// misc: change background color when panels are hidden.
+// misc: make reset match records button have svg in it instead of "reset".
+// misc: don't forget about hide panels button with responsive css.
+// misc: add grid size settings container etc.
+// misc: readress the media query breakpoints
 
 export const matchesKey = "matches";
 const getMatchesFromLocalStorage = (matchesKey: string): MatchRecord[] => {
