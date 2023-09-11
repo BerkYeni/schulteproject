@@ -4,6 +4,7 @@ import {
   GameState,
   GridSize,
   MatchRecord,
+  MemoryTile,
   TableDirection,
   Tile,
 } from "./interfaces";
@@ -62,6 +63,29 @@ export const tileArray = (gridSize: GridSize) =>
   gridSizeToArray(gridSize).map(
     (number): Tile => ({ value: number, checked: false })
   );
+
+export const memoryTileArray = (gridSize: GridSize) =>
+  gridSizeToArray(gridSize).map(
+    (number): MemoryTile => ({
+      value: number,
+      checked: false,
+      animationPlaying: false,
+      timeoutId: undefined,
+    })
+  );
+
+export const isMemoryTile = (memoryTile: Tile): memoryTile is MemoryTile => {
+  return (
+    memoryTile.hasOwnProperty("animationPlaying") &&
+    memoryTile.hasOwnProperty("timeoutId")
+  );
+};
+
+export const isMemoryTileArray = (
+  memoryTileArray: Tile[]
+): memoryTileArray is MemoryTile[] => {
+  return isMemoryTile(memoryTileArray[0]);
+};
 
 export const numbersFromTiles = (tiles: Tile[]) =>
   tiles.map((tile) => tile.value);

@@ -4,10 +4,13 @@ import ControlPanel from "./components/ControlPanel";
 import Statistics from "./components/Statistics";
 import {
   GameMode,
+  GameState,
   GridSize,
   MatchRecord,
   MatchRecordAction,
+  MemoryTable,
   MemoryTableAction,
+  MemoryTile,
   MemoryTileAnimationTracker,
   Table,
   TableAction,
@@ -23,6 +26,9 @@ import {
   gameStateToChronometerState,
   getExpectedNumberOfDirection,
   gridSizeToDisplay,
+  isMemoryTile,
+  isMemoryTileArray,
+  memoryTileArray,
   progressedExpectedNumberWithDirection,
   shuffleInPlace,
   tileArray,
@@ -54,6 +60,8 @@ import MemorySchulteTable from "./components/MemorySchulteTable";
 // misc: don't forget about hide panels button with responsive css.
 // misc: add grid size settings container etc.
 // misc: readress the media query breakpoints
+// misc: change tile border radius to percentage
+// misc: add "responsive design" to project description
 
 export const matchesKey = "matches";
 const getMatchesFromLocalStorage = (matchesKey: string): MatchRecord[] => {
@@ -116,15 +124,15 @@ const App = () => {
     null
   );
 
-  const animationTracker = (tiles: Tile[]): MemoryTileAnimationTracker[] =>
-    tiles.map((tile) => ({
-      value: tile.value,
-      timeoutId: undefined,
-    }));
+  // const animationTracker = (tiles: Tile[]): MemoryTileAnimationTracker[] =>
+  //   tiles.map((tile) => ({
+  //     value: tile.value,
+  //     timeoutId: undefined,
+  //   }));
 
-  const [tileAnimationTracker, setTileAnimationTracker] = useState(
-    animationTracker(tileArray(GridSize.Size4x4))
-  );
+  // const [tileAnimationTracker, setTileAnimationTracker] = useState(
+  //   animationTracker(tileArray(GridSize.Size4x4))
+  // );
 
   const initializeTableState = (
     gridSize: GridSize = GridSize.Size4x4,
@@ -234,10 +242,29 @@ const App = () => {
     return tableState;
   };
 
+  const initializeMemoryTableState = (
+    gridSize: GridSize = GridSize.Size4x4,
+    direction: TableDirection = "Ascending"
+  ): MemoryTable => {
+    const tiles = memoryTileArray(gridSize);
+    console.log("TESTING");
+    console.log(tiles);
+    const expectedNumber = getExpectedNumberOfDirection(direction, tiles);
+    const state: GameState = "NotStarted";
+    const memoryTable = {
+      tiles: tiles,
+      expectedNumber: expectedNumber,
+      state: state,
+      settings: { direction: direction, gridSize: gridSize },
+    };
+    console.log(memoryTable);
+    return memoryTable;
+  };
+
   const memoryTableReducer = (
-    tableState: Table,
+    tableState: MemoryTable,
     tableAction: MemoryTableAction
-  ): Table => {
+  ): MemoryTable => {
     const { expectedNumber, tiles, state, settings } = tableState;
     const { direction, gridSize } = settings;
     const countDownDurationInMilliseconds = 3000;
@@ -250,67 +277,76 @@ const App = () => {
         }
         // shuffleInPlace(tiles);
         matchRecordDispatch({ type: "Mark" });
+        console.log(tiles);
         return {
           ...tableState,
           state: "Playing",
-          tiles: tiles,
         };
 
       case "StartCountDown":
-        shuffleInPlace(tiles);
+        // shuffleInPlace(tiles);
         // after the countdown ends, start game is called with useEffect
-        return { ...tableState, state: "Countdown" };
+        const initialMemoryTable = initializeMemoryTableState(
+          tableState.settings.gridSize,
+          tableState.settings.direction
+        );
+        shuffleInPlace(initialMemoryTable.tiles);
+        return { ...initialMemoryTable, state: "Countdown" };
 
       case "ChangeGridSize":
         if (!(state === "NotStarted" || state === "Completed")) {
           break;
         }
-        return initializeTableState(tableAction.gridSize, direction);
+        return initializeMemoryTableState(tableAction.gridSize, direction);
 
       case "ChangeDirection":
         if (!(state === "NotStarted" || state === "Completed")) {
           break;
         }
-        return initializeTableState(gridSize, tableAction.direction);
+        return initializeMemoryTableState(gridSize, tableAction.direction);
 
       case "Reset":
         if (state !== "Completed") {
           break;
         }
-        return initializeTableState(gridSize, direction);
+        return initializeMemoryTableState(gridSize, direction);
 
       case "Restart":
         if (state !== "Completed") {
           break;
         }
-        const resettedTable = initializeTableState(gridSize, direction);
+        const resettedTable = initializeMemoryTableState(gridSize, direction);
         shuffleInPlace(resettedTable.tiles);
         matchRecordDispatch({ type: "Mark" });
         return { ...resettedTable, state: "Playing" };
+
+      case "StopAnimation":
+        const tileOfStopAnimation = tableState.tiles.find(
+          (tile) => tile.value === tableAction.value
+        );
+        if (!tileOfStopAnimation) {
+          throw new Error("tileOfStopAnimation must not be undefined.");
+        }
+        tileOfStopAnimation.animationPlaying = false;
+        tileOfStopAnimation.timeoutId = undefined;
+        return tableState;
 
       case "InputNumber":
         if (state !== "Playing") {
           break;
         }
-        // if the number is wrong, set an animation tracker
+        // if the number is wrong, set tile animationIsPlaying to true
         if (tableAction.inputtedNumber !== expectedNumber) {
-          setTileAnimationTracker((previousTracker) => {
-            const timeoutId = setTimeout(() => {
-              setTileAnimationTracker((previousTracker) => {
-                previousTracker[tableAction.inputtedNumber] = {
-                  timeoutId: undefined,
-                  value: previousTracker[tableAction.inputtedNumber].value,
-                };
-                return previousTracker;
-              });
-            }, 1000);
-            previousTracker[tableAction.inputtedNumber] = {
-              timeoutId: timeoutId,
-              value: previousTracker[tableAction.inputtedNumber].value,
-            };
-            return previousTracker;
-          });
-          break;
+          const tileToBeAnimated = tableState.tiles.find(
+            (tile) => tile.value === tableAction.inputtedNumber
+          );
+          console.log(tileToBeAnimated);
+          if (!tileToBeAnimated) {
+            throw new Error("tileToBeAnimated must not be undefined.");
+          }
+          tileToBeAnimated.animationPlaying = true;
+
+          return tableState;
         }
         // win condition
         if (tiles.every((tile) => tile.checked)) {
@@ -353,11 +389,7 @@ const App = () => {
     return tableState;
   };
 
-  const gameModeToTableReducer = (
-    gameMode: GameMode
-  ):
-    | ((tableState: Table, tableAction: MemoryTableAction) => Table)
-    | ((tableState: Table, tableAction: TableAction) => Table) => {
+  const gameModeToTableReducer = (gameMode: GameMode) => {
     switch (gameMode) {
       case GameMode.Vanilla:
       case GameMode.Reaction:
@@ -371,14 +403,46 @@ const App = () => {
     }
   };
 
+  const initializeTableWithGameMode = (
+    gameMode: GameMode
+  ): Table | MemoryTable => {
+    switch (gameMode) {
+      case GameMode.Vanilla:
+      case GameMode.Reaction:
+        return initializeTableState();
+
+      case GameMode.Memory:
+        console.log("THIS IS WORKING");
+        return initializeMemoryTableState();
+
+      default:
+        throw new Error("Unexpected game mode.");
+    }
+  };
+
   const [table, tableDispatch] = useReducer(
     gameModeToTableReducer(gameMode),
-    initializeTableState()
+    initializeTableWithGameMode(gameMode)
   );
 
+  console.log(table);
+
   useEffect(() => {
-    setTileAnimationTracker(animationTracker(table.tiles));
-  }, [table.tiles]);
+    if (gameMode === GameMode.Memory) {
+      const memoryTiles = table.tiles as MemoryTile[];
+      memoryTiles.forEach((tile) => {
+        if (tile.animationPlaying) {
+          tile.timeoutId = setTimeout(() => {
+            tableDispatch({ type: "StopAnimation", value: tile.value });
+          }, 3000);
+        }
+      });
+    }
+  }, [table]);
+
+  // useEffect(() => {
+  //   setTileAnimationTracker(animationTracker(table.tiles));
+  // }, [table.tiles]);
 
   const renderGameModeTable = (gameMode: GameMode) => {
     switch (gameMode) {
@@ -418,10 +482,14 @@ const App = () => {
         );
 
       case GameMode.Memory:
+        // const memoryTiles = table.tiles;
+        // if (!isMemoryTileArray(memoryTiles)) {
+        //   throw new Error("table tiles must be MemoryTile in memory gamemode.");
+        // }
         return (
           <MemorySchulteTable
             gameState={table.state}
-            tiles={table.tiles}
+            tiles={table.tiles as MemoryTile[]}
             gridSize={table.settings.gridSize}
             onStart={() => tableDispatch({ type: "StartCountDown" })}
             onRestart={() => tableDispatch({ type: "Restart" })}
@@ -441,7 +509,7 @@ const App = () => {
       return;
     }
     setGameMode(gameMode);
-    tableDispatch({ type: "Reset" });
+    // tableDispatch({ type: "Reset" });
   };
 
   const changeGridSize = (gridSize: GridSize): void => {

@@ -2,6 +2,7 @@ import React, { FC, useEffect, useState } from "react";
 import {
   GameState,
   GridSize,
+  MemoryTile,
   MemoryTileAnimationTracker,
   Tile,
 } from "../interfaces";
@@ -12,7 +13,7 @@ import MemorySchulteTile from "./MemorySchulteTile";
 
 interface MemorySchulteTableProps {
   gameState: GameState;
-  tiles: Tile[];
+  tiles: MemoryTile[];
   gridSize: GridSize;
   onStart: () => void;
   onRestart: () => void;
@@ -38,7 +39,7 @@ const MemorySchulteTable: FC<MemorySchulteTableProps> = (props) => {
   // }, [tiles]);
 
   const tileWithStandardPropsGiven = (
-    tile: Tile,
+    tile: MemoryTile,
     index: number,
     gameState: GameState
   ) => {
@@ -48,7 +49,6 @@ const MemorySchulteTable: FC<MemorySchulteTableProps> = (props) => {
         key={index}
         tile={tile}
         gameState={gameState}
-        animationIsPlaying={tile.checked}
       />
     );
   };

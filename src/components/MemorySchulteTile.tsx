@@ -1,30 +1,21 @@
 import React, { FC } from "react";
-import { GameState, Tile } from "../interfaces";
+import { GameState, MemoryTile, Tile } from "../interfaces";
 
 interface MemorySchulteTileProps {
-  tile: Tile;
-  onClick: (tile: Tile) => void;
+  tile: MemoryTile;
+  onClick: (tile: MemoryTile) => void;
   gameState: GameState;
-  animationIsPlaying: boolean;
 }
 
 const MemorySchulteTile: FC<MemorySchulteTileProps> = (props) => {
-  const { tile, onClick, gameState, animationIsPlaying } = props;
+  const { tile, onClick, gameState } = props;
 
   return (
     <button
       className={`tile ${tile.checked ? "clicked" : "unclicked"}`}
       onMouseDown={() => onClick(tile)}
     >
-      <div
-        className={
-          gameState !== "Playing"
-            ? ""
-            : animationIsPlaying
-            ? "revealTileShortly"
-            : ""
-        }
-      >
+      <div className={tile.animationPlaying ? "revealTileShortly" : ""}>
         {tile.value}
       </div>
     </button>

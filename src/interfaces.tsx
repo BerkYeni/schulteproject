@@ -13,6 +13,13 @@ export interface Tile {
   checked: boolean;
 }
 
+export type MemoryTile = {
+  value: number;
+  checked: boolean;
+  animationPlaying: boolean;
+  timeoutId: NodeJS.Timeout | undefined;
+};
+
 export type TableDirection = "Ascending" | "Descending";
 
 export interface TableSettings {
@@ -23,6 +30,13 @@ export interface TableSettings {
 export interface Table {
   state: GameState;
   tiles: Tile[];
+  expectedNumber: number;
+  settings: TableSettings;
+}
+
+export interface MemoryTable {
+  state: GameState;
+  tiles: MemoryTile[];
   expectedNumber: number;
   settings: TableSettings;
 }
@@ -58,6 +72,11 @@ export interface ChangeDirectionAction {
   direction: TableDirection;
 }
 
+export interface StopAnimationAction {
+  type: "StopAnimation";
+  value: number;
+}
+
 export type TableAction =
   | InputNumberAction
   | StartGameAction
@@ -73,7 +92,8 @@ export type MemoryTableAction =
   | ResetGameAction
   | RestartGameAction
   | ChangeGridSizeAction
-  | ChangeDirectionAction;
+  | ChangeDirectionAction
+  | StopAnimationAction;
 
 export interface MarkStartAction {
   type: "Mark";

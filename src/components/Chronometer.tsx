@@ -15,7 +15,6 @@ const Chronometer: FC<ChronometerProps> = (props) => {
   const initiateChronometer = () => {
     const interval = setInterval(() => {
       setSeconds((previousSeconds) => {
-        console.log(previousSeconds);
         return previousSeconds + 1;
       });
     }, 1000);
