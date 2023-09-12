@@ -24,19 +24,7 @@ const MemorySchulteTable: FC<MemorySchulteTableProps> = (props) => {
   const { gameState, tiles, gridSize, onStart, onNumberInput, onRestart } =
     props;
 
-  // const animationTracker = (tiles: Tile[]): MemoryTileAnimationTracker[] =>
-  //   tiles.map((tile) => ({
-  //     value: tile.value,
-  //     timeoutId: undefined,
-  //   }));
-
-  // const [tileAnimationTracker, setTileAnimationTracker] = useState(
-  //   animationTracker(tiles)
-  // );
-
-  // useEffect(() => {
-  //   setTileAnimationTracker(animationTracker(tiles));
-  // }, [tiles]);
+  console.log("THIS IS FUCKING RENDERED");
 
   const tileWithStandardPropsGiven = (
     tile: MemoryTile,
@@ -53,7 +41,7 @@ const MemorySchulteTable: FC<MemorySchulteTableProps> = (props) => {
     );
   };
 
-  const handleClick = (tile: Tile) => {
+  const handleClick = (tile: MemoryTile) => {
     onNumberInput(tile.value);
   };
 

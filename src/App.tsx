@@ -37,6 +37,10 @@ import VanillaSchulteTable from "./components/VanillaSchulteTable";
 import ReactionSchulteTable from "./components/ReactionSchulteTable";
 import MemorySchulteTable from "./components/MemorySchulteTable";
 
+// the source of animation not playing bug might be
+// about memory tile or memory table not rendering for whatever reason
+// not rendering might be about reducer not returning new object
+
 // TODO: implement memory table reducer, either find a way to
 // implement async dispatch or find a different way to impl.
 // TODO: implement chronometer countdown
@@ -83,7 +87,7 @@ const App = () => {
     getMatchesFromLocalStorage(matchesKey)
   );
   const [hidePanels, setHidePanels] = useState<boolean>(false);
-  const [gameMode, setGameMode] = useState<GameMode>(GameMode.Vanilla);
+  const [gameMode, setGameMode] = useState<GameMode>(GameMode.Memory);
 
   // TODO: come back to this
   const resetMatches = () => setMatches([]);
@@ -420,10 +424,10 @@ const App = () => {
     }
   };
 
-  const [table, tableDispatch] = useReducer(
-    gameModeToTableReducer(gameMode),
-    initializeTableWithGameMode(gameMode)
-  );
+  const reducer = gameModeToTableReducer(gameMode);
+  const initialTable = initializeTableWithGameMode(gameMode);
+
+  const [table, tableDispatch] = useReducer(reducer, initialTable);
 
   console.log(table);
 
@@ -431,14 +435,14 @@ const App = () => {
     if (gameMode === GameMode.Memory) {
       const memoryTiles = table.tiles as MemoryTile[];
       memoryTiles.forEach((tile) => {
-        if (tile.animationPlaying) {
+        if (tile.animationPlaying === undefined) {
           tile.timeoutId = setTimeout(() => {
             tableDispatch({ type: "StopAnimation", value: tile.value });
           }, 3000);
         }
       });
     }
-  }, [table]);
+  }, [table, gameMode]);
 
   // useEffect(() => {
   //   setTileAnimationTracker(animationTracker(table.tiles));
