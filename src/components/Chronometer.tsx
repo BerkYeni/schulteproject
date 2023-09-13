@@ -1,5 +1,6 @@
 import React, { FC, useState } from "react";
 import { ChronometerState } from "../interfaces";
+import stopSign from "../stopSign.png";
 
 let chronometerIntervalId: undefined | NodeJS.Timer = undefined;
 
@@ -42,6 +43,9 @@ const Chronometer: FC<ChronometerProps> = (props) => {
         chronometerIntervalId = initiateChronometer();
       }
       break;
+
+    case "Countdown":
+      break;
   }
 
   return (
@@ -50,6 +54,10 @@ const Chronometer: FC<ChronometerProps> = (props) => {
         <span>--</span>
       ) : chronometerState === "Active" ? (
         <span>{seconds} s</span>
+      ) : chronometerState === "Countdown" ? (
+        <span>
+          <img className="stopSign" src={stopSign} alt="Wait" />
+        </span>
       ) : (
         <span>{lastPlayedInSeconds || "--"} seconds</span>
       )}

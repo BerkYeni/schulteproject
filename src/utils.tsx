@@ -138,7 +138,7 @@ const gameStateToChronometerStateLookup: {
   NotStarted: "Idle",
   Playing: "Active",
   Completed: "DisplayResult",
-  Countdown: "Idle",
+  Countdown: "Countdown",
 };
 export const gameStateToChronometerState = (gameState: GameState) =>
   gameStateToChronometerStateLookup[gameState];

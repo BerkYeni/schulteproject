@@ -39,12 +39,22 @@ import MemorySchulteTable from "./components/MemorySchulteTable";
 
 // the source of animation not playing bug might be
 // about memory tile or memory table not rendering for whatever reason
-// not rendering might be about reducer not returning new object
+// not rendering might be about reducer not returning new object.
+// SOLVED
+
+// memory table tiles not being memory tiles might be caused
+// when gamemode is changed, it works fine when initial gamemode is memory.
+// SOLVED
+
+// TODO: implement chronometer countdown.
+// TODO: fix start action when not countdown bug in memory table restart,
+// bug happens when the game quickly restarts after a memory game was played.
+// might be about stop animation dispatches of the previous game.
 
 // TODO: implement memory table reducer, either find a way to
-// implement async dispatch or find a different way to impl.
-// TODO: implement chronometer countdown
-// TODO: adjust css for mobile.
+// implement async dispatch or find a different way to impl. DONE
+// TODO: adjust css for mobile. DONE
+// TODO: fix memory table restart. DONE
 
 // misc: add a "linear" gamemode, where numbers are in a 1x16 grid for example.
 // misc: memory game modes animation is flawed in many ways, meybe revisit.
@@ -87,7 +97,7 @@ const App = () => {
     getMatchesFromLocalStorage(matchesKey)
   );
   const [hidePanels, setHidePanels] = useState<boolean>(false);
-  const [gameMode, setGameMode] = useState<GameMode>(GameMode.Memory);
+  const [gameMode, setGameMode] = useState<GameMode>(GameMode.Vanilla);
 
   // TODO: come back to this
   const resetMatches = () => setMatches([]);
@@ -251,8 +261,6 @@ const App = () => {
     direction: TableDirection = "Ascending"
   ): MemoryTable => {
     const tiles = memoryTileArray(gridSize);
-    console.log("TESTING");
-    console.log(tiles);
     const expectedNumber = getExpectedNumberOfDirection(direction, tiles);
     const state: GameState = "NotStarted";
     const memoryTable = {
@@ -261,7 +269,6 @@ const App = () => {
       state: state,
       settings: { direction: direction, gridSize: gridSize },
     };
-    console.log(memoryTable);
     return memoryTable;
   };
 
@@ -281,7 +288,6 @@ const App = () => {
         }
         // shuffleInPlace(tiles);
         matchRecordDispatch({ type: "Mark" });
-        console.log(tiles);
         return {
           ...tableState,
           state: "Playing",
@@ -291,8 +297,8 @@ const App = () => {
         // shuffleInPlace(tiles);
         // after the countdown ends, start game is called with useEffect
         const initialMemoryTable = initializeMemoryTableState(
-          tableState.settings.gridSize,
-          tableState.settings.direction
+          gridSize,
+          direction
         );
         shuffleInPlace(initialMemoryTable.tiles);
         return { ...initialMemoryTable, state: "Countdown" };
@@ -321,8 +327,7 @@ const App = () => {
         }
         const resettedTable = initializeMemoryTableState(gridSize, direction);
         shuffleInPlace(resettedTable.tiles);
-        matchRecordDispatch({ type: "Mark" });
-        return { ...resettedTable, state: "Playing" };
+        return { ...resettedTable, state: "Countdown" };
 
       case "StopAnimation":
         const tileOfStopAnimation = tableState.tiles.find(
@@ -333,7 +338,7 @@ const App = () => {
         }
         tileOfStopAnimation.animationPlaying = false;
         tileOfStopAnimation.timeoutId = undefined;
-        return tableState;
+        return { ...tableState };
 
       case "InputNumber":
         if (state !== "Playing") {
@@ -344,13 +349,12 @@ const App = () => {
           const tileToBeAnimated = tableState.tiles.find(
             (tile) => tile.value === tableAction.inputtedNumber
           );
-          console.log(tileToBeAnimated);
           if (!tileToBeAnimated) {
             throw new Error("tileToBeAnimated must not be undefined.");
           }
           tileToBeAnimated.animationPlaying = true;
 
-          return tableState;
+          return { ...tableState };
         }
         // win condition
         if (tiles.every((tile) => tile.checked)) {
@@ -416,7 +420,6 @@ const App = () => {
         return initializeTableState();
 
       case GameMode.Memory:
-        console.log("THIS IS WORKING");
         return initializeMemoryTableState();
 
       default:
@@ -429,13 +432,12 @@ const App = () => {
 
   const [table, tableDispatch] = useReducer(reducer, initialTable);
 
-  console.log(table);
-
+  // memory table animation controller
   useEffect(() => {
     if (gameMode === GameMode.Memory) {
       const memoryTiles = table.tiles as MemoryTile[];
       memoryTiles.forEach((tile) => {
-        if (tile.animationPlaying === undefined) {
+        if (tile.animationPlaying && !tile.timeoutId) {
           tile.timeoutId = setTimeout(() => {
             tableDispatch({ type: "StopAnimation", value: tile.value });
           }, 3000);
@@ -513,7 +515,7 @@ const App = () => {
       return;
     }
     setGameMode(gameMode);
-    // tableDispatch({ type: "Reset" });
+    tableDispatch({ type: "Reset" });
   };
 
   const changeGridSize = (gridSize: GridSize): void => {

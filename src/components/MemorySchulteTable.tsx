@@ -24,8 +24,6 @@ const MemorySchulteTable: FC<MemorySchulteTableProps> = (props) => {
   const { gameState, tiles, gridSize, onStart, onNumberInput, onRestart } =
     props;
 
-  console.log("THIS IS FUCKING RENDERED");
-
   const tileWithStandardPropsGiven = (
     tile: MemoryTile,
     index: number,

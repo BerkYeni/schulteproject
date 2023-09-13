@@ -8,20 +8,24 @@ interface MemorySchulteTileProps {
 }
 
 const MemorySchulteTile: FC<MemorySchulteTileProps> = (props) => {
-  const { tile, onClick } = props;
-  const [test, setTest] = useState(tile);
-  console.log("test: ", test, "tile: ", tile);
-  if (test != tile) {
-    console.log("AAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHHHHAHAAAAAAA");
-    setTest(tile);
-  }
+  const { tile, onClick, gameState } = props;
 
   return (
     <button
       className={`tile ${tile.checked ? "clicked" : "unclicked"}`}
       onMouseDown={() => onClick(tile)}
     >
-      <div className={tile.animationPlaying ? "hidden" : "revealTileShortly"}>
+      <div
+        className={`tileText ${
+          gameState !== "Playing"
+            ? ""
+            : tile.checked
+            ? ""
+            : tile.animationPlaying
+            ? "revealTileShortly transparent"
+            : "hidden"
+        }`}
+      >
         {tile.value}
       </div>
     </button>

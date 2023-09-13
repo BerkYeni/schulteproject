@@ -129,7 +129,11 @@ export interface GameModeRule {
   expectedNumberSetter: (previousExpectedNumber: number) => number;
 }
 
-export type ChronometerState = "Idle" | "Active" | "DisplayResult";
+export type ChronometerState =
+  | "Idle"
+  | "Active"
+  | "DisplayResult"
+  | "Countdown";
 
 export interface matchesInfoToDisplay {
   recordCategoryToDisplay: string;
