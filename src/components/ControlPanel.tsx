@@ -1,5 +1,12 @@
 import React, { FC } from "react";
-import { GameMode, GameState, GridSize, TableDirection } from "../interfaces";
+import {
+  ControlPanelEventCallbacks,
+  GameMode,
+  GameState,
+  GridSize,
+  TableDirection,
+  TableSettings,
+} from "../interfaces";
 import {
   directionToDisplay,
   gameModeToDisplay,
@@ -8,28 +15,22 @@ import {
 
 interface ControlPanelProps {
   gameState: GameState;
-  onHidePanels: () => void;
-  onExposePanels: () => void;
+  tableSettings: TableSettings;
+  gameMode: GameMode;
   hidden: boolean;
-  onStart: () => void;
-  onRestart: () => void;
-  onGridSizeChange: (gridSize: GridSize) => void;
-  onGameModeChange: (gameMode: GameMode) => void;
-  onDirectionChange: (direction: TableDirection) => void;
+  eventCallbacks: ControlPanelEventCallbacks;
 }
 
 const ControlPanel: FC<ControlPanelProps> = (props) => {
+  const { gameState, hidden, eventCallbacks, gameMode, tableSettings } = props;
+
   const {
-    gameState,
     onHidePanels,
     onExposePanels,
-    hidden,
     onGridSizeChange,
-    onStart,
-    onRestart,
     onGameModeChange,
     onDirectionChange,
-  } = props;
+  } = eventCallbacks;
 
   const gridSizes = [GridSize.Size3x3, GridSize.Size4x4, GridSize.Size5x5];
   const gameModes = [GameMode.Vanilla, GameMode.Reaction, GameMode.Memory];
@@ -54,39 +55,40 @@ const ControlPanel: FC<ControlPanelProps> = (props) => {
           </button>
         </div>
 
-        {/* <div className="playAgainContainer">
-          {gameState === "NotStarted" && (
-            <button className="playAgain" onClick={onStart}>
-              Start
-            </button>
-          )}
-          {gameState === "Completed" && (
-            <button className="playAgain" onClick={onRestart}>
-              Play Again
-            </button>
-          )}
-        </div> */}
-
         <div className="gameSettings">
           <div className="gridSettings">
-            {gridSizes.map((size) => (
-              <button onClick={() => onGridSizeChange(size)}>
+            {gridSizes.map((size, index) => (
+              <button
+                className={tableSettings.gridSize === size ? "clicked" : ""}
+                key={index}
+                onClick={() => onGridSizeChange(size)}
+              >
                 {gridSizeToDisplay(size)}
               </button>
             ))}
           </div>
 
           <div className="gameModeSettings">
-            {gameModes.map((mode) => (
-              <button onClick={() => onGameModeChange(mode)}>
+            {gameModes.map((mode, index) => (
+              <button
+                className={gameMode === mode ? "clicked" : ""}
+                key={index}
+                onClick={() => onGameModeChange(mode)}
+              >
                 {gameModeToDisplay(mode)}
               </button>
             ))}
           </div>
 
           <div className="directionSettings">
-            {directions.map((direction) => (
-              <button onClick={() => onDirectionChange(direction)}>
+            {directions.map((direction, index) => (
+              <button
+                className={
+                  tableSettings.direction === direction ? "clicked" : ""
+                }
+                key={index}
+                onClick={() => onDirectionChange(direction)}
+              >
                 {directionToDisplay(direction)}
               </button>
             ))}

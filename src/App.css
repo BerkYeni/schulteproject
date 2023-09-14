@@ -1,8 +1,4 @@
 .App {
-  /* display: flex; */
-  /* justify-content: space-between; */
-  /* align-items: center; */
-
   height: 100vh;
   width: 100vw;
 
@@ -16,17 +12,11 @@
   box-sizing: border-box;
 }
 
-/* TODO: consider getting rid of the container and making schulte table position absolute */
 .tableContainer {
-  /* flex: 60%; */
-
   height: 100%;
   width: 93vmin;
   margin-left: auto;
   margin-right: auto;
-  /* display: flex; */
-  /* align-items: center;
-  justify-content: center; */
 }
 
 .schulteTable {
@@ -36,11 +26,8 @@
   left: 0;
   right: 0;
   margin: auto;
-  /* width: 93vmin;
-  height: 93vmin; */
   width: min(55vmax, 93vmin);
   height: min(55vmax, 93vmin);
-  /* margin-left: -10px; */
 
   display: grid;
   row-gap: 1.1vmin;
@@ -80,6 +67,10 @@
   justify-content: center;
   align-items: center;
   background-color: #855de0;
+}
+
+.tile {
+  border-radius: 10%;
 }
 
 button {
@@ -127,14 +118,11 @@ button:hover {
 }
 
 .playAgain {
-  /* width: 210px;
-  height: 70px; */
   padding: 20px 20%;
   cursor: pointer;
 }
 
 .playAgainContainer {
-  /* flex: 90%; */
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -206,15 +194,10 @@ button:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  /* box-shadow: 60px 60px; */
   box-shadow: 0px 0px 8.4px rgba(0, 0, 0, 0.093),
     0px 0px 20.2px rgba(0, 0, 0, 0.133), 0px 0px 38.1px rgba(0, 0, 0, 0.165),
     0px 0px 67.9px rgba(0, 0, 0, 0.197), 0px 0px 127px rgba(0, 0, 0, 0.237),
     0px 0px 304px rgba(0, 0, 0, 0.33);
-
-  /* box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
-    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
-    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px; */
 }
 
 .replaySvg {
@@ -310,10 +293,6 @@ button:hover {
     flex-direction: column;
   }
 
-  /* .controlPanel button {
-    font-size: x-large;
-  } */
-
   .toggleVisibility {
     rotate: 0deg;
   }
@@ -325,8 +304,6 @@ button:hover {
 
     display: flex;
     flex-direction: column;
-
-    /* font-size: medium; */
   }
 
   .exposePanels {
@@ -335,33 +312,4 @@ button:hover {
     bottom: auto;
     rotate: 0deg;
   }
-
-  /* .statistics button {
-    font-size: x-large;
-  } */
 }
-
-/* .controlPanel {
-  position: absolute;
-  height: 100%;
-  width: 20vw;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-direction: column;
-  background-color: #855de0;
-}
-
-.statistics {
-  position: absolute;
-  right: 0;
-  height: 100%;
-  width: 20vw;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: #855de0;
-} */

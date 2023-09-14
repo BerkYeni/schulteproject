@@ -1,11 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import {
-  GameState,
-  GridSize,
-  MemoryTile,
-  MemoryTileAnimationTracker,
-  Tile,
-} from "../interfaces";
+import { GameState, GridSize, MemoryTile, Tile } from "../interfaces";
 import ReplaySvg from "./ReplaySvg";
 import PlaySvg from "./PlaySvg";
 import { gridSizeToCss } from "../utils";

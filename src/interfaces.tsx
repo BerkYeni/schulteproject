@@ -141,7 +141,10 @@ export interface matchesInfoToDisplay {
   lastPlayedRecord: MatchRecord | undefined;
 }
 
-export interface MemoryTileAnimationTracker {
-  value: number;
-  timeoutId: NodeJS.Timeout | undefined;
+export interface ControlPanelEventCallbacks {
+  onHidePanels: () => void;
+  onExposePanels: () => void;
+  onGridSizeChange: (gridSize: GridSize) => void;
+  onGameModeChange: (gameMode: GameMode) => void;
+  onDirectionChange: (direction: TableDirection) => void;
 }

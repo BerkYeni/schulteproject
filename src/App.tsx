@@ -3,6 +3,7 @@ import "./App.css";
 import ControlPanel from "./components/ControlPanel";
 import Statistics from "./components/Statistics";
 import {
+  ControlPanelEventCallbacks,
   GameMode,
   GameState,
   GridSize,
@@ -11,11 +12,9 @@ import {
   MemoryTable,
   MemoryTableAction,
   MemoryTile,
-  MemoryTileAnimationTracker,
   Table,
   TableAction,
   TableDirection,
-  Tile,
 } from "./interfaces";
 import {
   directionToDisplay,
@@ -26,8 +25,6 @@ import {
   gameStateToChronometerState,
   getExpectedNumberOfDirection,
   gridSizeToDisplay,
-  isMemoryTile,
-  isMemoryTileArray,
   memoryTileArray,
   progressedExpectedNumberWithDirection,
   shuffleInPlace,
@@ -37,45 +34,18 @@ import VanillaSchulteTable from "./components/VanillaSchulteTable";
 import ReactionSchulteTable from "./components/ReactionSchulteTable";
 import MemorySchulteTable from "./components/MemorySchulteTable";
 
-// the source of animation not playing bug might be
-// about memory tile or memory table not rendering for whatever reason
-// not rendering might be about reducer not returning new object.
-// SOLVED
+// misc: i might add compensation (auto aim) for mobile use.
 
-// memory table tiles not being memory tiles might be caused
-// when gamemode is changed, it works fine when initial gamemode is memory.
-// SOLVED
-
-// TODO: implement chronometer countdown.
-// TODO: fix start action when not countdown bug in memory table restart,
-// bug happens when the game quickly restarts after a memory game was played.
-// might be about stop animation dispatches of the previous game.
-
-// TODO: implement memory table reducer, either find a way to
-// implement async dispatch or find a different way to impl. DONE
-// TODO: adjust css for mobile. DONE
-// TODO: fix memory table restart. DONE
-
-// misc: add a "linear" gamemode, where numbers are in a 1x16 grid for example.
-// misc: memory game modes animation is flawed in many ways, meybe revisit.
-// misc: instead of making reverse a gamemode, add a direction setting.
-// misc: refactor the gamemode code, try to decouple different gamemodes.
-// misc: refactor in general.
-// misc: make a state machine.
+// misc: delete unused files.
 // misc: add special effect when pr is achieved.
-// misc: add help features, accessibility features...
+// misc: add help features, hints, accessibility features...
 // misc: add indicator for the expected value.
-// misc: add indicator for current game settings (grid size, gamemode etc).
-// misc: make selected game settings buttons styled differently.
-// misc: make selected game settings styled differently.
 // misc: change mini icon/favicon.
-// misc: change background color when panels are hidden.
+// misc: change background color (or have table shadow) when panels are hidden.
 // misc: make reset match records button have svg in it instead of "reset".
-// misc: don't forget about hide panels button with responsive css.
 // misc: add grid size settings container etc.
-// misc: readress the media query breakpoints
-// misc: change tile border radius to percentage
-// misc: add "responsive design" to project description
+// misc: re-adress the media query breakpoints
+// misc: add "responsive design" to project description after deploy
 
 export const matchesKey = "matches";
 const getMatchesFromLocalStorage = (matchesKey: string): MatchRecord[] => {
@@ -99,7 +69,6 @@ const App = () => {
   const [hidePanels, setHidePanels] = useState<boolean>(false);
   const [gameMode, setGameMode] = useState<GameMode>(GameMode.Vanilla);
 
-  // TODO: come back to this
   const resetMatches = () => setMatches([]);
 
   const matchRecordReducer = (
@@ -137,16 +106,6 @@ const App = () => {
     matchRecordReducer,
     null
   );
-
-  // const animationTracker = (tiles: Tile[]): MemoryTileAnimationTracker[] =>
-  //   tiles.map((tile) => ({
-  //     value: tile.value,
-  //     timeoutId: undefined,
-  //   }));
-
-  // const [tileAnimationTracker, setTileAnimationTracker] = useState(
-  //   animationTracker(tileArray(GridSize.Size4x4))
-  // );
 
   const initializeTableState = (
     gridSize: GridSize = GridSize.Size4x4,
@@ -278,7 +237,6 @@ const App = () => {
   ): MemoryTable => {
     const { expectedNumber, tiles, state, settings } = tableState;
     const { direction, gridSize } = settings;
-    const countDownDurationInMilliseconds = 3000;
     switch (tableAction.type) {
       case "Start":
         if (state !== "Countdown") {
@@ -286,7 +244,6 @@ const App = () => {
             "Start action on memory table reducer when state wasn't countdown."
           );
         }
-        // shuffleInPlace(tiles);
         matchRecordDispatch({ type: "Mark" });
         return {
           ...tableState,
@@ -294,8 +251,6 @@ const App = () => {
         };
 
       case "StartCountDown":
-        // shuffleInPlace(tiles);
-        // after the countdown ends, start game is called with useEffect
         const initialMemoryTable = initializeMemoryTableState(
           gridSize,
           direction
@@ -436,19 +391,24 @@ const App = () => {
   useEffect(() => {
     if (gameMode === GameMode.Memory) {
       const memoryTiles = table.tiles as MemoryTile[];
-      memoryTiles.forEach((tile) => {
-        if (tile.animationPlaying && !tile.timeoutId) {
-          tile.timeoutId = setTimeout(() => {
-            tableDispatch({ type: "StopAnimation", value: tile.value });
-          }, 3000);
-        }
-      });
+      if (table.state !== "Playing") {
+        // if the game isn't playing, clear animations.
+        memoryTiles.forEach((tile) => {
+          if (tile.timeoutId) {
+            clearTimeout(tile.timeoutId);
+          }
+        });
+      } else {
+        memoryTiles.forEach((tile) => {
+          if (tile.animationPlaying && !tile.timeoutId) {
+            tile.timeoutId = setTimeout(() => {
+              tableDispatch({ type: "StopAnimation", value: tile.value });
+            }, 3000);
+          }
+        });
+      }
     }
   }, [table, gameMode]);
-
-  // useEffect(() => {
-  //   setTileAnimationTracker(animationTracker(table.tiles));
-  // }, [table.tiles]);
 
   const renderGameModeTable = (gameMode: GameMode) => {
     switch (gameMode) {
@@ -488,10 +448,6 @@ const App = () => {
         );
 
       case GameMode.Memory:
-        // const memoryTiles = table.tiles;
-        // if (!isMemoryTileArray(memoryTiles)) {
-        //   throw new Error("table tiles must be MemoryTile in memory gamemode.");
-        // }
         return (
           <MemorySchulteTable
             gameState={table.state}
@@ -526,11 +482,12 @@ const App = () => {
     tableDispatch({ type: "ChangeDirection", direction: direction });
   };
 
-  // i can get rid of this
+  // to save match records to local storage.
   useEffect(() => {
     localStorage.setItem(matchesKey, JSON.stringify(matches));
   }, [matches]);
 
+  // to solve the problem of async dispatch to start the game in memory mode.
   useEffect(() => {
     if (table.state !== "Countdown") {
       return;
@@ -550,32 +507,38 @@ const App = () => {
   const lastPlayedRecord = findLastPlayedRecord(settingSpecificMatches);
   const personalBestRecord = findPersonalBestRecord(settingSpecificMatches);
 
+  const matchesInfoToDisplay = {
+    lastPlayedRecord: lastPlayedRecord,
+    personalBestRecord: personalBestRecord,
+    recordCategoryToDisplay: `${gameModeToDisplay(
+      gameMode
+    )} ${gridSizeToDisplay(table.settings.gridSize)} ${directionToDisplay(
+      table.settings.direction
+    )}`,
+  };
+
+  const controlPanelEventCallbacks: ControlPanelEventCallbacks = {
+    onExposePanels: () => setHidePanels(false),
+    onHidePanels: () => setHidePanels(true),
+    onGridSizeChange: changeGridSize,
+    onGameModeChange: changeGameMode,
+    onDirectionChange: changeDirection,
+  };
+
   return (
     <div className="App">
       <ControlPanel
-        onStart={() => tableDispatch({ type: "Start" })}
-        onRestart={() => tableDispatch({ type: "Restart" })}
         gameState={table.state}
-        onExposePanels={() => setHidePanels(false)}
-        onHidePanels={() => setHidePanels(true)}
+        tableSettings={table.settings}
+        gameMode={gameMode}
         hidden={hidePanels}
-        onGridSizeChange={changeGridSize}
-        onGameModeChange={changeGameMode}
-        onDirectionChange={changeDirection}
+        eventCallbacks={controlPanelEventCallbacks}
       />
 
       <Statistics
         hidden={hidePanels}
         chronometerState={gameStateToChronometerState(table.state)}
-        matchesInfoToDisplay={{
-          lastPlayedRecord: lastPlayedRecord,
-          personalBestRecord: personalBestRecord,
-          recordCategoryToDisplay: `${gameModeToDisplay(
-            gameMode
-          )} ${gridSizeToDisplay(table.settings.gridSize)} ${directionToDisplay(
-            table.settings.direction
-          )}`,
-        }}
+        matchesInfoToDisplay={matchesInfoToDisplay}
         onResetMatches={resetMatches}
       />
 
