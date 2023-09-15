@@ -3,34 +3,49 @@ import { GameState, GridSize, Tile } from "../interfaces";
 import ReplaySvg from "./ReplaySvg";
 import PlaySvg from "./PlaySvg";
 import { gridSizeToCss } from "../utils";
-import SchulteTile from "./SchulteTile";
+import ReactionSchulteTile from "./ReactionSchulteTile";
 
-interface SchulteTableProps {
+interface ReactionSchulteTableProps {
   gameState: GameState;
   tiles: Tile[];
   gridSize: GridSize;
   onStart: () => void;
   onRestart: () => void;
   onNumberInput: (inputtedNumber: number) => void;
+  expectedNumber: number;
 }
 
-const SchulteTable: FC<SchulteTableProps> = (props) => {
-  const { gameState, tiles, gridSize, onStart, onNumberInput, onRestart } =
-    props;
+const ReactionSchulteTable: FC<ReactionSchulteTableProps> = (props) => {
+  const {
+    gameState,
+    tiles,
+    gridSize,
+    onStart,
+    onNumberInput,
+    onRestart,
+    expectedNumber,
+  } = props;
 
-  const tileWithStandardPropsGiven = (tile: Tile, index: number) => {
+  const tileWithStandardPropsGiven = (
+    tile: Tile,
+    index: number,
+    expectedNumber: number
+  ) => {
     return (
-      <SchulteTile
+      <ReactionSchulteTile
         onClick={() => onNumberInput(tile.value)}
         key={index}
         tile={tile}
+        expectedNumber={expectedNumber}
       />
     );
   };
 
   return (
     <div className={`schulteTable ${gridSizeToCss(gridSize)}`}>
-      {tiles.map(tileWithStandardPropsGiven)}
+      {tiles.map((tile, index) =>
+        tileWithStandardPropsGiven(tile, index, expectedNumber)
+      )}
 
       {(gameState === "NotStarted" || gameState === "Completed") && (
         <button
@@ -44,4 +59,4 @@ const SchulteTable: FC<SchulteTableProps> = (props) => {
   );
 };
 
-export default SchulteTable;
+export default ReactionSchulteTable;

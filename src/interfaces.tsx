@@ -1,41 +1,150 @@
+import React, { ReactNode } from "react";
+
 export type GameState = "NotStarted" | "Countdown" | "Playing" | "Completed";
+
 export enum GridSize {
   Size3x3 = 9,
   Size4x4 = 16,
   Size5x5 = 25,
 }
+
+export interface Tile {
+  value: number;
+  checked: boolean;
+}
+
+export type MemoryTile = {
+  value: number;
+  checked: boolean;
+  animationPlaying: boolean;
+  timeoutId: NodeJS.Timeout | undefined;
+};
+
+export type TableDirection = "Ascending" | "Descending";
+
+export interface TableSettings {
+  gridSize: GridSize;
+  direction: TableDirection;
+}
+
+export interface Table {
+  state: GameState;
+  tiles: Tile[];
+  expectedNumber: number;
+  settings: TableSettings;
+}
+
+export interface MemoryTable {
+  state: GameState;
+  tiles: MemoryTile[];
+  expectedNumber: number;
+  settings: TableSettings;
+}
+
+export interface InputNumberAction {
+  type: "InputNumber";
+  inputtedNumber: number;
+}
+
+export interface StartCountDownAction {
+  type: "StartCountDown";
+}
+
+export interface StartGameAction {
+  type: "Start";
+}
+
+export interface ResetGameAction {
+  type: "Reset";
+}
+
+export interface RestartGameAction {
+  type: "Restart";
+}
+
+export interface ChangeGridSizeAction {
+  type: "ChangeGridSize";
+  gridSize: GridSize;
+}
+
+export interface ChangeDirectionAction {
+  type: "ChangeDirection";
+  direction: TableDirection;
+}
+
+export interface StopAnimationAction {
+  type: "StopAnimation";
+  value: number;
+}
+
+export type TableAction =
+  | InputNumberAction
+  | StartGameAction
+  | ResetGameAction
+  | RestartGameAction
+  | ChangeGridSizeAction
+  | ChangeDirectionAction;
+
+export type MemoryTableAction =
+  | InputNumberAction
+  | StartCountDownAction
+  | StartGameAction
+  | ResetGameAction
+  | RestartGameAction
+  | ChangeGridSizeAction
+  | ChangeDirectionAction
+  | StopAnimationAction;
+
+export interface MarkStartAction {
+  type: "Mark";
+}
+
+export interface SaveRecordAction {
+  type: "SaveRecord";
+  tableSettings: TableSettings;
+}
+
+export type MatchRecordAction = MarkStartAction | SaveRecordAction;
+
 export interface MatchRecord {
   gridSize: GridSize;
   durationInMilliseconds: number;
   gameMode: GameMode;
+  startTime: Date;
+  direction: TableDirection;
 }
-export const gridSizeToCssLookUp: { [key in GridSize]: string } = {
-  [GridSize.Size3x3]: "grid3x3",
-  [GridSize.Size4x4]: "grid4x4",
-  [GridSize.Size5x5]: "grid5x5",
-};
-export const gridSizeToDisplayLookUp: { [key in GridSize]: string } = {
-  [GridSize.Size3x3]: "3 x 3",
-  [GridSize.Size4x4]: "4 x 4",
-  [GridSize.Size5x5]: "5 x 5",
-};
+
 export enum GameMode {
   Vanilla,
-  Reverse,
   Memory,
   Reaction,
 }
-export const gameModeToDisplayLookUp: { [key in GameMode]: string } = {
-  [GameMode.Vanilla]: "Vanilla",
-  [GameMode.Reverse]: "Reverse",
-  [GameMode.Memory]: "Memory",
-  [GameMode.Reaction]: "Reaction",
-};
+
 export interface GameModeRule {
   winCondition: (
     pressedNumber: number,
-    numbers: number[],
+    tiles: number[],
     expectedNumber: number
   ) => boolean;
   expectedNumberSetter: (previousExpectedNumber: number) => number;
+}
+
+export type ChronometerState =
+  | "Idle"
+  | "Active"
+  | "DisplayResult"
+  | "Countdown";
+
+export interface matchesInfoToDisplay {
+  recordCategoryToDisplay: string;
+  personalBestRecord: MatchRecord | undefined;
+  lastPlayedRecord: MatchRecord | undefined;
+}
+
+export interface ControlPanelEventCallbacks {
+  onHidePanels: () => void;
+  onExposePanels: () => void;
+  onGridSizeChange: (gridSize: GridSize) => void;
+  onGameModeChange: (gameMode: GameMode) => void;
+  onDirectionChange: (direction: TableDirection) => void;
 }

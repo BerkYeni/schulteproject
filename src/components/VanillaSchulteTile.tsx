@@ -1,22 +1,22 @@
 import React, { FC } from "react";
 import { Tile } from "../interfaces";
 
-interface SchulteTileProps {
+interface VanillaSchulteTileProps {
   tile: Tile;
   onClick: () => void;
 }
 
-const SchulteTile: FC<SchulteTileProps> = (props) => {
+const VanillaSchulteTile: FC<VanillaSchulteTileProps> = (props) => {
   const { tile, onClick } = props;
 
   return (
     <button
       className={`tile ${tile.checked ? "clicked" : "unclicked"}`}
-      onClick={onClick}
+      onMouseDown={onClick}
     >
-      <div className={``}>{tile.value}</div>
+      <div className={""}>{tile.value}</div>
     </button>
   );
 };
 
-export default SchulteTile;
+export default VanillaSchulteTile;

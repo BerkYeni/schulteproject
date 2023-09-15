@@ -1,14 +1,16 @@
-import React, { FC, useContext, useEffect, useState } from "react";
-import { GameStateContext, MatchesContext } from "../App";
-import { formatMatchDuration } from "../utils";
+import React, { FC, useState } from "react";
+import { ChronometerState } from "../interfaces";
+import stopSign from "../stopSign.png";
 
-// TODO: make chronometer into a class or a closure
+let chronometerIntervalId: undefined | NodeJS.Timer = undefined;
 
-interface ChronometerProps {}
+interface ChronometerProps {
+  lastPlayedInSeconds: string | undefined;
+  chronometerState: ChronometerState;
+}
 
 const Chronometer: FC<ChronometerProps> = (props) => {
-  const matches = useContext(MatchesContext);
-  const gameState = useContext(GameStateContext);
+  const { chronometerState, lastPlayedInSeconds } = props;
   const [seconds, setSeconds] = useState<number>(0);
 
   const initiateChronometer = () => {
@@ -21,40 +23,44 @@ const Chronometer: FC<ChronometerProps> = (props) => {
     return interval;
   };
 
-  useEffect(() => {
-    let interval: NodeJS.Timer | undefined;
-    switch (gameState) {
-      case "NotStarted":
-        break;
+  switch (chronometerState) {
+    case "Idle":
+    case "DisplayResult":
+      if (chronometerIntervalId !== undefined) {
+        clearInterval(chronometerIntervalId);
+        chronometerIntervalId = undefined;
+      }
+      if (seconds !== 0) {
+        setSeconds((previousSeconds) => 0);
+      }
+      break;
 
-      case "Playing":
-        interval = initiateChronometer();
-        break;
+    case "Active":
+      if (chronometerIntervalId === undefined) {
+        if (seconds !== 0) {
+          setSeconds((previousSeconds) => 0);
+        }
+        chronometerIntervalId = initiateChronometer();
+      }
+      break;
 
-      case "Completed":
-        clearInterval(interval);
-        setSeconds(0);
-        break;
-    }
-    return () => clearInterval(interval);
-  }, [gameState]);
+    case "Countdown":
+      break;
+  }
 
   return (
     <div className="chronometer">
-      {(() => {
-        switch (gameState) {
-          case "NotStarted":
-            return <div>--</div>;
-          case "Playing":
-            return <span>{seconds} s</span>;
-          case "Completed":
-            return (
-              <span>
-                {formatMatchDuration(matches[matches.length - 1])} seconds
-              </span>
-            );
-        }
-      })()}
+      {chronometerState === "Idle" ? (
+        <span>--</span>
+      ) : chronometerState === "Active" ? (
+        <span>{seconds} s</span>
+      ) : chronometerState === "Countdown" ? (
+        <span>
+          <img className="stopSign" src={stopSign} alt="Wait" />
+        </span>
+      ) : (
+        <span>{lastPlayedInSeconds || "--"} seconds</span>
+      )}
     </div>
   );
 };

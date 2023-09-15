@@ -1,36 +1,47 @@
-import React, { FC } from "react";
-import { GameState, GridSize, Tile } from "../interfaces";
+import React, { FC, useEffect, useState } from "react";
+import { GameState, GridSize, MemoryTile, Tile } from "../interfaces";
 import ReplaySvg from "./ReplaySvg";
 import PlaySvg from "./PlaySvg";
 import { gridSizeToCss } from "../utils";
-import SchulteTile from "./SchulteTile";
+import MemorySchulteTile from "./MemorySchulteTile";
 
-interface SchulteTableProps {
+interface MemorySchulteTableProps {
   gameState: GameState;
-  tiles: Tile[];
+  tiles: MemoryTile[];
   gridSize: GridSize;
   onStart: () => void;
   onRestart: () => void;
   onNumberInput: (inputtedNumber: number) => void;
 }
 
-const SchulteTable: FC<SchulteTableProps> = (props) => {
+const MemorySchulteTable: FC<MemorySchulteTableProps> = (props) => {
   const { gameState, tiles, gridSize, onStart, onNumberInput, onRestart } =
     props;
 
-  const tileWithStandardPropsGiven = (tile: Tile, index: number) => {
+  const tileWithStandardPropsGiven = (
+    tile: MemoryTile,
+    index: number,
+    gameState: GameState
+  ) => {
     return (
-      <SchulteTile
-        onClick={() => onNumberInput(tile.value)}
+      <MemorySchulteTile
+        onClick={(tile) => handleClick(tile)}
         key={index}
         tile={tile}
+        gameState={gameState}
       />
     );
   };
 
+  const handleClick = (tile: MemoryTile) => {
+    onNumberInput(tile.value);
+  };
+
   return (
     <div className={`schulteTable ${gridSizeToCss(gridSize)}`}>
-      {tiles.map(tileWithStandardPropsGiven)}
+      {tiles.map((tile, index) =>
+        tileWithStandardPropsGiven(tile, index, gameState)
+      )}
 
       {(gameState === "NotStarted" || gameState === "Completed") && (
         <button
@@ -44,4 +55,4 @@ const SchulteTable: FC<SchulteTableProps> = (props) => {
   );
 };
 
-export default SchulteTable;
+export default MemorySchulteTable;

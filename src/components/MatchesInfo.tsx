@@ -1,73 +1,48 @@
-import React, { FC, useContext, useState } from "react";
-import {
-  GameModeContext,
-  GridSizeContext,
-  MatchesContext,
-  SetMatchesContext,
-} from "../App";
-import {
-  findLastPlayed,
-  findPersonalBestRecord,
-  findSettingSpecificMatches,
-  formatMatchDuration,
-  gameModeToDisplay,
-  gridSizeToDisplay,
-  last,
-} from "../utils";
-import { GameMode, GridSize, MatchRecord } from "../interfaces";
-import { Match } from "@testing-library/react";
+import React, { FC } from "react";
+import { formatMatchDuration } from "../utils";
+import { matchesInfoToDisplay } from "../interfaces";
 
-interface MatchesInfoProps {}
+interface MatchesInfoProps {
+  onResetMatches: () => void;
+  matchesInfoToDisplay: matchesInfoToDisplay;
+}
 
 const MatchesInfo: FC<MatchesInfoProps> = (props) => {
-  const matches = useContext(MatchesContext);
-  const setMatches = useContext(SetMatchesContext);
-  const gridSize = useContext(GridSizeContext);
-  const gameMode = useContext(GameModeContext);
+  const { onResetMatches, matchesInfoToDisplay } = props;
 
-  const handleReset = () => {
-    if (!setMatches) throw new Error("setMatches must not be null");
-    setMatches([]);
+  const { lastPlayedRecord, personalBestRecord, recordCategoryToDisplay } =
+    matchesInfoToDisplay;
+
+  const Records: FC = (props) => {
+    if (!(personalBestRecord && lastPlayedRecord)) {
+      return <div>No records yet.</div>;
+    }
+
+    const isPersonalBest =
+      personalBestRecord.durationInMilliseconds ===
+      lastPlayedRecord.durationInMilliseconds;
+
+    const personalBestInSeconds = formatMatchDuration(personalBestRecord);
+    const lastPlayedInSeconds = formatMatchDuration(lastPlayedRecord);
+
+    return (
+      <>
+        <div>Personal Best: {personalBestInSeconds} s</div>
+
+        <div>
+          Last Played: {lastPlayedInSeconds} s {isPersonalBest && " ⭐"}
+        </div>
+      </>
+    );
   };
-
-  // TODO: find a better word than settings, settings sounds technical,
-  // apply the same strategy as changing gamemode name 'classic' to 'vanilla'
-  const settingSpecificMatches = findSettingSpecificMatches(
-    matches,
-    gridSize,
-    gameMode
-  );
-
-  const personalBestRecord = findPersonalBestRecord(settingSpecificMatches);
-  const personalBestSeconds = personalBestRecord
-    ? formatMatchDuration(personalBestRecord)
-    : undefined;
-
-  // TODO: i might wanna add date to match record type and sort them that way
-  const lastMatchRecord = findLastPlayed(settingSpecificMatches);
-  const lastMatchSeconds = lastMatchRecord
-    ? formatMatchDuration(lastMatchRecord)
-    : undefined;
 
   return (
     <div className="matchesInfo">
-      <button onClick={handleReset}>Reset</button>
+      <button onClick={onResetMatches}>Reset</button>
 
-      <div>{`${gridSizeToDisplay(gridSize)} ${gameModeToDisplay(
-        gameMode
-      )}`}</div>
+      <div>{recordCategoryToDisplay}</div>
 
-      {settingSpecificMatches.length <= 0 ? (
-        <div>No records yet.</div>
-      ) : (
-        <>
-          <div>Personal Best: {personalBestSeconds} s</div>
-          <div>
-            Last Played: {lastMatchSeconds} s
-            {lastMatchRecord === personalBestRecord && " ⭐"}
-          </div>
-        </>
-      )}
+      <Records />
     </div>
   );
 };

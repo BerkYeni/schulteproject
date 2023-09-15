@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <rect style="stroke: rgb(0, 0, 0); paint-order: fill; fill: rgb(160, 118, 249);" x="0" y="0" width="500" height="500" rx="50" ry="50"/>
+  <rect style="stroke: rgb(0, 0, 0); fill: rgb(215, 187, 245);" width="140" height="140" x="180" rx="30" ry="30" y="23"/>
+  <rect style="stroke: rgb(0, 0, 0); fill: rgb(215, 187, 245);" width="140" height="140" rx="30" ry="30" x="23" y="23"/>
+  <rect style="stroke: rgb(0, 0, 0); fill: rgb(215, 187, 245);" width="140" height="140" rx="30" ry="30" y="23" x="337"/>
+  <rect style="stroke: rgb(0, 0, 0); fill: rgb(215, 187, 245);" width="140" height="140" x="180" rx="30" ry="30" y="180"/>
+  <rect style="stroke: rgb(0, 0, 0); fill: rgb(215, 187, 245);" width="140" height="140" x="337" rx="30" ry="30" y="180"/>
+  <rect style="stroke: rgb(0, 0, 0); fill: rgb(215, 187, 245);" width="140" height="140" x="23" rx="30" ry="30" y="180"/>
+  <rect style="stroke: rgb(0, 0, 0); fill: rgb(215, 187, 245);" width="140" height="140" x="23" rx="30" ry="30" y="337"/>
+  <rect style="stroke: rgb(0, 0, 0); fill: rgb(215, 187, 245);" width="140" height="140" x="180" rx="30" ry="30" y="337"/>
+  <rect style="stroke: rgb(0, 0, 0); fill: rgb(215, 187, 245);" width="140" height="140" x="337" rx="30" ry="30" y="337"/>
+</svg>

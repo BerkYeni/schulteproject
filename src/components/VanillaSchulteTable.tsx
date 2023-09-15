@@ -3,9 +3,9 @@ import { GameState, GridSize, Tile } from "../interfaces";
 import ReplaySvg from "./ReplaySvg";
 import PlaySvg from "./PlaySvg";
 import { gridSizeToCss } from "../utils";
-import SchulteTile from "./SchulteTile";
+import VanillaSchulteTile from "./VanillaSchulteTile";
 
-interface SchulteTableProps {
+interface VanillaSchulteTableProps {
   gameState: GameState;
   tiles: Tile[];
   gridSize: GridSize;
@@ -14,13 +14,13 @@ interface SchulteTableProps {
   onNumberInput: (inputtedNumber: number) => void;
 }
 
-const SchulteTable: FC<SchulteTableProps> = (props) => {
+const VanillaSchulteTable: FC<VanillaSchulteTableProps> = (props) => {
   const { gameState, tiles, gridSize, onStart, onNumberInput, onRestart } =
     props;
 
   const tileWithStandardPropsGiven = (tile: Tile, index: number) => {
     return (
-      <SchulteTile
+      <VanillaSchulteTile
         onClick={() => onNumberInput(tile.value)}
         key={index}
         tile={tile}
@@ -44,4 +44,4 @@ const SchulteTable: FC<SchulteTableProps> = (props) => {
   );
 };
 
-export default SchulteTable;
+export default VanillaSchulteTable;
