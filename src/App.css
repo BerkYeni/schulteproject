@@ -6,6 +6,8 @@
   font-size: large;
   background-color: #ede4ff;
   color: white;
+
+  transition: background-color 0.25s;
 }
 
 * {
@@ -229,6 +231,10 @@ button:hover {
   user-select: none;
 }
 
+.dimmed {
+  background-color: #2d2837;
+}
+
 @keyframes reveal {
   0% {
     opacity: 1;
@@ -243,6 +249,15 @@ button:hover {
 
 .transparent {
   opacity: 0;
+}
+
+@media only screen and (min-width: 768px) {
+  .App {
+    font-size: large;
+  }
+  button {
+    font-size: x-large;
+  }
 }
 
 @media only screen and (min-width: 992px) {

@@ -34,18 +34,10 @@ import VanillaSchulteTable from "./components/VanillaSchulteTable";
 import ReactionSchulteTable from "./components/ReactionSchulteTable";
 import MemorySchulteTable from "./components/MemorySchulteTable";
 
-// misc: i might add compensation (auto aim) for mobile use.
-
-// misc: delete unused files.
-// misc: add special effect when pr is achieved.
-// misc: add help features, hints, accessibility features...
-// misc: add indicator for the expected value.
-// misc: change mini icon/favicon.
-// misc: change background color (or have table shadow) when panels are hidden.
-// misc: make reset match records button have svg in it instead of "reset".
-// misc: add grid size settings container etc.
-// misc: re-adress the media query breakpoints
-// misc: add "responsive design" to project description after deploy
+// ideas:
+//   add compensation (auto aim) for mobile use.
+//   make animations more satisfying
+//   display special effect when pr is achieved (confetti).
 
 export const matchesKey = "matches";
 const getMatchesFromLocalStorage = (matchesKey: string): MatchRecord[] => {
@@ -526,7 +518,7 @@ const App = () => {
   };
 
   return (
-    <div className="App">
+    <div className={`App ${hidePanels ? "dimmed" : ""}`}>
       <ControlPanel
         gameState={table.state}
         tableSettings={table.settings}
