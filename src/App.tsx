@@ -166,21 +166,7 @@ const App = () => {
         if (tableAction.inputtedNumber !== expectedNumber) {
           break;
         }
-        // win condition
-        if (tiles.every((tile) => tile.checked)) {
-          matchRecordDispatch({
-            type: "SaveRecord",
-            tableSettings: tableState.settings,
-          });
-          return {
-            ...tableState,
-            state: "Completed",
-            expectedNumber: progressedExpectedNumberWithDirection(
-              direction,
-              expectedNumber
-            ),
-          };
-        }
+
         // increment or decrement expected number when inputted correct number
         // based on direction
         // make the corresponding tile checked
@@ -195,6 +181,21 @@ const App = () => {
           direction,
           expectedNumber
         );
+
+        // win condition
+        const everyTileIsChecked = tiles.every((tile) => tile.checked);
+        if (everyTileIsChecked) {
+          matchRecordDispatch({
+            type: "SaveRecord",
+            tableSettings: tableState.settings,
+          });
+          return {
+            ...tableState,
+            state: "Completed",
+            expectedNumber: newExpectedNumber,
+          };
+        }
+
         return {
           ...tableState,
           expectedNumber: newExpectedNumber,
@@ -303,21 +304,7 @@ const App = () => {
 
           return { ...tableState };
         }
-        // win condition
-        if (tiles.every((tile) => tile.checked)) {
-          matchRecordDispatch({
-            type: "SaveRecord",
-            tableSettings: tableState.settings,
-          });
-          return {
-            ...tableState,
-            state: "Completed",
-            expectedNumber: progressedExpectedNumberWithDirection(
-              direction,
-              expectedNumber
-            ),
-          };
-        }
+
         // increment or decrement expected number when inputted correct number
         // based on direction
         // make the corresponding tile checked
@@ -332,6 +319,21 @@ const App = () => {
           direction,
           expectedNumber
         );
+
+        // win condition
+        const everyTileIsChecked = tiles.every((tile) => tile.checked);
+        if (everyTileIsChecked) {
+          matchRecordDispatch({
+            type: "SaveRecord",
+            tableSettings: tableState.settings,
+          });
+          return {
+            ...tableState,
+            state: "Completed",
+            expectedNumber: newExpectedNumber,
+          };
+        }
+
         return {
           ...tableState,
           expectedNumber: newExpectedNumber,
