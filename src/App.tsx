@@ -30,9 +30,7 @@ import {
   shuffleInPlace,
   tileArray,
 } from "./utils";
-import VanillaSchulteTable from "./components/VanillaSchulteTable";
-import ReactionSchulteTable from "./components/ReactionSchulteTable";
-import MemorySchulteTable from "./components/MemorySchulteTable";
+import SchulteTable from "./components/SchulteTable";
 
 // ideas:
 //   add compensation (auto aim) for mobile use.
@@ -405,59 +403,31 @@ const App = () => {
   }, [table, gameMode]);
 
   const renderGameModeTable = (gameMode: GameMode) => {
-    switch (gameMode) {
-      case GameMode.Vanilla:
-        return (
-          <VanillaSchulteTable
-            gameState={table.state}
-            tiles={table.tiles}
-            gridSize={table.settings.gridSize}
-            onStart={() => tableDispatch({ type: "Start" })}
-            onRestart={() => tableDispatch({ type: "Restart" })}
-            onNumberInput={(inputtedNumber: number) =>
-              tableDispatch({
-                type: "InputNumber",
-                inputtedNumber: inputtedNumber,
-              })
-            }
-          />
-        );
-
-      case GameMode.Reaction:
-        return (
-          <ReactionSchulteTable
-            gameState={table.state}
-            tiles={table.tiles}
-            gridSize={table.settings.gridSize}
-            onStart={() => tableDispatch({ type: "Start" })}
-            onRestart={() => tableDispatch({ type: "Restart" })}
-            onNumberInput={(inputtedNumber: number) =>
-              tableDispatch({
-                type: "InputNumber",
-                inputtedNumber: inputtedNumber,
-              })
-            }
-            expectedNumber={table.expectedNumber}
-          />
-        );
-
-      case GameMode.Memory:
-        return (
-          <MemorySchulteTable
-            gameState={table.state}
-            tiles={table.tiles as MemoryTile[]}
-            gridSize={table.settings.gridSize}
-            onStart={() => tableDispatch({ type: "StartCountDown" })}
-            onRestart={() => tableDispatch({ type: "Restart" })}
-            onNumberInput={(inputtedNumber: number) =>
-              tableDispatch({
-                type: "InputNumber",
-                inputtedNumber: inputtedNumber,
-              })
-            }
-          />
-        );
-    }
+    return (
+      <SchulteTable
+        gameMode={gameMode}
+        gameState={table.state}
+        tiles={table.tiles}
+        gridSize={table.settings.gridSize}
+        onStart={
+          gameMode === GameMode.Memory
+            ? () => tableDispatch({ type: "StartCountDown" })
+            : () => tableDispatch({ type: "Start" })
+        }
+        onRestart={
+          gameMode === GameMode.Memory
+            ? () => tableDispatch({ type: "Restart" })
+            : () => tableDispatch({ type: "Restart" })
+        }
+        onNumberInput={(inputtedNumber: number) =>
+          tableDispatch({
+            type: "InputNumber",
+            inputtedNumber: inputtedNumber,
+          })
+        }
+        expectedNumber={gameMode === GameMode.Reaction ? table.expectedNumber : undefined}
+      />
+    );
   };
 
   const changeGameMode = (gameMode: GameMode) => {

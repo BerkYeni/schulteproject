@@ -148,3 +148,10 @@ export interface ControlPanelEventCallbacks {
   onGameModeChange: (gameMode: GameMode) => void;
   onDirectionChange: (direction: TableDirection) => void;
 }
+
+export interface GenericTile extends Tile {
+  animationPlaying?: boolean;
+  timeoutId?: NodeJS.Timeout;
+}
+
+export type SchulteTile = Tile | MemoryTile;

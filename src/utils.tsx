@@ -7,6 +7,7 @@ import {
   MemoryTile,
   TableDirection,
   Tile,
+  SchulteTile, // Added SchulteTile here
 } from "./interfaces";
 
 export const shuffleInPlace = (array: any[]) => {
@@ -161,3 +162,65 @@ export const progressedExpectedNumberWithDirection = (
   direction: TableDirection,
   expectedNumber: number
 ) => (direction === "Ascending" ? expectedNumber + 1 : expectedNumber - 1);
+
+export const renderSchulteTile = (
+  tile: SchulteTile,
+  index: number,
+  gameMode: GameMode,
+  gameState: GameState,
+  onNumberInput: (num: number) => void,
+  expectedNumber: number | undefined
+) => {
+  switch (gameMode) {
+    case GameMode.Vanilla:
+      return (
+        <button
+          className={`tile ${tile.checked ? "clicked" : "unclicked"}`}
+          onMouseDown={() => onNumberInput(tile.value)}
+          key={index}
+        >
+          <div>{tile.value}</div>
+        </button>
+      );
+    case GameMode.Reaction:
+      return (
+        <button
+          className={`tile ${tile.checked ? "clicked" : "unclicked"}`}
+          onMouseDown={() => onNumberInput(tile.value)}
+          key={index}
+        >
+          <div className={`tileText ${
+            expectedNumber === undefined 
+            ? "" 
+            : tile.value <= expectedNumber 
+            ? "" 
+            : "hidden"}`}>{tile.value}</div>
+        </button>
+      );
+    case GameMode.Memory:
+      const memoryTile = tile as MemoryTile;
+      return (
+        <button
+          className={`tile ${memoryTile.checked ? "clicked" : "unclicked"}`}
+          onMouseDown={() => onNumberInput(memoryTile.value)}
+          key={index}
+        >
+          <div
+            className={`tileText ${
+              gameState !== "Playing"
+                ? ""
+                : memoryTile.checked
+                ? ""
+                : memoryTile.animationPlaying
+                ? "revealTileShortly transparent"
+                : "hidden"
+            }`}
+          >
+            {memoryTile.value}
+          </div>
+        </button>
+      );
+    default:
+      return null;
+  }
+};
