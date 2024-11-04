@@ -1,180 +1,512 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import "./App.css";
-import SchulteTable from "./components/SchulteTable";
 import ControlPanel from "./components/ControlPanel";
 import Statistics from "./components/Statistics";
-import { GameMode, GameState, GridSize, MatchRecord } from "./interfaces";
-import { gridSizeToArray, shuffleInPlace } from "./utils";
+import {
+  ControlPanelEventCallbacks,
+  GameMode,
+  GameState,
+  GridSize,
+  MatchRecord,
+  MatchRecordAction,
+  MemoryTable,
+  MemoryTableAction,
+  MemoryTile,
+  Table,
+  TableAction,
+  TableDirection,
+} from "./interfaces";
+import {
+  directionToDisplay,
+  findLastPlayedRecord,
+  findPersonalBestRecord,
+  findSettingSpecificMatches,
+  gameModeToDisplay,
+  gameStateToChronometerState,
+  getExpectedNumberOfDirection,
+  gridSizeToDisplay,
+  memoryTileArray,
+  progressedExpectedNumberWithDirection,
+  shuffleInPlace,
+  tileArray,
+} from "./utils";
+import SchulteTable from "./components/SchulteTable";
 
-// misc: add a "linear" gamemode, where numbers are in a 1x16 grid for example.
-// misc: memory game modes animation is flawed in many ways, meybe revisit.
-// misc: instead of making reverse a gamemode, add a direction setting.
-// misc: refactor the gamemode code, try to decouple different gamemodes.
-// misc: refactor in general.
-// misc: make a state machine.
-// misc: add special effect when pr is achieved.
-// misc: add help features, accessibility features...
-// misc: add indicator for the expected value.
-// misc: add indicator for current game settings (grid size, gamemode etc).
-// misc: make selected game settings buttons styled differently.
-// misc: make selected game settings styled differently.
-
-export const GameStateContext = createContext<GameState>("NotStarted");
-export const MatchesContext = createContext<MatchRecord[]>([]);
-export const SetMatchesContext = createContext<React.Dispatch<
-  React.SetStateAction<MatchRecord[]>
-> | null>(null);
-export const GridSizeContext = createContext<GridSize>(GridSize.Size4x4);
-export const GameModeContext = createContext<GameMode>(GameMode.Vanilla);
+// ideas:
+//   add compensation (auto aim) for mobile use.
+//   make animations more satisfying
+//   display special effect when pr is achieved (confetti).
 
 export const matchesKey = "matches";
-const getMatchesFromLocalStorage = (): MatchRecord[] => {
+const getMatchesFromLocalStorage = (matchesKey: string): MatchRecord[] => {
   const matches = localStorage.getItem(matchesKey);
   if (matches === null) {
     localStorage.setItem(matchesKey, JSON.stringify([]));
     return [];
   }
-  return JSON.parse(matches) as MatchRecord[];
+  const unconstructed = JSON.parse(matches) as MatchRecord[];
+  const constructed = unconstructed.map((match) => ({
+    ...match,
+    startTime: new Date(match.startTime),
+  }));
+  return constructed as MatchRecord[];
 };
 
 const App = () => {
-  const [gameState, setGameState] = useState<GameState>("NotStarted");
-  const [matches, setMatches] = useState<MatchRecord[]>(
-    getMatchesFromLocalStorage
+  const [matches, setMatches] = useState<MatchRecord[]>(() =>
+    getMatchesFromLocalStorage(matchesKey)
   );
-  const [roundStartTimestamp, setRoundStartTimestamp] = useState<
-    number | undefined
-  >();
-  const [numbers, setNumbers] = useState<number[] | undefined>();
-  const [displayOnlyTable, setDisplayOnlyTable] = useState<boolean>(false);
-  const [gridSize, setGridSize] = useState<GridSize>(GridSize.Size4x4);
-  const [expectedNumber, setExpectedNumber] = useState<number>(
-    Math.min(...gridSizeToArray(gridSize))
-  );
+  const [hidePanels, setHidePanels] = useState<boolean>(false);
   const [gameMode, setGameMode] = useState<GameMode>(GameMode.Vanilla);
 
-  const resetExpectedNumber = (): void => {
-    // setExpectedNumber(Math.min(...gridSizeToArray(gridSize)));
-    const orderedNumbers = gridSizeToArray(gridSize);
+  const resetMatches = () => setMatches([]);
+
+  const matchRecordReducer = (
+    roundStartTimestampState: null | Date,
+    matchRecordAction: MatchRecordAction
+  ): null | Date => {
+    switch (matchRecordAction.type) {
+      case "Mark":
+        if (roundStartTimestampState)
+          throw new Error(
+            "Tried to mark start time when it was already marked."
+          );
+        return new Date();
+      case "SaveRecord":
+        if (!roundStartTimestampState)
+          throw new Error("Tried to save record without marking.");
+        setMatches([
+          ...matches,
+          {
+            durationInMilliseconds:
+              new Date().getTime() - roundStartTimestampState.getTime(),
+            gameMode: gameMode,
+            gridSize: matchRecordAction.tableSettings.gridSize,
+            startTime: roundStartTimestampState,
+            direction: matchRecordAction.tableSettings.direction,
+          },
+        ]);
+        return null;
+      default:
+        throw new Error("Unexpected match record action.");
+    }
+  };
+
+  const [roundStartTimestamp, matchRecordDispatch] = useReducer(
+    matchRecordReducer,
+    null
+  );
+
+  const initializeTableState = (
+    gridSize: GridSize = GridSize.Size4x4,
+    direction: TableDirection = "Ascending"
+  ): Table => {
+    const tiles = tileArray(gridSize);
+    const expectedNumber = getExpectedNumberOfDirection(direction, tiles);
+    return {
+      tiles: tiles,
+      expectedNumber: expectedNumber,
+      state: "NotStarted",
+      settings: { direction: direction, gridSize: gridSize },
+    };
+  };
+
+  const vanillaTableReducer = (
+    tableState: Table,
+    tableAction: TableAction
+  ): Table => {
+    const { expectedNumber, tiles, state, settings } = tableState;
+    const { direction, gridSize } = settings;
+    switch (tableAction.type) {
+      case "Start":
+        if (state !== "NotStarted") {
+          break;
+        }
+        shuffleInPlace(tiles);
+        matchRecordDispatch({ type: "Mark" });
+        return {
+          ...tableState,
+          state: "Playing",
+          tiles: tiles,
+        };
+
+      case "ChangeGridSize":
+        if (!(state === "NotStarted" || state === "Completed")) {
+          break;
+        }
+        return initializeTableState(tableAction.gridSize, direction);
+
+      case "ChangeDirection":
+        if (!(state === "NotStarted" || state === "Completed")) {
+          break;
+        }
+        return initializeTableState(gridSize, tableAction.direction);
+
+      case "Reset":
+        if (state !== "Completed") {
+          break;
+        }
+        return initializeTableState(gridSize, direction);
+
+      case "Restart":
+        if (state !== "Completed") {
+          break;
+        }
+        const resettedTable = initializeTableState(gridSize, direction);
+        shuffleInPlace(resettedTable.tiles);
+        matchRecordDispatch({ type: "Mark" });
+        return { ...resettedTable, state: "Playing" };
+
+      case "InputNumber":
+        if (state !== "Playing") {
+          break;
+        }
+        if (tableAction.inputtedNumber !== expectedNumber) {
+          break;
+        }
+
+        // increment or decrement expected number when inputted correct number
+        // based on direction
+        // make the corresponding tile checked
+        const tile = tiles.find(
+          (tile) => tile.value === tableAction.inputtedNumber
+        );
+        if (!tile)
+          throw new Error("Failed to find inputted number, tile value match.");
+        tile.checked = true;
+
+        const newExpectedNumber = progressedExpectedNumberWithDirection(
+          direction,
+          expectedNumber
+        );
+
+        // win condition
+        const everyTileIsChecked = tiles.every((tile) => tile.checked);
+        if (everyTileIsChecked) {
+          matchRecordDispatch({
+            type: "SaveRecord",
+            tableSettings: tableState.settings,
+          });
+          return {
+            ...tableState,
+            state: "Completed",
+            expectedNumber: newExpectedNumber,
+          };
+        }
+
+        return {
+          ...tableState,
+          expectedNumber: newExpectedNumber,
+        };
+
+      default:
+        throw new Error("Unexpected table action.");
+    }
+
+    return tableState;
+  };
+
+  const initializeMemoryTableState = (
+    gridSize: GridSize = GridSize.Size4x4,
+    direction: TableDirection = "Ascending"
+  ): MemoryTable => {
+    const tiles = memoryTileArray(gridSize);
+    const expectedNumber = getExpectedNumberOfDirection(direction, tiles);
+    const state: GameState = "NotStarted";
+    const memoryTable = {
+      tiles: tiles,
+      expectedNumber: expectedNumber,
+      state: state,
+      settings: { direction: direction, gridSize: gridSize },
+    };
+    return memoryTable;
+  };
+
+  const memoryTableReducer = (
+    tableState: MemoryTable,
+    tableAction: MemoryTableAction
+  ): MemoryTable => {
+    const { expectedNumber, tiles, state, settings } = tableState;
+    const { direction, gridSize } = settings;
+    switch (tableAction.type) {
+      case "Start":
+        if (state !== "Countdown") {
+          throw new Error(
+            "Start action on memory table reducer when state wasn't countdown."
+          );
+        }
+        matchRecordDispatch({ type: "Mark" });
+        return {
+          ...tableState,
+          state: "Playing",
+        };
+
+      case "StartCountDown":
+        const initialMemoryTable = initializeMemoryTableState(
+          gridSize,
+          direction
+        );
+        shuffleInPlace(initialMemoryTable.tiles);
+        return { ...initialMemoryTable, state: "Countdown" };
+
+      case "ChangeGridSize":
+        if (!(state === "NotStarted" || state === "Completed")) {
+          break;
+        }
+        return initializeMemoryTableState(tableAction.gridSize, direction);
+
+      case "ChangeDirection":
+        if (!(state === "NotStarted" || state === "Completed")) {
+          break;
+        }
+        return initializeMemoryTableState(gridSize, tableAction.direction);
+
+      case "Reset":
+        if (state !== "Completed") {
+          break;
+        }
+        return initializeMemoryTableState(gridSize, direction);
+
+      case "Restart":
+        if (state !== "Completed") {
+          break;
+        }
+        const resettedTable = initializeMemoryTableState(gridSize, direction);
+        shuffleInPlace(resettedTable.tiles);
+        return { ...resettedTable, state: "Countdown" };
+
+      case "StopAnimation":
+        const tileOfStopAnimation = tableState.tiles.find(
+          (tile) => tile.value === tableAction.value
+        );
+        if (!tileOfStopAnimation) {
+          throw new Error("tileOfStopAnimation must not be undefined.");
+        }
+        tileOfStopAnimation.animationPlaying = false;
+        tileOfStopAnimation.timeoutId = undefined;
+        return { ...tableState };
+
+      case "InputNumber":
+        if (state !== "Playing") {
+          break;
+        }
+        // if the number is wrong, set tile animationIsPlaying to true
+        if (tableAction.inputtedNumber !== expectedNumber) {
+          const tileToBeAnimated = tableState.tiles.find(
+            (tile) => tile.value === tableAction.inputtedNumber
+          );
+          if (!tileToBeAnimated) {
+            throw new Error("tileToBeAnimated must not be undefined.");
+          }
+          tileToBeAnimated.animationPlaying = true;
+
+          return { ...tableState };
+        }
+
+        // increment or decrement expected number when inputted correct number
+        // based on direction
+        // make the corresponding tile checked
+        const tile = tiles.find(
+          (tile) => tile.value === tableAction.inputtedNumber
+        );
+        if (!tile)
+          throw new Error("Failed to find inputted number, tile value match.");
+        tile.checked = true;
+
+        const newExpectedNumber = progressedExpectedNumberWithDirection(
+          direction,
+          expectedNumber
+        );
+
+        // win condition
+        const everyTileIsChecked = tiles.every((tile) => tile.checked);
+        if (everyTileIsChecked) {
+          matchRecordDispatch({
+            type: "SaveRecord",
+            tableSettings: tableState.settings,
+          });
+          return {
+            ...tableState,
+            state: "Completed",
+            expectedNumber: newExpectedNumber,
+          };
+        }
+
+        return {
+          ...tableState,
+          expectedNumber: newExpectedNumber,
+        };
+
+      default:
+        throw new Error("Unexpected table action.");
+    }
+
+    return tableState;
+  };
+
+  const gameModeToTableReducer = (gameMode: GameMode) => {
     switch (gameMode) {
       case GameMode.Vanilla:
       case GameMode.Reaction:
+        return vanillaTableReducer;
+
       case GameMode.Memory:
-        setExpectedNumber(Math.min(...orderedNumbers));
-        break;
-      case GameMode.Reverse:
-        setExpectedNumber(Math.max(...orderedNumbers));
-        console.log(expectedNumber);
-        break;
+        return memoryTableReducer;
+
+      default:
+        throw new Error("Unexpected game mode.");
     }
   };
 
-  const shuffleTable = (): void =>
-    setNumbers(shuffleInPlace(gridSizeToArray(gridSize)));
+  const initializeTableWithGameMode = (
+    gameMode: GameMode
+  ): Table | MemoryTable => {
+    switch (gameMode) {
+      case GameMode.Vanilla:
+      case GameMode.Reaction:
+        return initializeTableState();
 
-  const resetGame = (): void => {
-    resetExpectedNumber();
-  };
+      case GameMode.Memory:
+        return initializeMemoryTableState();
 
-  const startGame = (): void => {
-    resetGame();
-    if (gameMode !== GameMode.Memory) {
-      shuffleTable();
+      default:
+        throw new Error("Unexpected game mode.");
     }
-    setGameState("Playing");
-    setRoundStartTimestamp(new Date().getTime());
   };
 
-  const endGame = (): void => {
-    setGameState("Completed");
-    if (!roundStartTimestamp)
-      throw new Error("Round start time can't be undefined.");
-    const temporaryRoundTime = new Date().getTime() - roundStartTimestamp;
-    // setCurrentRoundTime(temporaryRoundTime);
-    const record: MatchRecord = {
-      durationInMilliseconds: temporaryRoundTime,
-      gridSize: gridSize,
-      gameMode: gameMode,
-    };
-    setMatches((previousMatches) => [...previousMatches, record]);
-  };
+  const reducer = gameModeToTableReducer(gameMode);
+  const initialTable = initializeTableWithGameMode(gameMode);
 
-  const handleStart = (): void => {
+  const [table, tableDispatch] = useReducer(reducer, initialTable);
+
+  // memory table animation controller
+  useEffect(() => {
     if (gameMode === GameMode.Memory) {
-      shuffleTable();
-      setGameState("Countdown");
-      setTimeout(() => {
-        startGame();
-      }, 3000);
+      const memoryTiles = table.tiles as MemoryTile[];
+      if (table.state !== "Playing") {
+        // if the game isn't playing, clear animations.
+        memoryTiles.forEach((tile) => {
+          if (tile.timeoutId) {
+            clearTimeout(tile.timeoutId);
+          }
+        });
+      } else {
+        memoryTiles.forEach((tile) => {
+          if (tile.animationPlaying && !tile.timeoutId) {
+            tile.timeoutId = setTimeout(() => {
+              tableDispatch({ type: "StopAnimation", value: tile.value });
+            }, 3000);
+          }
+        });
+      }
+    }
+  }, [table, gameMode]);
+
+  const renderGameModeTable = (gameMode: GameMode) => {
+    return (
+      <SchulteTable
+        gameMode={gameMode}
+        gameState={table.state}
+        tiles={table.tiles}
+        gridSize={table.settings.gridSize}
+        onStart={
+          gameMode === GameMode.Memory
+            ? () => tableDispatch({ type: "StartCountDown" })
+            : () => tableDispatch({ type: "Start" })
+        }
+        onRestart={
+          gameMode === GameMode.Memory
+            ? () => tableDispatch({ type: "Restart" })
+            : () => tableDispatch({ type: "Restart" })
+        }
+        onNumberInput={(inputtedNumber: number) =>
+          tableDispatch({
+            type: "InputNumber",
+            inputtedNumber: inputtedNumber,
+          })
+        }
+        expectedNumber={gameMode === GameMode.Reaction ? table.expectedNumber : undefined}
+      />
+    );
+  };
+
+  const changeGameMode = (gameMode: GameMode) => {
+    if (table.state !== "NotStarted" && table.state !== "Completed") {
       return;
     }
-    startGame();
-  };
-
-  // const setExpectedNumberWithGameMode = () => {
-  //   if (!numbers) return;
-  //   switch (gameMode) {
-  //     case GameMode.Vanilla:
-  //       setExpectedNumber(Math.min(...numbers));
-  //       break;
-  //     case GameMode.Reverse:
-  //       setExpectedNumber(Math.max(...numbers));
-  //       console.log(expectedNumber);
-  //       break;
-  //     case GameMode.Reaction:
-  //       setExpectedNumber(Math.min(...numbers));
-  //       break;
-  //     case GameMode.Memory:
-  //       setExpectedNumber(Math.min(...numbers));
-  //       break;
-  //   }
-  // };
-
-  const changeGameMode = (gameMode: GameMode): void => {
     setGameMode(gameMode);
-    // setExpectedNumberWithGameMode();
+    tableDispatch({ type: "Reset" });
   };
 
+  const changeGridSize = (gridSize: GridSize): void => {
+    tableDispatch({ type: "ChangeGridSize", gridSize: gridSize });
+  };
+
+  const changeDirection = (direction: TableDirection): void => {
+    tableDispatch({ type: "ChangeDirection", direction: direction });
+  };
+
+  // to save match records to local storage.
   useEffect(() => {
     localStorage.setItem(matchesKey, JSON.stringify(matches));
   }, [matches]);
 
+  // to solve the problem of async dispatch to start the game in memory mode.
+  useEffect(() => {
+    if (table.state !== "Countdown") {
+      return;
+    }
+    setTimeout(() => {
+      tableDispatch({ type: "Start" });
+    }, 3000);
+  }, [table]);
+
+  const settingSpecificMatches = findSettingSpecificMatches(
+    matches,
+    table.settings.gridSize,
+    gameMode,
+    table.settings.direction
+  );
+
+  const lastPlayedRecord = findLastPlayedRecord(settingSpecificMatches);
+  const personalBestRecord = findPersonalBestRecord(settingSpecificMatches);
+
+  const matchesInfoToDisplay = {
+    lastPlayedRecord: lastPlayedRecord,
+    personalBestRecord: personalBestRecord,
+    recordCategoryToDisplay: `${gameModeToDisplay(
+      gameMode
+    )} ${gridSizeToDisplay(table.settings.gridSize)} ${directionToDisplay(
+      table.settings.direction
+    )}`,
+  };
+
+  const controlPanelEventCallbacks: ControlPanelEventCallbacks = {
+    onExposePanels: () => setHidePanels(false),
+    onHidePanels: () => setHidePanels(true),
+    onGridSizeChange: changeGridSize,
+    onGameModeChange: changeGameMode,
+    onDirectionChange: changeDirection,
+  };
+
   return (
-    <div className="App">
+    <div className={`App ${hidePanels ? "dimmed" : ""}`}>
       <ControlPanel
-        gameState={gameState}
-        setGameState={setGameState}
-        setRoundStartTimestamp={setRoundStartTimestamp}
-        handleStart={handleStart}
-        setDisplayOnlyTable={setDisplayOnlyTable}
-        setGridSize={setGridSize}
-        hidden={displayOnlyTable}
-        resetGame={resetGame}
-        changeGameMode={changeGameMode}
+        gameState={table.state}
+        tableSettings={table.settings}
+        gameMode={gameMode}
+        hidden={hidePanels}
+        eventCallbacks={controlPanelEventCallbacks}
       />
-      <div className="tableContainer">
-        <SchulteTable
-          gameState={gameState}
-          expectedNumber={expectedNumber}
-          setExpectedNumber={setExpectedNumber}
-          numbers={numbers}
-          gridSize={gridSize}
-          endGame={endGame}
-          handleStart={handleStart}
-          gameMode={gameMode}
-        />
-      </div>
-      <GameModeContext.Provider value={gameMode}>
-        <GridSizeContext.Provider value={gridSize}>
-          <MatchesContext.Provider value={matches}>
-            <SetMatchesContext.Provider value={setMatches}>
-              <GameStateContext.Provider value={gameState}>
-                <Statistics hidden={displayOnlyTable} />
-              </GameStateContext.Provider>
-            </SetMatchesContext.Provider>
-          </MatchesContext.Provider>
-        </GridSizeContext.Provider>
-      </GameModeContext.Provider>
+
+      <Statistics
+        hidden={hidePanels}
+        chronometerState={gameStateToChronometerState(table.state)}
+        matchesInfoToDisplay={matchesInfoToDisplay}
+        onResetMatches={resetMatches}
+      />
+
+      <div className="tableContainer">{renderGameModeTable(gameMode)}</div>
     </div>
   );
 };
