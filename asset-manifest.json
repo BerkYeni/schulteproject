@@ -1,15 +1,16 @@
 {
   "files": {
-    "main.css": "/schulteproject/static/css/main.e2a89855.css",
-    "main.js": "/schulteproject/static/js/main.035681c7.js",
+    "main.css": "/schulteproject/static/css/main.e1a6761b.css",
+    "main.js": "/schulteproject/static/js/main.17ea6d77.js",
     "static/js/787.402124f3.chunk.js": "/schulteproject/static/js/787.402124f3.chunk.js",
+    "static/media/stopSign.png": "/schulteproject/static/media/stopSign.2dab7322d8cf98b6817c.png",
     "index.html": "/schulteproject/index.html",
-    "main.e2a89855.css.map": "/schulteproject/static/css/main.e2a89855.css.map",
-    "main.035681c7.js.map": "/schulteproject/static/js/main.035681c7.js.map",
+    "main.e1a6761b.css.map": "/schulteproject/static/css/main.e1a6761b.css.map",
+    "main.17ea6d77.js.map": "/schulteproject/static/js/main.17ea6d77.js.map",
     "787.402124f3.chunk.js.map": "/schulteproject/static/js/787.402124f3.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.e2a89855.css",
-    "static/js/main.035681c7.js"
+    "static/css/main.e1a6761b.css",
+    "static/js/main.17ea6d77.js"
   ]
 }
