@@ -12,25 +12,14 @@ const HidePanelsButton: FC<HidePanelsButtonProps> = (props) => {
   const { hidden, onHidePanels, onExposePanels } = props;
 
   return (
-    <>
-      <button
-        id="exposePanelsButton"
-        // className={`exposePanels tile unclicked ${!hidden && "hidden"}`}
-        className={`exposePanels tile unclicked`}
-        onClick={hidden ? onExposePanels : onHidePanels}
-      >
-        ←
-      </button>
-
-      {/* <div className="toggleVisibilityContainer">
-        <button
-          className="toggleVisibility tile unclicked"
-          onClick={onHidePanels}
-        >
-          ←
-        </button>
-      </div> */}
-    </>
+    <button
+      id="exposePanelsButton"
+      // className={`exposePanels tile unclicked ${!hidden && "hidden"}`}
+      className={`exposePanels tile unclicked`}
+      onClick={hidden ? onExposePanels : onHidePanels}
+    >
+      ←
+    </button>
   )
 }
 
