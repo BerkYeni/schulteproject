@@ -19,7 +19,7 @@ const HidePanelsButton: FC<HidePanelsButtonProps> = (props) => {
         className={`exposePanels tile unclicked`}
         onClick={hidden ? onExposePanels : onHidePanels}
       >
-        →
+        ←
       </button>
 
       {/* <div className="toggleVisibilityContainer">
