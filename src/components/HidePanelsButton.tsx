@@ -15,7 +15,7 @@ const HidePanelsButton: FC<HidePanelsButtonProps> = (props) => {
     <button
       id="exposePanelsButton"
       // className={`exposePanels tile unclicked ${!hidden && "hidden"}`}
-      className={`exposePanels tile unclicked`}
+      className={`exposePanels tile unclicked ${hidden && "rotateAround"}`}
       onClick={hidden ? onExposePanels : onHidePanels}
     >
       ←
