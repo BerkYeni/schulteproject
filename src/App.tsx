@@ -32,10 +32,6 @@ import {
 } from "./utils";
 import SchulteTable from "./components/SchulteTable";
 
-// ideas:
-//   add compensation (auto aim) for mobile use.
-//   make animations more satisfying
-//   display special effect when pr is achieved (confetti).
 
 export const matchesKey = "matches";
 const getMatchesFromLocalStorage = (matchesKey: string): MatchRecord[] => {
