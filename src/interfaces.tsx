@@ -141,9 +141,10 @@ export interface matchesInfoToDisplay {
   lastPlayedRecord: MatchRecord | undefined;
 }
 
+export type OnHidePanels = () => void;
+export type OnExposePanels = () => void;
+
 export interface ControlPanelEventCallbacks {
-  onHidePanels: () => void;
-  onExposePanels: () => void;
   onGridSizeChange: (gridSize: GridSize) => void;
   onGameModeChange: (gameMode: GameMode) => void;
   onDirectionChange: (direction: TableDirection) => void;

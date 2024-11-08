@@ -31,6 +31,7 @@ import {
   tileArray,
 } from "./utils";
 import SchulteTable from "./components/SchulteTable";
+import HidePanelsButton from "./components/HidePanelsButton";
 
 
 export const matchesKey = "matches";
@@ -478,15 +479,19 @@ const App = () => {
   };
 
   const controlPanelEventCallbacks: ControlPanelEventCallbacks = {
-    onExposePanels: () => setHidePanels(false),
-    onHidePanels: () => setHidePanels(true),
     onGridSizeChange: changeGridSize,
     onGameModeChange: changeGameMode,
     onDirectionChange: changeDirection,
   };
+  
+  const onExposePanels = () => setHidePanels(false)
+  const onHidePanels = () => setHidePanels(true)
 
   return (
-    <div className={`App ${hidePanels ? "dimmed" : ""}`}>
+    <div className={`App`}>
+      <HidePanelsButton hidden={hidePanels} onHidePanels={onHidePanels} onExposePanels={onExposePanels} />
+
+
       <ControlPanel
         gameState={table.state}
         tableSettings={table.settings}
