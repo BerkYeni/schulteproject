@@ -242,6 +242,11 @@ button:hover {
   rotate: 90deg;
 }
 
+.hidePanelsArrow {
+  position: relative;
+  bottom: 2px;
+}
+
 
 @keyframes reveal {
   0% {
