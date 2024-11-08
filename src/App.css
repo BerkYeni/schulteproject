@@ -152,6 +152,8 @@ button:hover {
 }
 
 .exposePanels {
+  z-index: 2;
+  transition-duration: .2s;
   position: absolute;
 
   bottom: 20px;
@@ -159,6 +161,7 @@ button:hover {
   rotate: -90deg;
   font-size: x-large;
 }
+
 
 .chronometer {
   display: flex;
@@ -234,6 +237,11 @@ button:hover {
 .dimmed {
   background-color: #2d2837;
 }
+
+.rotateAround {
+  rotate: 90deg;
+}
+
 
 @keyframes reveal {
   0% {
@@ -327,4 +335,10 @@ button:hover {
     bottom: auto;
     rotate: 0deg;
   }
+
+  .rotateAround {
+    rotate: 180deg;
+  }
+  
 }
+
