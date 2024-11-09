@@ -3,17 +3,11 @@ import {
   ControlPanelEventCallbacks,
   GameMode,
   GameState,
-  GridSize,
-  TableDirection,
   TableSettings,
 } from "../interfaces";
-import {
-  directionToDisplay,
-  gameModeToDisplay,
-  gridSizeToDisplay,
-} from "../utils";
 import GridSettings from "./GridSettings";
 import GameModeSettings from "./GameModeSettings";
+import DirectionSettings from "./DirectionSettings";
 
 interface ControlPanelProps {
   gameState: GameState;
@@ -34,27 +28,14 @@ const ControlPanel: FC<ControlPanelProps> = (props) => {
 
   return (
     <div className={`controlPanel smoothTransition ${hidden ? "slideLeft" : ""}`}>
-
       <div className="gameSettings">
 
         <GridSettings tableSettings={tableSettings} onGridSizeChange={onGridSizeChange} />
 
         <GameModeSettings gameMode={gameMode} onGameModeChange={onGameModeChange} />
 
+        <DirectionSettings onDirectionChange={onDirectionChange} tableSettings={tableSettings} />
 
-        <div className="directionSettings">
-          {directions.map((direction, index) => (
-            <button
-              className={
-                tableSettings.direction === direction ? "clicked" : ""
-              }
-              key={index}
-              onClick={() => onDirectionChange(direction)}
-            >
-              {directionToDisplay(direction)}
-            </button>
-          ))}
-        </div>
       </div>
     </div>
   );
