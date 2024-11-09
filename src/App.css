@@ -80,8 +80,13 @@ select:hover {
   cursor: pointer;
 }
 
-option {
+select option:hover {
+  box-shadow: 0 0 10px 100px #f3d1d1 inset;
+}
 
+
+option {
+  border-radius: 2.625vmin;
 }
 option:hover {
   /* cursor: pointer; */
