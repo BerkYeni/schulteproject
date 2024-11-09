@@ -12,7 +12,22 @@ const GameModeSettings: FC<GameModeSettingsProps> = (props) => {
 
   return (
     <div className="gameModeSettings">
-      {gameModes.map((mode, index) => (
+      <label htmlFor="gameModeSetting">Change gamemode:</label><br/>
+
+      <select name="gameModeSetting" id="gameModeSetting" onChange={(event) => onGameModeChange(parseInt(event.target.value))}>
+        {gameModes.map((mode, index) => (
+          <option
+            selected={mode === gameMode ? true : false}
+            className={gameMode === mode ? "clicked" : ""}
+            key={index}
+            value={mode}
+          >
+            {gameModeToDisplay(mode)}
+          </option>
+        ))}
+      </select>
+
+      {/* {gameModes.map((mode, index) => (
         <button
           className={gameMode === mode ? "clicked" : ""}
           key={index}
@@ -20,7 +35,7 @@ const GameModeSettings: FC<GameModeSettingsProps> = (props) => {
         >
           {gameModeToDisplay(mode)}
         </button>
-      ))}
+      ))} */}
     </div>
   )
 }
