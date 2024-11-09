@@ -14,6 +14,10 @@
   box-sizing: border-box;
 }
 
+body {
+  overflow: hidden;
+}
+
 .tableContainer {
   height: 100%;
   width: 93vmin;
@@ -55,9 +59,13 @@
   justify-content: space-between;
   align-items: center;
   background-color: #855de0;
+  
+}
 
-  transition-duration: .2s;
-  transition-timing-function: ease-out;
+.smoothTransition {
+  transition-duration: .5s;
+  transition-timing-function: cubic-bezier(.09,.65,0,1);
+  /* transition-timing-function: cubic-bezier(0,.6,0,1); */
 
 }
 
@@ -75,9 +83,6 @@
   justify-content: center;
   align-items: center;
   background-color: #855de0;
-
-  transition-duration: .2s;
-  transition-timing-function: ease-out;
 
 }
 

@@ -23,7 +23,7 @@ const Statistics: FC<StatisticsProps> = (props) => {
   }
 
   return (
-    <div className={`statistics ${hidden ? "slideRight" : ""}`}>
+    <div className={`statistics smoothTransition ${hidden ? "slideRight" : ""}`}>
       <Chronometer
         chronometerState={chronometerState}
         lastPlayedInSeconds={lastPlayedInSeconds}

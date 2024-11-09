@@ -36,7 +36,7 @@ const ControlPanel: FC<ControlPanelProps> = (props) => {
 
   return (
     // <div className={`controlPanel ${hidden ? "hidden" : ""}`}>
-    <div className={`controlPanel ${hidden ? "slideLeft" : ""}`}>
+    <div className={`controlPanel smoothTransition ${hidden ? "slideLeft" : ""}`}>
 
       <div className="gameSettings">
 
