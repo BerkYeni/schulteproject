@@ -12,9 +12,9 @@ const GridSettings: FC<GridSettingsProps> = (props) => {
 
   return (
     <div className="gridSettings">
-      <label htmlFor="tableSettings">Change grid size:</label><br/>
+      <label htmlFor="gridSetting">Change grid size:</label><br/>
 
-      <select name="tableSettings" id="tableSettings" onChange={(event) => onGridSizeChange(parseInt(event.target.value))}>
+      <select name="gridSetting" id="gridSetting" onChange={(event) => onGridSizeChange(parseInt(event.target.value))}>
         {gridSizes.map((size, index) => (
           <option
             selected={size === tableSettings.gridSize ? true : false}
