@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react";
-import { ChronometerState } from "../interfaces";
 import stopSign from "../stopSign.png";
+import { ChronometerState } from "../../interfaces";
 
 let chronometerIntervalId: undefined | NodeJS.Timer = undefined;
 

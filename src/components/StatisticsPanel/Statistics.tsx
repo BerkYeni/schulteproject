@@ -1,8 +1,8 @@
 import React, { FC } from "react";
 import Chronometer from "./Chronometer";
 import MatchesInfo from "./MatchesInfo";
-import { ChronometerState, matchesInfoToDisplay } from "../interfaces";
-import { formatMatchDuration } from "../utils";
+import { ChronometerState, matchesInfoToDisplay } from "../../interfaces";
+import { formatMatchDuration } from "../../utils";
 
 interface StatisticsProps {
   hidden: boolean;

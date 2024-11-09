@@ -1,6 +1,6 @@
 import React, { FC } from "react";
-import { formatMatchDuration } from "../utils";
-import { matchesInfoToDisplay } from "../interfaces";
+import { matchesInfoToDisplay } from "../../interfaces";
+import { formatMatchDuration } from "../../utils";
 
 interface MatchesInfoProps {
   onResetMatches: () => void;
