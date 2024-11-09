@@ -10,22 +10,18 @@ interface GameModeSettingsProps {
 const GameModeSettings: FC<GameModeSettingsProps> = (props) => {
   const { gameMode, onGameModeChange } = props;
 
-
-
   return (
     <div className="gameModeSettings">
-    {gameModes.map((mode, index) => (
-      <button
-        className={gameMode === mode ? "clicked" : ""}
-        key={index}
-        onClick={() => onGameModeChange(mode)}
-      >
-        {gameModeToDisplay(mode)}
-      </button>
-    ))}
-  </div>
-
-
+      {gameModes.map((mode, index) => (
+        <button
+          className={gameMode === mode ? "clicked" : ""}
+          key={index}
+          onClick={() => onGameModeChange(mode)}
+        >
+          {gameModeToDisplay(mode)}
+        </button>
+      ))}
+    </div>
   )
 }
 
