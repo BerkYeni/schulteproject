@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { GridSize, OnGridSizeChange, TableSettings } from "../../interfaces";
+import { OnGridSizeChange, TableSettings } from "../../interfaces";
 import { gridSizes, gridSizeToDisplay } from "../../utils";
 
 interface GridSettingsProps {
@@ -12,19 +12,23 @@ const GridSettings: FC<GridSettingsProps> = (props) => {
 
   return (
     <div className="gridSettings">
-    {gridSizes.map((size, index) => (
-      <button
-        className={tableSettings.gridSize === size ? "clicked" : ""}
-        key={index}
-        onClick={() => onGridSizeChange(size)}
-      >
-        {gridSizeToDisplay(size)}
-      </button>
-    ))}
+      <label htmlFor="tableSettings">Change grid size:</label><br/>
+
+      <select name="tableSettings" id="tableSettings" onChange={(event) => onGridSizeChange(parseInt(event.target.value))}>
+        {gridSizes.map((size, index) => (
+          <option
+            selected={size === tableSettings.gridSize ? true : false}
+            className={tableSettings.gridSize === size ? "clicked" : ""}
+            key={index}
+            value={size}
+          >
+            {gridSizeToDisplay(size)}
+          </option>
+        ))}
+      </select>
     </div>
   )
 }
-
 
 
 export default GridSettings;
