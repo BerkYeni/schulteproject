@@ -1,7 +1,5 @@
 import React, { useEffect, useReducer, useState } from "react";
 import "./App.css";
-import ControlPanel from "./components/ControlPanel";
-import Statistics from "./components/Statistics";
 import {
   ControlPanelEventCallbacks,
   GameMode,
@@ -30,8 +28,10 @@ import {
   shuffleInPlace,
   tileArray,
 } from "./utils";
-import SchulteTable from "./components/SchulteTable";
-import HidePanelsButton from "./components/HidePanelsButton";
+import ControlPanel from "./components/ControlPanel/ControlPanel";
+import HidePanelsButton from "./components/Other/HidePanelsButton";
+import SchulteTable from "./components/SchulteTable/SchulteTable";
+import Statistics from "./components/StatisticsPanel/Statistics";
 
 
 export const matchesKey = "matches";
