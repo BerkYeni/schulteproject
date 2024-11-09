@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { OnExposePanels, OnHidePanels } from "../interfaces";
+import { OnExposePanels, OnHidePanels } from "../../interfaces";
 
 interface HidePanelsButtonProps {
   hidden: boolean;
