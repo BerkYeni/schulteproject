@@ -12,7 +12,7 @@ const GameModeSettings: FC<GameModeSettingsProps> = (props) => {
 
   return (
     <div className="gameModeSettings">
-      <label htmlFor="gameModeSetting">Change gamemode:</label><br/>
+      <label htmlFor="gameModeSetting">Gamemode</label><br/>
 
       <select name="gameModeSetting" id="gameModeSetting" onChange={(event) => onGameModeChange(parseInt(event.target.value))}>
         {gameModes.map((mode, index) => (

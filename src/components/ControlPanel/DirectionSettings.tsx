@@ -12,7 +12,7 @@ const DirectionSettings: FC<DirectionSettingsProps> = (props) => {
 
   return (
     <div className="directionSettings">
-      <label htmlFor="directionSetting">Change direction:</label><br/>
+      <label htmlFor="directionSetting">Direction</label><br/>
 
       <select name="directionSetting" id="directionSetting" onChange={(event) => onDirectionChange(event.target.value as TableDirection)}>
         {directions.map((direction, index) => (

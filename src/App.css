@@ -74,7 +74,8 @@ select {
   padding: 0 1rem;
   border-radius: 2.625vmin;
   background-color: #d7bbf5;
-  border: 1px solid black
+  border: 1px solid black;
+  width: 100%;
 }
 select:hover {
   cursor: pointer;
@@ -187,6 +188,7 @@ button:hover {
   flex: 90%;
   display: flex;
   justify-content: space-around;
+  text-align: start;
 }
 
 .exposePanels {
