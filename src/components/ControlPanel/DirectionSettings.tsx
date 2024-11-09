@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { directions, directionToDisplay } from "../../utils";
-import { OnDirectionChange, TableSettings } from "../../interfaces";
+import { OnDirectionChange, TableDirection, TableSettings } from "../../interfaces";
 
 interface DirectionSettingsProps {
   tableSettings: TableSettings;
@@ -12,17 +12,20 @@ const DirectionSettings: FC<DirectionSettingsProps> = (props) => {
 
   return (
     <div className="directionSettings">
-      {directions.map((direction, index) => (
-        <button
-          className={
-            tableSettings.direction === direction ? "clicked" : ""
-          }
-          key={index}
-          onClick={() => onDirectionChange(direction)}
-        >
-          {directionToDisplay(direction)}
-        </button>
-      ))}
+      <label htmlFor="directionSetting">Change direction:</label><br/>
+
+      <select name="directionSetting" id="directionSetting" onChange={(event) => onDirectionChange(event.target.value as TableDirection)}>
+        {directions.map((direction, index) => (
+          <option
+            selected={direction === tableSettings.direction ? true : false}
+            className={tableSettings.direction === direction ? "clicked" : ""}
+            key={index}
+            value={direction}
+          >
+            {directionToDisplay(direction)}
+          </option>
+        ))}
+      </select>
     </div>
   )
 }
