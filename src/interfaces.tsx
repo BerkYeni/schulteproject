@@ -141,14 +141,20 @@ export interface matchesInfoToDisplay {
   lastPlayedRecord: MatchRecord | undefined;
 }
 
-export type OnHidePanels = () => void;
-export type OnExposePanels = () => void;
 
 export interface ControlPanelEventCallbacks {
   onGridSizeChange: (gridSize: GridSize) => void;
   onGameModeChange: (gameMode: GameMode) => void;
   onDirectionChange: (direction: TableDirection) => void;
 }
+
+export type OnHidePanels = () => void;
+export type OnExposePanels = () => void;
+export type OnGridSizeChange = ControlPanelEventCallbacks['onGridSizeChange'];
+export type OnGameModeChange = ControlPanelEventCallbacks['onGameModeChange'];
+export type OnDirectionChange = ControlPanelEventCallbacks['onDirectionChange'];
+
+
 
 export interface GenericTile extends Tile {
   animationPlaying?: boolean;

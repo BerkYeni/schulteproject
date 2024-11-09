@@ -12,6 +12,7 @@ import {
   gameModeToDisplay,
   gridSizeToDisplay,
 } from "../utils";
+import GridSettings from "./GridSettings";
 
 interface ControlPanelProps {
   gameState: GameState;
@@ -35,22 +36,11 @@ const ControlPanel: FC<ControlPanelProps> = (props) => {
   const directions: TableDirection[] = ["Ascending", "Descending"];
 
   return (
-    // <div className={`controlPanel ${hidden ? "hidden" : ""}`}>
     <div className={`controlPanel smoothTransition ${hidden ? "slideLeft" : ""}`}>
 
       <div className="gameSettings">
 
-        <div className="gridSettings">
-          {gridSizes.map((size, index) => (
-            <button
-              className={tableSettings.gridSize === size ? "clicked" : ""}
-              key={index}
-              onClick={() => onGridSizeChange(size)}
-            >
-              {gridSizeToDisplay(size)}
-            </button>
-          ))}
-        </div>
+        <GridSettings tableSettings={tableSettings} onGridSizeChange={onGridSizeChange} />
 
         <div className="gameModeSettings">
           {gameModes.map((mode, index) => (
