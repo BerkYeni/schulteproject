@@ -133,6 +133,10 @@ const gameModeToDisplayLookUp: { [key in GameMode]: string } = {
 export const gameModeToDisplay = (gameMode: GameMode) =>
   gameModeToDisplayLookUp[gameMode];
 
+const gridSizes = [GridSize.Size3x3, GridSize.Size4x4, GridSize.Size5x5];
+const gameModes = [GameMode.Vanilla, GameMode.Reaction, GameMode.Memory];
+const directions: TableDirection[] = ["Ascending", "Descending"];
+
 const gameStateToChronometerStateLookup: {
   [key in GameState]: ChronometerState;
 } = {

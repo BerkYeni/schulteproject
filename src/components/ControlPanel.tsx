@@ -31,10 +31,6 @@ const ControlPanel: FC<ControlPanelProps> = (props) => {
     onDirectionChange,
   } = eventCallbacks;
 
-  const gridSizes = [GridSize.Size3x3, GridSize.Size4x4, GridSize.Size5x5];
-  const gameModes = [GameMode.Vanilla, GameMode.Reaction, GameMode.Memory];
-  const directions: TableDirection[] = ["Ascending", "Descending"];
-
   return (
     <div className={`controlPanel smoothTransition ${hidden ? "slideLeft" : ""}`}>
 
