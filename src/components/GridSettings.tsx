@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { GridSize, OnGridSizeChange, TableSettings } from "../interfaces";
-import { gridSizeToDisplay } from "../utils";
+import { gridSizes, gridSizeToDisplay } from "../utils";
 
 interface GridSettingsProps {
   tableSettings: TableSettings;
@@ -9,7 +9,6 @@ interface GridSettingsProps {
 
 const GridSettings: FC<GridSettingsProps> = (props) => {
   const { tableSettings, onGridSizeChange } = props;
-  const gridSizes = [GridSize.Size3x3, GridSize.Size4x4, GridSize.Size5x5];
 
   return (
     <div className="gridSettings">
