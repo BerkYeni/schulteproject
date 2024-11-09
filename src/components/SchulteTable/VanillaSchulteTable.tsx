@@ -1,9 +1,9 @@
 import React, { FC } from "react";
-import { GameState, GridSize, Tile } from "../interfaces";
-import ReplaySvg from "./ReplaySvg";
-import PlaySvg from "./PlaySvg";
-import { gridSizeToCss } from "../utils";
 import VanillaSchulteTile from "./VanillaSchulteTile";
+import { GameState, Tile, GridSize } from "../../interfaces";
+import { gridSizeToCss } from "../../utils";
+import PlaySvg from "../Other/PlaySvg";
+import ReplaySvg from "../Other/ReplaySvg";
 
 interface VanillaSchulteTableProps {
   gameState: GameState;

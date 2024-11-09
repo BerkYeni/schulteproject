@@ -1,9 +1,9 @@
 import React, { FC } from "react";
-import { GameState, GridSize, Tile, GameMode } from "../interfaces";
-import ReplaySvg from "./ReplaySvg";
-import PlaySvg from "./PlaySvg";
-import { gridSizeToCss, renderSchulteTile } from "../utils";
-import { MemoryTile } from "../interfaces"; // If needed for Memory mode
+import { MemoryTile } from "../../interfaces"; // If needed for Memory mode
+import { GameMode, GameState, Tile, GridSize } from "../../interfaces";
+import { gridSizeToCss, renderSchulteTile } from "../../utils";
+import PlaySvg from "../Other/PlaySvg";
+import ReplaySvg from "../Other/ReplaySvg";
 
 interface SchulteTableProps {
   gameMode: GameMode;

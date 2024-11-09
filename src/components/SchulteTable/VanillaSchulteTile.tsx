@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Tile } from "../interfaces";
+import { Tile } from "../../interfaces";
 
 interface VanillaSchulteTileProps {
   tile: Tile;

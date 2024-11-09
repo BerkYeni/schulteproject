@@ -1,9 +1,9 @@
 import React, { FC, useEffect, useState } from "react";
-import { GameState, GridSize, MemoryTile, Tile } from "../interfaces";
-import ReplaySvg from "./ReplaySvg";
-import PlaySvg from "./PlaySvg";
-import { gridSizeToCss } from "../utils";
 import MemorySchulteTile from "./MemorySchulteTile";
+import { GameState, MemoryTile, GridSize } from "../../interfaces";
+import { gridSizeToCss } from "../../utils";
+import PlaySvg from "../Other/PlaySvg";
+import ReplaySvg from "../Other/ReplaySvg";
 
 interface MemorySchulteTableProps {
   gameState: GameState;

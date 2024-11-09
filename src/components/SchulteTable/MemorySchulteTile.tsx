@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { GameState, MemoryTile } from "../interfaces";
+import { MemoryTile, GameState } from "../../interfaces";
 
 interface MemorySchulteTileProps {
   tile: MemoryTile;
