@@ -51,7 +51,7 @@ body {
 
   flex-direction: row;
 
-  font-size: medium;
+  font-size: x-large;
 
   position: absolute;
 
@@ -67,6 +67,24 @@ body {
   transition-timing-function: cubic-bezier(.09,.65,0,1);
   /* transition-timing-function: cubic-bezier(0,.6,0,1); */
 
+}
+
+select {
+  font-size: xx-large;
+  padding: 0 1rem;
+  border-radius: 2.625vmin;
+  background-color: #d7bbf5;
+  border: 1px solid black
+}
+select:hover {
+  cursor: pointer;
+}
+
+option {
+
+}
+option:hover {
+  /* cursor: pointer; */
 }
 
 .statistics {
