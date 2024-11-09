@@ -4,7 +4,7 @@ import {
   GameMode,
   GameState,
   TableSettings,
-} from "../interfaces";
+} from "../../interfaces";
 import GridSettings from "./GridSettings";
 import GameModeSettings from "./GameModeSettings";
 import DirectionSettings from "./DirectionSettings";

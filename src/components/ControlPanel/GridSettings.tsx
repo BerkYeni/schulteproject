@@ -1,6 +1,6 @@
 import React, { FC } from "react";
-import { GridSize, OnGridSizeChange, TableSettings } from "../interfaces";
-import { gridSizes, gridSizeToDisplay } from "../utils";
+import { GridSize, OnGridSizeChange, TableSettings } from "../../interfaces";
+import { gridSizes, gridSizeToDisplay } from "../../utils";
 
 interface GridSettingsProps {
   tableSettings: TableSettings;

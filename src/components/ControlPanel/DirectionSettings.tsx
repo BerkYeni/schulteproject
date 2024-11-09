@@ -1,6 +1,6 @@
 import React, { FC } from "react";
-import { directions, directionToDisplay } from "../utils";
-import { OnDirectionChange, TableSettings } from "../interfaces";
+import { directions, directionToDisplay } from "../../utils";
+import { OnDirectionChange, TableSettings } from "../../interfaces";
 
 interface DirectionSettingsProps {
   tableSettings: TableSettings;

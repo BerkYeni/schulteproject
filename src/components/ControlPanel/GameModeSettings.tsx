@@ -1,6 +1,6 @@
 import React, { FC } from "react";
-import { gameModes, gameModeToDisplay } from "../utils";
-import { GameMode, OnGameModeChange } from "../interfaces";
+import { gameModes, gameModeToDisplay } from "../../utils";
+import { GameMode, OnGameModeChange } from "../../interfaces";
 
 interface GameModeSettingsProps {
   gameMode: GameMode;
