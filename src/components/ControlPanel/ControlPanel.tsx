@@ -28,13 +28,17 @@ const ControlPanel: FC<ControlPanelProps> = (props) => {
 
   return (
     <div className={`controlPanel smoothTransition ${hidden ? "slideLeft" : ""}`}>
-      <div className="gameSettings">
+      <div className="settingsAndHeaderContainer">
+        <h1>Game Settings</h1>
+        <div className="gameSettings">
 
-        <GridSettings tableSettings={tableSettings} onGridSizeChange={onGridSizeChange} />
+          <GridSettings tableSettings={tableSettings} onGridSizeChange={onGridSizeChange} />
 
-        <GameModeSettings gameMode={gameMode} onGameModeChange={onGameModeChange} />
+          <GameModeSettings gameMode={gameMode} onGameModeChange={onGameModeChange} />
 
-        <DirectionSettings onDirectionChange={onDirectionChange} tableSettings={tableSettings} />
+          <DirectionSettings onDirectionChange={onDirectionChange} tableSettings={tableSettings} />
+
+      </div>
 
       </div>
     </div>

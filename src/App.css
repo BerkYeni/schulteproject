@@ -206,7 +206,7 @@ button:hover {
   flex-direction: row;
   flex: 90%;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   text-align: start;
 }
 
@@ -314,6 +314,20 @@ button:hover {
   background-color: #f3d1d1;
 }
 
+.settingsAndHeaderContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 90%;
+  padding: 10vmin 0;
+}
+
+.controlPanel h1 {
+  font-size: x-large;
+  margin-bottom: 0;
+  text-align: start;
+
+}
 
 
 
