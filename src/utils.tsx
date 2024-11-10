@@ -54,8 +54,8 @@ export const gridSizeToDisplay = (gridSize: GridSize) =>
   gridSizeToDisplayLookUp[gridSize];
 
 const directionToDisplayLookUp: { [key in TableDirection]: string } = {
-  Ascending: "Ascending",
-  Descending: "Descending",
+  Ascending: "Start from 1",
+  Descending: "Towards 1",
 };
 export const directionToDisplay = (direction: TableDirection) =>
   directionToDisplayLookUp[direction];
