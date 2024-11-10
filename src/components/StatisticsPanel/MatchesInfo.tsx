@@ -27,10 +27,13 @@ const MatchesInfo: FC<MatchesInfoProps> = (props) => {
 
     return (
       <>
-        <div>Personal Best: {personalBestInSeconds} s</div>
+        <div>Personal Best</div>
+        <div className="pbText">{personalBestInSeconds}<span> s</span></div>
 
-        <div>
-          Last Played: {lastPlayedInSeconds} s {isPersonalBest && " ⭐"}
+        <div>Last Played</div>
+        <div className="lpText">
+          {/* Last Played: {lastPlayedInSeconds} s {isPersonalBest ? " ⭐" : ""} */}
+          {lastPlayedInSeconds}<span> s</span> {isPersonalBest ? " ⭐" : ""}
         </div>
       </>
     );
@@ -38,11 +41,11 @@ const MatchesInfo: FC<MatchesInfoProps> = (props) => {
 
   return (
     <div className="matchesInfo">
-      <button onClick={onResetMatches}>Reset</button>
-
-      <div>{recordCategoryToDisplay}</div>
-
-      <Records />
+      {/* <button onClick={onResetMatches}>Reset</button> */}
+      <div className="matchesInfoInner">
+        {/* <div>{recordCategoryToDisplay}</div> */}
+        <Records />
+      </div>
     </div>
   );
 };
