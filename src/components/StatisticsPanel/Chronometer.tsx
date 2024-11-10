@@ -50,7 +50,7 @@ const Chronometer: FC<ChronometerProps> = (props) => {
 
   return (
     <div className="chronometer">
-      <span className="timerLabel">Timer</span>
+      <h1 className="timerLabel">Timer</h1>
       <div className={`timeContainer ${chronometerState === "Active" ? "timerRunning" : ""}`}>
         {chronometerState === "Idle" ? (
           <><span>--</span><span className="secondsSign"> s</span></>
