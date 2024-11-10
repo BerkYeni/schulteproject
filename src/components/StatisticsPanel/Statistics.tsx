@@ -3,6 +3,7 @@ import Chronometer from "./Chronometer";
 import MatchesInfo from "./MatchesInfo";
 import { ChronometerState, matchesInfoToDisplay } from "../../interfaces";
 import { formatMatchDuration } from "../../utils";
+import PersonalInfo from "./PersonalInfo";
 
 interface StatisticsProps {
   hidden: boolean;
@@ -33,6 +34,7 @@ const Statistics: FC<StatisticsProps> = (props) => {
           matchesInfoToDisplay={matchesInfoToDisplay}
           onResetMatches={onResetMatches}
         />
+        <PersonalInfo />
       </div>
     </div>
   );
