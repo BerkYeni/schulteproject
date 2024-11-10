@@ -5,10 +5,9 @@
   text-align: center;
   font-size: large;
   background-color: #ede4ff;
-  color: white;
+  color: #edddff;
 
   transition: background-color 0.25s;
-  
 }
 
 * {
@@ -109,11 +108,12 @@ option:hover {
   justify-content: center;
   align-items: center;
   background-color: #855de0;
-
-
 }
 
 .timeContainer {
+  display: flex;
+  justify-content: end;
+  align-items: end;
   font-size: xx-large;
   text-align: end;
   background-color: #d7bbf5;
@@ -131,6 +131,10 @@ option:hover {
   font-size: x-large;
 }
 
+.twinkleLittleStar {
+  align-self: center;
+  font-size: x-large;
+}
 
 
 .tile {

@@ -14,26 +14,31 @@ const MatchesInfo: FC<MatchesInfoProps> = (props) => {
     matchesInfoToDisplay;
 
   const Records: FC = (props) => {
-    if (!(personalBestRecord && lastPlayedRecord)) {
-      return <div>No records yet.</div>;
-    }
+    // if (!(personalBestRecord && lastPlayedRecord)) {
+    //   return <div>No records yet.</div>;
+    // }
 
-    const isPersonalBest =
-      personalBestRecord.durationInMilliseconds ===
-      lastPlayedRecord.durationInMilliseconds;
-
-    const personalBestInSeconds = formatMatchDuration(personalBestRecord);
-    const lastPlayedInSeconds = formatMatchDuration(lastPlayedRecord);
+    const isPersonalBest = lastPlayedRecord 
+      ? personalBestRecord?.durationInMilliseconds === lastPlayedRecord?.durationInMilliseconds
+      : false;
+    
+    const personalBestInSeconds = personalBestRecord ? formatMatchDuration(personalBestRecord) : null;
+    const lastPlayedInSeconds = lastPlayedRecord ? formatMatchDuration(lastPlayedRecord) : null;
 
     return (
       <>
         <div>Personal Best</div>
-        <div className="pbText timeContainer">{personalBestInSeconds}<span className="secondsSign"> s</span></div>
+        <div className="pbText timeContainer">
+          <span className="twinkleLittleStar">{personalBestRecord ? "⭐" : ""}</span>
+          {personalBestInSeconds || "--"}
+          <span className="secondsSign"> s</span>
+        </div>
 
         <div>Last Played</div>
         <div className="lpText timeContainer">
-          {/* Last Played: {lastPlayedInSeconds} s {isPersonalBest ? " ⭐" : ""} */}
-          {lastPlayedInSeconds}<span className="secondsSign"> s</span> {isPersonalBest ? " ⭐" : ""}
+          <span className="twinkleLittleStar">{isPersonalBest ? " ⭐" : ""}</span>
+          {lastPlayedInSeconds || "--"}
+          <span className="secondsSign"> s</span>
         </div>
       </>
     );
