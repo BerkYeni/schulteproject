@@ -357,6 +357,10 @@ button:hover {
   font-size: xx-large;
 }
 
+.lpLabel {
+  margin-top: .1rem;
+}
+
 .statisticsInner {
   display: flex;
   width: 100%;

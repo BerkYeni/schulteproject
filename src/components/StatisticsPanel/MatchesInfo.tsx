@@ -34,7 +34,7 @@ const MatchesInfo: FC<MatchesInfoProps> = (props) => {
           <span className="secondsSign"> s</span>
         </div>
 
-        <div>Last Played</div>
+        <div className="lpLabel">Last Played</div>
         <div className="lpText timeContainer">
           <span className="twinkleLittleStar">{isPersonalBest ? " ⭐" : ""}</span>
           {lastPlayedInSeconds || "--"}
