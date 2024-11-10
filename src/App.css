@@ -114,17 +114,21 @@ option:hover {
 }
 
 .timeContainer {
+  font-size: xx-large;
+  text-align: end;
   background-color: #d7bbf5;
   border: 1px solid black;
   border-radius: 2.625vmin;
   width: 100%;
-  padding: .3rem;
+  /* padding: .3rem; */
+  padding: 0 1rem;
   color: black;
   /* cursor: not-allowed; */
 }
 
 .secondsSign {
   color: #3f3649;
+  font-size: x-large;
 }
 
 

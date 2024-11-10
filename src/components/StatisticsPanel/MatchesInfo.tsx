@@ -28,12 +28,12 @@ const MatchesInfo: FC<MatchesInfoProps> = (props) => {
     return (
       <>
         <div>Personal Best</div>
-        <div className="pbText">{personalBestInSeconds}<span> s</span></div>
+        <div className="pbText timeContainer">{personalBestInSeconds}<span className="secondsSign"> s</span></div>
 
         <div>Last Played</div>
-        <div className="lpText">
+        <div className="lpText timeContainer">
           {/* Last Played: {lastPlayedInSeconds} s {isPersonalBest ? " ⭐" : ""} */}
-          {lastPlayedInSeconds}<span> s</span> {isPersonalBest ? " ⭐" : ""}
+          {lastPlayedInSeconds}<span className="secondsSign"> s</span> {isPersonalBest ? " ⭐" : ""}
         </div>
       </>
     );
