@@ -375,6 +375,39 @@ h1 {
   padding: 15vmin 0;
 }
 
+.github {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  font-size: large;
+  background-color: #593b9d;
+  padding: .5rem;
+  border-radius: 2.625vmin;
+}
+.github:hover {
+  background-color: #4e338b;
+}
+
+.githubMark {
+  width: 2.5rem;
+}
+
+.personalInfo {
+  width: 90%;
+
+}
+
+a,
+a:link,
+a:visited,
+a:hover,
+a:active {
+  color: inherit;
+  text-decoration: inherit;
+  font-weight: inherit;
+}
+
+
 
 @keyframes reveal {
   0% {
