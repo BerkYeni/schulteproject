@@ -51,7 +51,7 @@ const Chronometer: FC<ChronometerProps> = (props) => {
   return (
     <div className="chronometer">
       <span>Timer</span>
-      <div className="timeContainer">
+      <div className={`timeContainer ${chronometerState === "Active" ? "timerRunning" : ""}`}>
         {chronometerState === "Idle" ? (
           <><span>--</span><span className="secondsSign"> s</span></>
         ) : chronometerState === "Active" ? (

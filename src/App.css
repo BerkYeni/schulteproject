@@ -114,7 +114,7 @@ option:hover {
 .timeContainer {
   background-color: #d7bbf5;
   border: 1px solid black;
-  border-radius: .625vmin;
+  border-radius: 2.625vmin;
   width: 80%;
   padding: .3rem;
   color: black;
@@ -123,6 +123,7 @@ option:hover {
 .secondsSign {
   color: #3f3649;
 }
+
 
 
 .tile {
@@ -304,6 +305,10 @@ button:hover {
 
 .slideLeft {
   left: -20%;
+}
+
+.timerRunning {
+  background-color: #f3d1d1;
 }
 
 
