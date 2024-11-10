@@ -50,17 +50,21 @@ const Chronometer: FC<ChronometerProps> = (props) => {
 
   return (
     <div className="chronometer">
-      {chronometerState === "Idle" ? (
-        <span>--</span>
-      ) : chronometerState === "Active" ? (
-        <span>{seconds} s</span>
-      ) : chronometerState === "Countdown" ? (
-        <span>
-          <img className="stopSign" src={stopSign} alt="Wait" />
-        </span>
-      ) : (
-        <span>{lastPlayedInSeconds || "--"} seconds</span>
-      )}
+      <span>Timer</span>
+      <div className="timeContainer">
+        {chronometerState === "Idle" ? (
+          <><span>--</span><span className="secondsSign"> s</span></>
+        ) : chronometerState === "Active" ? (
+          <><span>{seconds}</span><span className="secondsSign"> s</span></>
+        ) : chronometerState === "Countdown" ? (
+          <span>
+            <img className="stopSign" src={stopSign} alt="Wait" />
+          </span>
+        ) : (
+          <span>{lastPlayedInSeconds || "--"} seconds</span>
+        )}
+
+      </div>
     </div>
   );
 };

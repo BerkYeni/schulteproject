@@ -108,7 +108,22 @@ option:hover {
   align-items: center;
   background-color: #855de0;
 
+
 }
+
+.timeContainer {
+  background-color: #d7bbf5;
+  border: 1px solid black;
+  border-radius: .625vmin;
+  width: 80%;
+  padding: .3rem;
+  color: black;
+}
+
+.secondsSign {
+  color: #3f3649;
+}
+
 
 .tile {
   border-radius: 10%;
