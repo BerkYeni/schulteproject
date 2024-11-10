@@ -24,14 +24,16 @@ const Statistics: FC<StatisticsProps> = (props) => {
 
   return (
     <div className={`statistics smoothTransition ${hidden ? "slideRight" : ""}`}>
-      <Chronometer
-        chronometerState={chronometerState}
-        lastPlayedInSeconds={lastPlayedInSeconds}
-      />
-      <MatchesInfo
-        matchesInfoToDisplay={matchesInfoToDisplay}
-        onResetMatches={onResetMatches}
-      />
+      <div className="statisticsInner">
+        <Chronometer
+          chronometerState={chronometerState}
+          lastPlayedInSeconds={lastPlayedInSeconds}
+        />
+        <MatchesInfo
+          matchesInfoToDisplay={matchesInfoToDisplay}
+          onResetMatches={onResetMatches}
+        />
+      </div>
     </div>
   );
 };
