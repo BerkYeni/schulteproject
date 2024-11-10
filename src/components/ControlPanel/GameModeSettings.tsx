@@ -26,16 +26,6 @@ const GameModeSettings: FC<GameModeSettingsProps> = (props) => {
           </option>
         ))}
       </select>
-
-      {/* {gameModes.map((mode, index) => (
-        <button
-          className={gameMode === mode ? "clicked" : ""}
-          key={index}
-          onClick={() => onGameModeChange(mode)}
-        >
-          {gameModeToDisplay(mode)}
-        </button>
-      ))} */}
     </div>
   )
 }
