@@ -27,6 +27,7 @@ const MatchesInfo: FC<MatchesInfoProps> = (props) => {
 
     return (
       <>
+        <h1>Scores</h1>
         <div>Personal Best</div>
         <div className="pbText timeContainer">
           <span className="twinkleLittleStar">{personalBestRecord ? "⭐" : ""}</span>
