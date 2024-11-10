@@ -1,20 +1,22 @@
 import React, { FC } from "react";
 import { gameModes, gameModeToDisplay } from "../../utils";
-import { GameMode, OnGameModeChange } from "../../interfaces";
+import { GameMode, GameState, OnGameModeChange } from "../../interfaces";
 
 interface GameModeSettingsProps {
   gameMode: GameMode;
   onGameModeChange: OnGameModeChange;
+  gameState: GameState;
 }
 
 const GameModeSettings: FC<GameModeSettingsProps> = (props) => {
-  const { gameMode, onGameModeChange } = props;
+  const { gameMode, onGameModeChange, gameState } = props;
 
   return (
     <div className="gameModeSettings">
       <label htmlFor="gameModeSetting">Gamemode</label><br/>
 
-      <select name="gameModeSetting" id="gameModeSetting" onChange={(event) => onGameModeChange(parseInt(event.target.value))}>
+      <select disabled={gameState === "Playing"} className={gameState === "Playing" ? "dontClick" : ""}
+        name="gameModeSetting" id="gameModeSetting" onChange={(event) => onGameModeChange(parseInt(event.target.value))}>
         {gameModes.map((mode, index) => (
           <option
             selected={mode === gameMode ? true : false}

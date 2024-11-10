@@ -32,11 +32,11 @@ const ControlPanel: FC<ControlPanelProps> = (props) => {
         <h1>Game Settings</h1>
         <div className="gameSettings">
 
-          <GridSettings tableSettings={tableSettings} onGridSizeChange={onGridSizeChange} />
+          <GridSettings tableSettings={tableSettings} onGridSizeChange={onGridSizeChange} gameState={gameState} />
 
-          <GameModeSettings gameMode={gameMode} onGameModeChange={onGameModeChange} />
+          <GameModeSettings gameMode={gameMode} onGameModeChange={onGameModeChange} gameState={gameState} />
 
-          <DirectionSettings onDirectionChange={onDirectionChange} tableSettings={tableSettings} />
+          <DirectionSettings onDirectionChange={onDirectionChange} tableSettings={tableSettings} gameState={gameState} />
 
       </div>
 

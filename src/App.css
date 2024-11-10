@@ -80,6 +80,7 @@ select {
 }
 select:hover {
   cursor: pointer;
+  background-color: #f3d1d1;
 }
 
 select option:hover {
@@ -409,6 +410,10 @@ a:active {
 }
 
 .infoLink {
+}
+
+.dontClick {
+  cursor: not-allowed !important;
 }
 
 

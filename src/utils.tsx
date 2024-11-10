@@ -167,6 +167,7 @@ export const progressedExpectedNumberWithDirection = (
   expectedNumber: number
 ) => (direction === "Ascending" ? expectedNumber + 1 : expectedNumber - 1);
 
+// TODO: make this a component, possibly
 export const renderSchulteTile = (
   tile: SchulteTile,
   index: number,
@@ -179,7 +180,7 @@ export const renderSchulteTile = (
     case GameMode.Vanilla:
       return (
         <button
-          className={`tile ${tile.checked ? "clicked" : "unclicked"}`}
+          className={`tile ${tile.checked ? "clicked" : "unclicked"} ${gameState !== "Playing" ? "dontClick" : ""}`}
           onMouseDown={() => onNumberInput(tile.value)}
           key={index}
         >
@@ -189,7 +190,7 @@ export const renderSchulteTile = (
     case GameMode.Reaction:
       return (
         <button
-          className={`tile ${tile.checked ? "clicked" : "unclicked"}`}
+          className={`tile ${tile.checked ? "clicked" : "unclicked"} ${gameState !== "Playing" ? "dontClick" : ""}`}
           onMouseDown={() => onNumberInput(tile.value)}
           key={index}
         >
@@ -205,7 +206,7 @@ export const renderSchulteTile = (
       const memoryTile = tile as MemoryTile;
       return (
         <button
-          className={`tile ${memoryTile.checked ? "clicked" : "unclicked"}`}
+          className={`tile ${memoryTile.checked ? "clicked" : "unclicked"} ${gameState !== "Playing" ? "dontClick" : ""}`}
           onMouseDown={() => onNumberInput(memoryTile.value)}
           key={index}
         >

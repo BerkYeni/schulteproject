@@ -1,20 +1,22 @@
 import React, { FC } from "react";
 import { directions, directionToDisplay } from "../../utils";
-import { OnDirectionChange, TableDirection, TableSettings } from "../../interfaces";
+import { GameState, OnDirectionChange, TableDirection, TableSettings } from "../../interfaces";
 
 interface DirectionSettingsProps {
   tableSettings: TableSettings;
   onDirectionChange: OnDirectionChange;
+  gameState: GameState;
 }
 
 const DirectionSettings: FC<DirectionSettingsProps> = (props) => {
-  const { tableSettings, onDirectionChange } = props;
+  const { tableSettings, onDirectionChange, gameState } = props;
 
   return (
     <div className="directionSettings">
       <label htmlFor="directionSetting">Direction</label><br/>
 
-      <select name="directionSetting" id="directionSetting" onChange={(event) => onDirectionChange(event.target.value as TableDirection)}>
+      <select disabled={gameState === "Playing"} className={gameState === "Playing" ? "dontClick" : ""}
+        name="directionSetting" id="directionSetting" onChange={(event) => onDirectionChange(event.target.value as TableDirection)}>
         {directions.map((direction, index) => (
           <option
             selected={direction === tableSettings.direction ? true : false}
