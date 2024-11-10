@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { ReactComponent as GithubMark } from '../../../public/github-mark/github-mark-white.svg';
 
 interface PersonalInfoProps {
 }
@@ -9,6 +10,7 @@ const PersonalInfo: FC<PersonalInfoProps> = (props) => {
   return (
     <div>
       See source code
+      <GithubMark />
     </div>
   );
 };
