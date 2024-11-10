@@ -375,7 +375,7 @@ h1 {
   padding: 10vmin 0 5vmin 0;
 }
 
-.github {
+.siteLinkInner {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -385,12 +385,13 @@ h1 {
   border-radius: 2.625vmin;
   margin: .2rem 0;
 }
-.github:hover {
+.siteLinkInner:hover {
   background-color: #4e338b;
 }
 
-.githubMark {
+.siteMark {
   width: 2.5rem;
+  border-radius: .2rem;
 }
 
 .personalInfo {
