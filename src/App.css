@@ -8,6 +8,7 @@
   color: white;
 
   transition: background-color 0.25s;
+  
 }
 
 * {
@@ -16,6 +17,7 @@
 
 body {
   overflow: hidden;
+  user-select: none;
 }
 
 .tableContainer {
@@ -118,6 +120,7 @@ option:hover {
   width: 80%;
   padding: .3rem;
   color: black;
+  /* cursor: not-allowed; */
 }
 
 .secondsSign {
