@@ -585,7 +585,7 @@ a:active {
 
   .matchesInfo {
     width: 90%;
-    flex: 30%;
+    flex: 80%;
     flex-direction: column;
   }
 
@@ -634,5 +634,10 @@ a:active {
     right: -20%;
   }
   
+  .matchesInfoInner {
+    width: 100%;
+    /* flex-direction: column; */
+    /* display: flex; */
+  }  
 }
 
