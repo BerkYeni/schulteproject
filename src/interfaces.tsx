@@ -27,6 +27,13 @@ export interface TableSettings {
   direction: TableDirection;
 }
 
+export type GridSizes = GridSize[];
+export type GameModes = GameMode[];
+export type Directions = TableDirection[];
+export type SettingLists = GridSizes | GameModes | Directions;
+
+export type Setting = GridSize | GameMode | TableDirection;
+
 export interface Table {
   state: GameState;
   tiles: Tile[];
