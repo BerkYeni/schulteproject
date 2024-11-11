@@ -15,7 +15,7 @@ const DirectionSettings: FC<DirectionSettingsProps> = (props) => {
     <div className="directionSettings">
       <label htmlFor="directionSetting">Direction</label><br/>
 
-      <select disabled={gameState === "Playing"} className={gameState === "Playing" ? "dontClick" : ""}
+      <select disabled={gameState === "Playing" || gameState === "Countdown"} className={gameState === "Playing" ? "dontClick" : ""}
         name="directionSetting" id="directionSetting" onChange={(event) => onDirectionChange(event.target.value as TableDirection)}>
         {directions.map((direction, index) => (
           <option

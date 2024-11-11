@@ -15,7 +15,7 @@ const GridSettings: FC<GridSettingsProps> = (props) => {
     <div className="gridSettings">
       <label htmlFor="gridSetting">Grid Size</label><br/>
 
-      <select disabled={gameState === "Playing"} className={gameState === "Playing" ? "dontClick" : ""}
+      <select disabled={gameState === "Playing" || gameState === "Countdown"} className={gameState === "Playing" ? "dontClick" : ""}
         name="gridSetting" id="gridSetting" onChange={(event) => onGridSizeChange(parseInt(event.target.value))}>
         {gridSizes.map((size, index) => (
           <option
