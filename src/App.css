@@ -638,6 +638,15 @@ a:active {
     width: 100%;
     /* flex-direction: column; */
     /* display: flex; */
-  }  
+  }
+  .scoresContainer {
+    display: block;
+  }
+  
+  .scoresContainerInner {
+    margin-right: auto;
+  
+  }
+  
 }
 
