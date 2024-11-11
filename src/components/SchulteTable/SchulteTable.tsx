@@ -27,7 +27,7 @@ const SchulteTable: FC<SchulteTableProps> = ({
   expectedNumber,
 }) => {
   return (
-    <div className={`schulteTable ${gridSizeToCss(gridSize)}`}>
+    <div className={`schulteTable ${gridSizeToCss(gridSize)} ${gameState !== "Playing" ? "dimOverlay" : ""}`}>
       {tiles.map((tile, index) => renderSchulteTile(tile, index, gameMode, gameState, onNumberInput, expectedNumber))}
 
       {(gameState === "NotStarted" || gameState === "Completed") && (
