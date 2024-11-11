@@ -428,7 +428,7 @@ h1 {
   flex: 0;
   padding: 0 1vmin;
   justify-content: center;
-    align-items: center;
+  align-items: center;
 }
 
 a,
@@ -499,18 +499,31 @@ a:active {
   .App {
     font-size: medium;
   }
-  label {
-    font-size: medium;
-  }
   button {
     font-size: x-large;
   }
+  .pbText {
+    font-size: x-large;
+  }
+
+  .lpText {
+    font-size: x-large;
+  }
+  .timeContainer {
+    font-size: x-large;
+    
+  }
+  
+
+  /* label {
+    font-size: medium;
+  } 
   select {
     font-size: x-large;
   }
   span {
     font-size: x-large;
-  }
+  } */
 }
 
 
@@ -627,10 +640,12 @@ a:active {
   }
   
   .slideLeft {
+    bottom: 0;
     left: -20%;
   }
   
   .slideRight {
+    top: 0;
     right: -20%;
   }
   
@@ -649,16 +664,46 @@ a:active {
   }
   
   .siteLinkInner {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    width: 100%;
+    height: auto;
+  }
+
+  .berkyeniContent {
+    visibility: visible;
+    width: auto;
+    height: auto;
+  }
+  
+  .githubContent {
+    visibility: visible;
+    width: auto;
+    height: auto;
+  }
+  
+  /* span {
     font-size: large;
-    background-color: #593b9d;
-    padding: .5rem;
-    border-radius: 2.625vmin;
-    margin: .2rem 0;
-    width: fit-content;
-    height: fit-content;
-  }  
+  } */
+
+  .pbText {
+    font-size: xx-large;
+  }
+
+  .lpText {
+    font-size: xx-large;
+  }
+
+  .berkyeniContent {
+    font-size: large;
+  }
+
+  .githubContent {
+    font-size: large;
+  }
+
+  .personalInfo {
+    display: block;
+    width: 90%;
+  }
+  
 }
 

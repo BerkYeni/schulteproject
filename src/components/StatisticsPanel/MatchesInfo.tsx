@@ -34,7 +34,7 @@ const MatchesInfo: FC<MatchesInfoProps> = (props) => {
             <div>Personal Best</div>
             <div className="pbText timeContainer">
               <span className="twinkleLittleStar">{personalBestRecord ? "⭐" : ""}</span>
-              <span>{personalBestInSeconds || "--"}</span>
+              <span className="pbContent">{personalBestInSeconds || "--"}</span>
               <span className="secondsSign"> s</span>
             </div>
           </div>
@@ -44,7 +44,7 @@ const MatchesInfo: FC<MatchesInfoProps> = (props) => {
           <div className="lpLabel">Last Played</div>
           <div className="lpText timeContainer">
             <span className="twinkleLittleStar">{isPersonalBest ? " ⭐" : ""}</span>
-            <span>{lastPlayedInSeconds || "--"}</span>
+            <span className="lpContent">{lastPlayedInSeconds || "--"}</span>
             <span className="secondsSign"> s</span>
           </div>
           </div>
