@@ -412,7 +412,7 @@ const App = () => {
         gameMode={gameMode}
         gameState={table.state}
         tiles={table.tiles}
-        gridSize={table.settings.gridSize}
+        tableSettings={table.settings}
         onStart={onStart}
         onRestart={onRestart}
         onNumberInput={(inputtedNumber: number) =>

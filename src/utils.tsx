@@ -173,6 +173,7 @@ export const renderSchulteTile = (
   index: number,
   gameMode: GameMode,
   gameState: GameState,
+  tableDirection: TableDirection,
   onNumberInput: (num: number) => void,
   expectedNumber: number | undefined
 ) => {
@@ -197,8 +198,10 @@ export const renderSchulteTile = (
           <div className={`tileText ${
             expectedNumber === undefined 
             ? "" 
-            : tile.value <= expectedNumber 
+            : tableDirection === "Ascending" && tile.value <= expectedNumber 
             ? "" 
+            : tableDirection === "Descending" && tile.value >= expectedNumber 
+            ? ""
             : "hidden"}`}>{tile.value}</div>
         </button>
       );
