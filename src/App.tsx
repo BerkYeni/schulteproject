@@ -413,8 +413,7 @@ const App = () => {
         gameState={table.state}
         tiles={table.tiles}
         tableSettings={table.settings}
-        onStart={onStart}
-        onRestart={onRestart}
+        panelsAreHidden={hidePanels}
         onNumberInput={(inputtedNumber: number) =>
           tableDispatch({
             type: "InputNumber",

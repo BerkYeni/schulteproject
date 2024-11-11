@@ -2,17 +2,13 @@ import React, { FC } from "react";
 import { MemoryTile, TableSettings } from "../../interfaces"; // If needed for Memory mode
 import { GameMode, GameState, Tile, GridSize } from "../../interfaces";
 import { gridSizeToCss, renderSchulteTile } from "../../utils";
-import PlaySvg from "../Other/PlaySvg";
-import ReplaySvg from "../Other/ReplaySvg";
-import PlayReplayButton from "./PlayReplayButton";
 
 interface SchulteTableProps {
   gameMode: GameMode;
   gameState: GameState;
   tiles: Tile[] | MemoryTile[];
   tableSettings: TableSettings
-  onStart: () => void;
-  onRestart: () => void;
+  panelsAreHidden: boolean;
   onNumberInput: (inputtedNumber: number) => void;
   expectedNumber?: number; // Optional for specific modes
 }
@@ -22,14 +18,23 @@ const SchulteTable: FC<SchulteTableProps> = ({
   gameState,
   tiles,
   tableSettings,
-  onStart,
-  onRestart,
   onNumberInput,
   expectedNumber,
+  panelsAreHidden,
 }) => {
+  const className = `schulteTable smoothTransition ${
+    gridSizeToCss(tableSettings.gridSize)
+  } ${
+    gameState === "Playing" || gameState === "Countdown"  ? "" : "dimOverlay"
+  } ${
+    panelsAreHidden ? "tableCanExpand" : ""
+  }`;
+
   return (
-    <div className={`schulteTable ${gridSizeToCss(tableSettings.gridSize)} ${gameState === "Playing" || gameState === "Countdown"  ? "" : "dimOverlay"}`}>
-      {tiles.map((tile, index) => renderSchulteTile(tile, index, gameMode, gameState, tableSettings.direction, onNumberInput, expectedNumber))}
+    <div className={className}>
+      {tiles.map((tile, index) => renderSchulteTile(
+        tile, index, gameMode, gameState, tableSettings.direction, onNumberInput, expectedNumber
+      ))}
     </div>
   );
 };
