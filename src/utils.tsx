@@ -7,10 +7,7 @@ import {
   MemoryTile,
   TableDirection,
   Tile,
-  SchulteTile,
-  Directions,
-  GameModes,
-  GridSizes, // Added SchulteTile here
+  SchulteTile, // Added SchulteTile here
 } from "./interfaces";
 
 export const shuffleInPlace = (array: any[]) => {
@@ -136,10 +133,9 @@ const gameModeToDisplayLookUp: { [key in GameMode]: string } = {
 export const gameModeToDisplay = (gameMode: GameMode) =>
   gameModeToDisplayLookUp[gameMode];
 
-
-export const gridSizes: GridSizes = [GridSize.Size3x3, GridSize.Size4x4, GridSize.Size5x5];
-export const gameModes: GameModes = [GameMode.Vanilla, GameMode.Reaction, GameMode.Memory];
-export const directions: Directions = ["Ascending", "Descending"];
+export const gridSizes = [GridSize.Size3x3, GridSize.Size4x4, GridSize.Size5x5];
+export const gameModes = [GameMode.Vanilla, GameMode.Reaction, GameMode.Memory];
+export const directions: TableDirection[] = ["Ascending", "Descending"];
 
 const gameStateToChronometerStateLookup: {
   [key in GameState]: ChronometerState;
