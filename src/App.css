@@ -648,5 +648,17 @@ a:active {
   
   }
   
+  .siteLinkInner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: large;
+    background-color: #593b9d;
+    padding: .5rem;
+    border-radius: 2.625vmin;
+    margin: .2rem 0;
+    width: fit-content;
+    height: fit-content;
+  }  
 }
 
