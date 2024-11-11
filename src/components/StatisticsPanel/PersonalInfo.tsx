@@ -15,13 +15,13 @@ const PersonalInfo: FC<PersonalInfoProps> = (props) => {
 
       <a href="https://berkyeni.com" className="infoLink" target="_blank" rel="noopener noreferrer">
         <div className="siteLinkInner">
-          <span>Visit my website</span><img className="siteMark" src={berkyeniMark} alt="Berk Yeni's Mark" />
+          <span className="berkyeniContent">Visit my website</span><img className="siteMark" src={berkyeniMark} alt="Berk Yeni's Mark" />
         </div>
       </a>
 
       <a href="https://github.com/BerkYeni/schulteproject" className="infoLink" target="_blank" rel="noopener noreferrer">
         <div className="siteLinkInner">
-          <span>See the source code</span><img className="siteMark" src={githubMark} alt="GitHub Mark" />
+          <span className="githubContent">See the source code</span><img className="siteMark" src={githubMark} alt="GitHub Mark" />
         </div>
       </a>
 
