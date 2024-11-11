@@ -32,6 +32,7 @@ import ControlPanel from "./components/ControlPanel/ControlPanel";
 import HidePanelsButton from "./components/Other/HidePanelsButton";
 import SchulteTable from "./components/SchulteTable/SchulteTable";
 import Statistics from "./components/StatisticsPanel/Statistics";
+import PlayReplayButton from "./components/SchulteTable/PlayReplayButton";
 
 
 export const matchesKey = "matches";
@@ -399,6 +400,12 @@ const App = () => {
     }
   }, [table, gameMode]);
 
+  const onStart = gameMode === GameMode.Memory
+    ? () => tableDispatch({ type: "StartCountDown" })
+    : () => tableDispatch({ type: "Start" })
+  
+  const onRestart = () => tableDispatch({ type: "Restart" })
+
   const renderGameModeTable = (gameMode: GameMode) => {
     return (
       <SchulteTable
@@ -406,16 +413,8 @@ const App = () => {
         gameState={table.state}
         tiles={table.tiles}
         gridSize={table.settings.gridSize}
-        onStart={
-          gameMode === GameMode.Memory
-            ? () => tableDispatch({ type: "StartCountDown" })
-            : () => tableDispatch({ type: "Start" })
-        }
-        onRestart={
-          gameMode === GameMode.Memory
-            ? () => tableDispatch({ type: "Restart" })
-            : () => tableDispatch({ type: "Restart" })
-        }
+        onStart={onStart}
+        onRestart={onRestart}
         onNumberInput={(inputtedNumber: number) =>
           tableDispatch({
             type: "InputNumber",
@@ -507,7 +506,10 @@ const App = () => {
         onResetMatches={resetMatches}
       />
 
-      <div className="tableContainer">{renderGameModeTable(gameMode)}</div>
+      <div className="tableContainer">
+        {renderGameModeTable(gameMode)}
+        <PlayReplayButton gameState={table.state} onRestart={onRestart} onStart={onStart} />
+      </div>
     </div>
   );
 };

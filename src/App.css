@@ -265,13 +265,15 @@ button:hover {
 }
 
 .tableReplay {
+  aspect-ratio: 1;
+  z-index: 3;
   position: absolute;
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
   margin: auto;
-  width: 30%;
+  /* width: 30%; */
   height: 30%;
   padding: 0;
   border-radius: 100%;
@@ -418,7 +420,7 @@ a:active {
 
 .dimOverlay:after {
   content: " ";
-  z-index: 10;
+  z-index: 2;
   display: block;
   position: absolute;
   height: 100%;

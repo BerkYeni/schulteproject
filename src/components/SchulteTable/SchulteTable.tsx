@@ -4,6 +4,7 @@ import { GameMode, GameState, Tile, GridSize } from "../../interfaces";
 import { gridSizeToCss, renderSchulteTile } from "../../utils";
 import PlaySvg from "../Other/PlaySvg";
 import ReplaySvg from "../Other/ReplaySvg";
+import PlayReplayButton from "./PlayReplayButton";
 
 interface SchulteTableProps {
   gameMode: GameMode;
@@ -27,17 +28,8 @@ const SchulteTable: FC<SchulteTableProps> = ({
   expectedNumber,
 }) => {
   return (
-    <div className={`schulteTable ${gridSizeToCss(gridSize)} ${gameState !== "Playing" ? "dimOverlay" : ""}`}>
+    <div className={`schulteTable ${gridSizeToCss(gridSize)} ${gameState === "Playing" || gameState === "Countdown"  ? "" : "dimOverlay"}`}>
       {tiles.map((tile, index) => renderSchulteTile(tile, index, gameMode, gameState, onNumberInput, expectedNumber))}
-
-      {(gameState === "NotStarted" || gameState === "Completed") && (
-        <button
-          className="tableReplay"
-          onClick={gameState === "NotStarted" ? onStart : onRestart}
-        >
-          {gameState === "NotStarted" ? <PlaySvg /> : <ReplaySvg />}
-        </button>
-      )}
     </div>
   );
 };
