@@ -505,7 +505,7 @@ a:active {
   opacity: 0;
 }
 
-@media only screen and (min-width: 390px) {
+@media only screen and (min-width: 350px) {
   .App {
     font-size: medium;
   }
