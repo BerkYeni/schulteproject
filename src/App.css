@@ -521,19 +521,6 @@ a:active {
   option {
     font-size: medium;
   }
-
-
-  
-
-  /* label {
-    font-size: medium;
-  } 
-  select {
-    font-size: x-large;
-  }
-  span {
-    font-size: x-large;
-  } */
 }
 
 
@@ -553,7 +540,6 @@ a:active {
   }
   .timeContainer {
     font-size: x-large;
-    
   }
   select {
     font-size: x-large;
@@ -564,8 +550,6 @@ a:active {
   option {
     font-size: x-large;
   }
-
-
 }
 
 @media only screen and (min-width: 992px) {
@@ -583,7 +567,6 @@ a:active {
   }
   .timeContainer {
     font-size: xx-large;
-    
   }
   select {
     font-size: xx-large;
@@ -594,8 +577,6 @@ a:active {
   option {
     font-size: xx-large;
   }
-
-
 }
 
 @media only screen and (min-width: 1500px) {
@@ -613,7 +594,6 @@ a:active {
   }
   .timeContainer {
     font-size: 44px;
-    
   }
   select {
     font-size: 44px;
@@ -670,7 +650,6 @@ a:active {
   }
   .timeContainer {
     font-size: 120px;
-    
   }
   select {
     font-size: 120px;
