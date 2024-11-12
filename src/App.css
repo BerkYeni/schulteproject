@@ -240,6 +240,7 @@ button:hover {
   justify-content: center;
   align-items: center;
   width: 24vmin;
+  margin: 0 1vmin;
   /* width: 100%; */
   /* flex: 10%; */
 }
@@ -270,6 +271,7 @@ button:hover {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: end;
 }
 
 .scoresContainerInner {
@@ -478,6 +480,13 @@ a:active {
   height: 0;
 }
 
+.chronometerAndMatchesInfoContainer {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: end;
+  width: 100%;
+}
+
 
 @keyframes reveal {
   0% {
@@ -510,7 +519,6 @@ a:active {
   }
   .timeContainer {
     font-size: x-large;
-    
   }
   select {
     font-size: x-large;
@@ -521,6 +529,10 @@ a:active {
   option {
     font-size: medium;
   }
+  .twinkleLittleStar {
+    font-size: x-large;
+  }
+
 }
 
 
@@ -550,6 +562,9 @@ a:active {
   option {
     font-size: x-large;
   }
+  .twinkleLittleStar {
+    font-size: large;
+  }
 }
 
 @media only screen and (min-width: 992px) {
@@ -576,6 +591,9 @@ a:active {
   }
   option {
     font-size: xx-large;
+  }
+  .twinkleLittleStar {
+    font-size: x-large;
   }
 }
 
@@ -604,7 +622,9 @@ a:active {
   option {
     font-size: 44px;
   }
-
+  .twinkleLittleStar {
+    font-size: 36px;
+  }
 }
 
 @media only screen and (min-width: 2000px) {
@@ -632,7 +652,9 @@ a:active {
   option {
     font-size: 100px;
   }
-
+  .twinkleLittleStar {
+    font-size: 72px;
+  }
 }
 
 @media only screen and (min-width: 3300px) {
@@ -657,7 +679,9 @@ a:active {
   span {
     font-size: 120px;
   }
-
+  .twinkleLittleStar {
+    font-size: 100px;
+  }
 }
 
 @media only screen and (orientation: landscape) {
@@ -692,7 +716,17 @@ a:active {
   .chronometer {
     width: 90%;
     flex: 20%;
+    margin: 0;
   }  
+
+  .chronometerAndMatchesInfoContainer {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    align-items: center;
+    height: 100%;
+  }
+  
     
   .toggleVisibility {
     rotate: 0deg;
