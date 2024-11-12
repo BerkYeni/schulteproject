@@ -292,8 +292,8 @@ button:hover {
   top: 0;
   bottom: 0;
   margin: auto;
-  /* width: 30%; */
-  height: 30%;
+  width: min(20vmax, 34vmin);
+  height: min(20vmax, 34vmin);
   padding: 0;
   border-radius: 100%;
 
