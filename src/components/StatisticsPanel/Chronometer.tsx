@@ -61,7 +61,7 @@ const Chronometer: FC<ChronometerProps> = (props) => {
             <img className="stopSign" src={stopSign} alt="Wait" />
           </span>
         ) : (
-          <span>{lastPlayedInSeconds || "--"} seconds</span>
+          <><span>{lastPlayedInSeconds || "--"}</span><span className="secondsSign"> s</span></>
         )}
 
       </div>
