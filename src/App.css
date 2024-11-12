@@ -505,7 +505,6 @@ a:active {
   .pbText {
     font-size: x-large;
   }
-
   .lpText {
     font-size: x-large;
   }
@@ -513,6 +512,17 @@ a:active {
     font-size: x-large;
     
   }
+  select {
+    font-size: x-large;
+  }
+  span {
+    font-size: x-large;
+  }
+  option {
+    font-size: medium;
+  }
+
+
   
 
   /* label {
@@ -535,6 +545,27 @@ a:active {
   button {
     font-size: x-large;
   }
+  .pbText {
+    font-size: x-large;
+  }
+  .lpText {
+    font-size: x-large;
+  }
+  .timeContainer {
+    font-size: x-large;
+    
+  }
+  select {
+    font-size: x-large;
+  }
+  span {
+    font-size: x-large;
+  }
+  option {
+    font-size: x-large;
+  }
+
+
 }
 
 @media only screen and (min-width: 992px) {
@@ -544,6 +575,27 @@ a:active {
   button {
     font-size: xx-large;
   }
+  .pbText {
+    font-size: xx-large;
+  }
+  .lpText {
+    font-size: xx-large;
+  }
+  .timeContainer {
+    font-size: xx-large;
+    
+  }
+  select {
+    font-size: xx-large;
+  }
+  span {
+    font-size: xx-large;
+  }
+  option {
+    font-size: xx-large;
+  }
+
+
 }
 
 @media only screen and (min-width: 1500px) {
@@ -553,6 +605,26 @@ a:active {
   button {
     font-size: 44px;
   }
+  .pbText {
+    font-size: 44px;
+  }
+  .lpText {
+    font-size: 44px;
+  }
+  .timeContainer {
+    font-size: 44px;
+    
+  }
+  select {
+    font-size: 44px;
+  }
+  span {
+    font-size: 44px;
+  }
+  option {
+    font-size: 44px;
+  }
+
 }
 
 @media only screen and (min-width: 2000px) {
@@ -560,8 +632,27 @@ a:active {
     font-size: 72px;
   }
   button {
-    font-size: 72px;
+    font-size: 100px;
   }
+  .pbText {
+    font-size: 100px;
+  }
+  .lpText {
+    font-size: 100px;
+  }
+  .timeContainer {
+    font-size: 100px;
+  }
+  select {
+    font-size: 100px;
+  }
+  span {
+    font-size: 100px;
+  }
+  option {
+    font-size: 100px;
+  }
+
 }
 
 @media only screen and (min-width: 3300px) {
@@ -571,6 +662,23 @@ a:active {
   button {
     font-size: 120px;
   }
+  .pbText {
+    font-size: 120px;
+  }
+  .lpText {
+    font-size: 120px;
+  }
+  .timeContainer {
+    font-size: 120px;
+    
+  }
+  select {
+    font-size: 120px;
+  }
+  span {
+    font-size: 120px;
+  }
+
 }
 
 @media only screen and (orientation: landscape) {
