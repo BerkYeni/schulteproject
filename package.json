@@ -22,7 +22,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "react-scripts build && rsync -an -v --delete -e ssh ~/projects/schulteproject/build/ berk@161.35.15.58:~/projects/berkyeni/public/schulteproject"
+    "deploy": "react-scripts build && rsync -a -v --delete -e ssh ~/projects/schulteproject/build/ berk@161.35.15.58:~/projects/berkyeni/public/schulteproject && ssh berk@161.35.15.58 \"source ~/.nvm/nvm.sh && pm2 reload 0\""
   },
   "eslintConfig": {
     "extends": [
