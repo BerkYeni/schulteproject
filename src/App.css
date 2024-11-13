@@ -423,8 +423,13 @@ label {
 }
 
 .siteMark {
-  width: 2.5rem;
-  border-radius: .2rem;
+  /* width: 2.5rem; */
+  /* width: 10vmin; */
+  /* border-radius: .2rem; */
+  /* height: 1vmax;
+  border-radius: 2vmin; */
+  height: 3.5vmax;
+  border-radius: 2vmin;
 }
 
 .personalInfo {
@@ -446,6 +451,14 @@ a:active {
   text-decoration: inherit;
   font-weight: inherit;
 }
+
+input,
+textarea,
+button,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
 
 .infoLink {
 }
@@ -556,28 +569,31 @@ a:active {
     font-size: medium;
   }
   button {
-    font-size: x-large;
+    font-size: large;
   }
   .pbText {
-    font-size: x-large;
+    font-size: large;
   }
   .lpText {
-    font-size: x-large;
+    font-size: large;
   }
   .timeContainer {
-    font-size: x-large;
+    font-size: large;
   }
   select {
-    font-size: x-large;
+    font-size: large;
   }
   span {
-    font-size: x-large;
+    font-size: large;
   }
   option {
     font-size: medium;
   }
   .twinkleLittleStar {
-    font-size: x-large;
+    font-size: large;
+  }
+  label {
+    font-size: medium;
   }
 
 }
