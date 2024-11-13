@@ -12,8 +12,8 @@ const GridSettings: FC<GridSettingsProps> = (props) => {
   const { tableSettings, onGridSizeChange, gameState } = props;
 
   return (
-    <div className="gridSettings">
-      <label htmlFor="gridSetting">Grid Size</label><br/>
+    <div className="setting">
+      <label htmlFor="gridSetting">Grid Size</label>
 
       <select 
         defaultValue={tableSettings.gridSize} 

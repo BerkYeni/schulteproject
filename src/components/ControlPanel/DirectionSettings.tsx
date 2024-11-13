@@ -12,8 +12,8 @@ const DirectionSettings: FC<DirectionSettingsProps> = (props) => {
   const { tableSettings, onDirectionChange, gameState } = props;
 
   return (
-    <div className="directionSettings">
-      <label htmlFor="directionSetting">Direction</label><br/>
+    <div className="setting">
+      <label htmlFor="directionSetting">Direction</label>
 
       <select 
         defaultValue={tableSettings.direction} 

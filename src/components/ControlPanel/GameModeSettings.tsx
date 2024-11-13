@@ -12,8 +12,8 @@ const GameModeSettings: FC<GameModeSettingsProps> = (props) => {
   const { gameMode, onGameModeChange, gameState } = props;
 
   return (
-    <div className="gameModeSettings">
-      <label htmlFor="gameModeSetting">Gamemode</label><br/>
+    <div className="setting">
+      <label htmlFor="gameModeSetting">Gamemode</label>
 
       <select 
         defaultValue={gameMode} 

@@ -213,7 +213,7 @@ button:hover {
 
 .gameSettings {
   flex-direction: row;
-  flex: 90%;
+  /* flex: 90%; */
   display: flex;
   flex-wrap: wrap;
   /* justify-content: space-between; */
@@ -381,6 +381,10 @@ h1 {
   text-align: start;
 }
 
+label {
+  display: block;
+}
+
 .pbText {
   font-size: xx-large;
 }
@@ -488,6 +492,10 @@ a:active {
   justify-content: space-around;
 }
 
+.setting {
+  display: flex;
+  flex-direction: column;
+}
 
 @keyframes reveal {
   0% {
@@ -504,6 +512,44 @@ a:active {
 .transparent {
   opacity: 0;
 }
+
+@media only screen and (max-width: 350px) {
+  .App {
+    font-size: small;
+  }
+  button {
+    font-size: large;
+  }
+  .pbText {
+    font-size: large;
+  }
+  .lpText {
+    font-size: large;
+  }
+  .timeContainer {
+    font-size: large;
+  }
+  select {
+    font-size: small;
+  }
+  span {
+    font-size: large;
+  }
+  option {
+    font-size: small;
+  }
+  .twinkleLittleStar {
+    font-size: large;
+  }
+  label {
+    font-size: small;
+  }
+  h1 {
+    /* font-size: x-large; */
+  }
+
+}
+
 
 @media only screen and (min-width: 350px) {
   .App {
@@ -695,6 +741,8 @@ a:active {
   }
 
   .gameSettings {
+    flex: 90%;
+
     flex-direction: column;
     justify-content: space-between;
   }
@@ -837,6 +885,11 @@ a:active {
     align-items: center;
   
   }
+
+  .setting {
+    display: block;
+  }
+  
   
 }
 
