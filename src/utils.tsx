@@ -185,7 +185,7 @@ export const renderSchulteTile = (
           onMouseDown={() => onNumberInput(tile.value)}
           key={index}
         >
-          <div>{tile.value}</div>
+          <div className="tileText">{tile.value}</div>
         </button>
       );
     case GameMode.Reaction:
