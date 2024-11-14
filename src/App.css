@@ -549,7 +549,7 @@ a:active {
   }
   
   @media (min-width: 768px) {
-    :root { font-size: 100%; }
+    :root { font-size: 94%; }
   }
   
   @media (min-width: 992px) {
