@@ -13,7 +13,7 @@ const DirectionSettings: FC<DirectionSettingsProps> = (props) => {
 
   return (
     <div className="setting">
-      <label htmlFor="directionSetting">Direction</label>
+      <div>Direction</div>
 
       <select 
         defaultValue={tableSettings.direction} 
