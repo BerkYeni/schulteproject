@@ -99,7 +99,6 @@ div {
 
 select,
 label,
-.siteLinkInner,
 .controlPanel,
 .timeContainer,
 .pbText,
@@ -114,6 +113,7 @@ label,
   font-size: 1.5rem;
 }
 
+.siteLinkInner,
 .twinkleLittleStar {
   font-size: 1.2rem;
 }
@@ -542,6 +542,10 @@ a:active {
 /* Media Queries */
 @media screen {
   /* Mobile First Breakpoints */
+  @media (max-width: 350px) {
+    :root { font-size: 70%; }
+  }
+
   @media (min-width: 350px) {
     :root { font-size: 100%; }
   }
