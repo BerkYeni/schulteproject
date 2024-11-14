@@ -102,8 +102,7 @@ label,
 .controlPanel,
 .timeContainer,
 .pbText,
-.lpText,
-.toggleVisibility
+.lpText
  {
   font-size: 1.6rem;
 }
@@ -446,24 +445,6 @@ a:active {
   background-color: var(--color-tile-hover);
 }
 
-/* Hide/Expose Panels Button */
-.toggleVisibilityContainer {
-  width: 100%;
-  flex: 10%;
-}
-
-.toggleVisibility {
-  rotate: -90deg;
-  float: right;
-  margin: 10px;
-}
-
-.exposePanels {
-}
-
-/* Change Theme Button */
-.themeToggle {
-}
 
 /* Utility Classes */
 .smoothTransition {
@@ -606,10 +587,6 @@ a:active {
       justify-content: space-between;
     }
       
-    .toggleVisibility {
-      rotate: 0deg;
-    }
-  
     .statistics {
       right: 0;
       height: 100%;
