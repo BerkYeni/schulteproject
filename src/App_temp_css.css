@@ -1,5 +1,25 @@
 /* CSS Variables */
 :root {
+  /* Shared values */
+  --border-radius: 2.625vmin;
+  --transition-standard: 0.5s cubic-bezier(0.09, 0.65, 0, 1);
+  
+  /* Light theme (default) */
+  --color-primary: #a076f9;
+  --color-secondary: #855de0;
+  --color-background: #ede4ff;
+  --color-text: #2d2837;
+  --color-tile: #d7bbf5;
+  --color-tile-hover: #f3d1d1;
+  --color-clicked: #6528f7;
+  --color-clicked-text: #ffffff;
+  --color-panel: #855de0;
+  --color-link: #593b9d;
+  --color-link-hover: #4e338b;
+  --color-timer: #3f3649;
+  --color-overlay: rgba(0, 0, 0, 0.5);
+
+/* 
   --color-primary: #a076f9;
   --color-secondary: #855de0;
   --color-background: #ede4ff;
@@ -9,8 +29,26 @@
   --color-clicked: #6528f7;
   
   --border-radius: 2.625vmin;
-  --transition-standard: 0.5s cubic-bezier(0.09, 0.65, 0, 1);
+  --transition-standard: 0.5s cubic-bezier(0.09, 0.65, 0, 1); */
 }
+
+/* Dark theme */
+[data-theme="dark"] {
+  --color-primary: #6528f7;
+  --color-secondary: #4e338b;
+  --color-background: #1a1625;
+  --color-text: #ffffff;
+  --color-tile: #593b9d;
+  --color-tile-hover: #855de0;
+  --color-clicked: #a076f9;
+  --color-clicked-text: #1a1625;
+  --color-panel: #2d2837;
+  --color-link: #855de0;
+  --color-link-hover: #a076f9;
+  --color-timer: #d7bbf5;
+  --color-overlay: rgba(255, 255, 255, 0.2);
+}
+
 
 /* Base Styles */
 * {
@@ -31,7 +69,8 @@ body {
   font-size: large;
   background-color: var(--color-background);
   color: var(--color-text);
-  transition: background-color 0.25s;
+  /* transition: background-color 0.25s; */
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .tableContainer {
@@ -396,4 +435,26 @@ a:active {
     width: 100%;
     height: auto;
   }
+}
+
+.themeToggle {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  background-color: var(--color-tile);
+  border: 1px solid var(--color-text);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.themeToggle:hover {
+  background-color: var(--color-tile-hover);
+}
+
+/* Theme transition */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease;
 }

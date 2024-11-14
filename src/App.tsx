@@ -33,6 +33,7 @@ import HidePanelsButton from "./components/Other/HidePanelsButton";
 import SchulteTable from "./components/SchulteTable/SchulteTable";
 import Statistics from "./components/StatisticsPanel/Statistics";
 import PlayReplayButton from "./components/SchulteTable/PlayReplayButton";
+import ChangeThemeToggleButton from "./components/Other/ChangeThemeToggleButton";
 
 
 export const matchesKey = "matches";
@@ -488,6 +489,7 @@ const App = () => {
   return (
     <div className={`App`}>
       <HidePanelsButton hidden={hidePanels} onHidePanels={onHidePanels} onExposePanels={onExposePanels} />
+      <ChangeThemeToggleButton />
 
 
       <ControlPanel
