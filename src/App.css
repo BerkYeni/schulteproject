@@ -103,10 +103,13 @@ label,
 .timeContainer,
 .pbText,
 .lpText,
-.toggleVisibility,
-.exposePanels,
-.themeToggle {
+.toggleVisibility
+ {
   font-size: 1.6rem;
+}
+
+.screenControlButton {
+  font-size: 1.3rem;
 }
 
 .secondsSign {
@@ -426,6 +429,23 @@ a:active {
   height: 100%;
 }
 
+/* Screen Controls */
+.screenControls {
+  display: flex;
+  position: absolute;
+  top: .5rem;
+}
+
+.screenControlButton {
+  margin-left: .5rem;
+  z-index: 5;
+  transition-duration: .2s;
+  border-radius: .4rem;
+}
+.screenControlButton:hover {
+  background-color: var(--color-tile-hover);
+}
+
 /* Hide/Expose Panels Button */
 .toggleVisibilityContainer {
   width: 100%;
@@ -439,32 +459,10 @@ a:active {
 }
 
 .exposePanels {
-  z-index: 5;
-  transition-duration: .2s;
-  position: absolute;
-
-  bottom: 80px;
-  left: 20px;
-  rotate: -90deg;
-}
-
-.hidePanelsArrow {
-  position: relative;
-  bottom: 2px;
 }
 
 /* Change Theme Button */
 .themeToggle {
-  z-index: 5;
-  transition-duration: .2s;
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  rotate: -90deg;
-}
-
-.themeToggle:hover {
-  background-color: var(--color-tile-hover);
 }
 
 /* Utility Classes */
@@ -547,7 +545,7 @@ a:active {
   }
 
   @media (min-width: 350px) {
-    :root { font-size: 100%; }
+    :root { font-size: 87%; }
   }
   
   @media (min-width: 768px) {
@@ -607,7 +605,6 @@ a:active {
       height: 100%;
       justify-content: space-between;
     }
-    
       
     .toggleVisibility {
       rotate: 0deg;
@@ -619,21 +616,7 @@ a:active {
       width: 20vw;
       flex-direction: column;
     }
-  
-    .exposePanels {
-      top: 20px;
-      left: 20px;
-      bottom: auto;
-      rotate: 0deg;
-    }
-  
-    .themeToggle {
-      top: 20px;
-      left: 80px;
-      bottom: auto;
-      rotate: 0deg;
-    }
-  
+    
     .rotateAround {
       rotate: 180deg;
     }
@@ -661,7 +644,6 @@ a:active {
     
     .scoresContainerInner {
       margin-right: auto;
-    
     }
     
     .siteLinkInner {
@@ -683,12 +665,10 @@ a:active {
       justify-content: center;
       flex-direction: column;
       align-items: center;
-    
     }
   
     .setting {
       display: block;
     }
-  
   }
 }

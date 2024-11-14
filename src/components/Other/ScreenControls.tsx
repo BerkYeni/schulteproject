@@ -13,7 +13,7 @@ const ScreenControls: FC<ScreenControlsProps> = (props) => {
   const { hidden, onHidePanels, onExposePanels } = props;
 
   return (
-    <div>
+    <div className="screenControls">
       <HidePanelsButton hidden={hidden} onExposePanels={onExposePanels} onHidePanels={onHidePanels} />
 
       <ChangeThemeToggleButton />

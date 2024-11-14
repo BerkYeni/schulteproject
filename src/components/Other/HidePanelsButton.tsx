@@ -14,10 +14,10 @@ const HidePanelsButton: FC<HidePanelsButtonProps> = (props) => {
   return (
     <button
       id="exposePanelsButton"
-      className={`exposePanels smoothTransition tile unclicked ${hidden && "rotateAround"}`}
+      className={`screenControlButton exposePanels smoothTransition tile unclicked`}
       onClick={hidden ? onExposePanels : onHidePanels}
     >
-      <span className="hidePanelsArrow">{hidden ? "➕" : "➖"}</span>
+      <span>{hidden ? "➕" : "➖"}</span>
     </button>
   )
 }
