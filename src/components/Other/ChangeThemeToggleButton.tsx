@@ -22,7 +22,7 @@ const ChangeThemeToggleButton: FC = () => {
 
   return (
       <button 
-        className="themeToggle" 
+        className="themeToggle tile" 
         onClick={toggleTheme}
         aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
       >

@@ -226,10 +226,22 @@ button:hover {
   transition-duration: .2s;
   position: absolute;
 
+  bottom: 80px;
+  left: 20px;
+  rotate: -90deg;
+  font-size: x-large;
+}
+
+.themeToggle {
+  z-index: 5;
+  transition-duration: .2s;
+  position: absolute;
+
   bottom: 20px;
   left: 20px;
   rotate: -90deg;
   font-size: x-large;
+
 }
 
 
@@ -814,6 +826,13 @@ select {
   .exposePanels {
     top: 20px;
     left: 20px;
+    bottom: auto;
+    rotate: 0deg;
+  }
+
+  .themeToggle {
+    top: 20px;
+    left: 80px;
     bottom: auto;
     rotate: 0deg;
   }
