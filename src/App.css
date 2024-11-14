@@ -23,7 +23,7 @@
 
   --border: 1px solid var(--color-tile-border);
 
-  font-size: 32px;
+  font-size: 100%;
 }
 
 /* Dark theme */
@@ -51,7 +51,6 @@
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
   transition: background-color 0.3s ease, color 0.3s ease;
-
 }
 
 body {
@@ -60,7 +59,7 @@ body {
 }
 
 button {
-  font-size: medium;
+  font-size: x-large;
   background-color: var(--color-tile);
   border: var(--border);
   border-radius: var(--border-radius);
@@ -76,7 +75,6 @@ button:hover {
   height: 100vh;
   width: 100vw;
   text-align: center;
-  /* font-size: large; */
   background-color: var(--color-background);
   color: var(--color-text);
 }
@@ -90,9 +88,34 @@ button:hover {
 
 /* Typography */
 h1 {
-  font-size: x-large;
+  font-size: 2rem;
   margin: 0;
   text-align: start;
+}
+
+div {
+  font-size: 1rem;
+}
+
+select,
+label,
+.siteLinkInner,
+.controlPanel,
+.timeContainer,
+.pbText,
+.lpText,
+.toggleVisibility,
+.exposePanels,
+.themeToggle {
+  font-size: 1.6rem;
+}
+
+.secondsSign {
+  font-size: 1.5rem;
+}
+
+.twinkleLittleStar {
+  font-size: 1.2rem;
 }
 
 
@@ -136,7 +159,6 @@ h1 {
   justify-content: center;
   flex-direction: row;
   align-items: center;
-  font-size: x-large;
   height: 20%;
   width: 100%;
   left: 0;
@@ -178,7 +200,6 @@ h1 {
 
 select {
   width: 100%;
-  font-size: xx-large;
   padding: 0 1rem;
   background-color: var(--color-tile);
   border: var(--border);
@@ -213,7 +234,6 @@ option:hover {
 
 label {
   display: block;
-  font-size: small;
 }
 
 /* Statistics Panel */
@@ -235,7 +255,6 @@ label {
   display: flex;
   justify-content: end;
   align-items: end;
-  font-size: xx-large;
   text-align: end;
   background-color: var(--color-tile);
   border: var(--border);
@@ -300,10 +319,6 @@ label {
   height: 0;
 }
 
-.pbText,
-.lpText {
-  font-size: xx-large;
-}
 
 .lpLabel {
   margin-top: .1rem;
@@ -326,7 +341,6 @@ label {
   margin: 0 0 0 1vmin;
   width: fit-content;
   height: fit-content;
-  font-size: large;
   background-color: var(--color-link);
   border-radius: var(--border-radius);
 }
@@ -361,7 +375,6 @@ a:active {
 
 .twinkleLittleStar {
   align-self: center;
-  font-size: x-large;
 }
 
 
@@ -421,7 +434,6 @@ a:active {
 
 .toggleVisibility {
   rotate: -90deg;
-  font-size: x-large;
   float: right;
   margin: 10px;
 }
@@ -434,7 +446,6 @@ a:active {
   bottom: 80px;
   left: 20px;
   rotate: -90deg;
-  font-size: x-large;
 }
 
 .hidePanelsArrow {
@@ -450,7 +461,6 @@ a:active {
   bottom: 20px;
   left: 20px;
   rotate: -90deg;
-  font-size: x-large;
 }
 
 .themeToggle:hover {
@@ -533,26 +543,15 @@ a:active {
 @media screen {
   /* Mobile First Breakpoints */
   @media (min-width: 350px) {
-    .App { font-size: small; }
-    h1, button, .timeContainer, span, select, option { font-size: large; }
-    label { font-size: small; }
-    .secondsSign { font-size: .85rem; }
+    :root { font-size: 100%; }
   }
   
   @media (min-width: 768px) {
-    .App { font-size: large; }
-    h1, button, .timeContainer, span, select, option { font-size: x-large; }
-    label { font-size: large; }
-    .secondsSign { font-size: .85rem; }
-
+    :root { font-size: 100%; }
   }
   
   @media (min-width: 992px) {
-    .App { font-size: x-large; }
-    h1, button, .timeContainer, span, select, option { font-size: xx-large; }
-    label { font-size: x-large; }
-    .secondsSign { font-size: .85rem; }
-
+    :root { font-size: 100%; }
   }
   
   /* Landscape Orientation */
@@ -651,8 +650,6 @@ a:active {
     
     .matchesInfoInner {
       width: 100%;
-      /* flex-direction: column; */
-      /* display: flex; */
     }
     .scoresContainer {
       display: block;
@@ -674,23 +671,7 @@ a:active {
       width: auto;
       height: auto;
     }
-    
-    /* span {
-      font-size: large;
-    } */
-  
-    .pbText {
-      font-size: xx-large;
-    }
-  
-    .lpText {
-      font-size: xx-large;
-    }
-  
-    .linkContent {
-      font-size: large;
-    }
-  
+      
     .personalInfo {
       padding: 0;
       display: block;
