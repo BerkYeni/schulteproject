@@ -530,8 +530,9 @@ a:active {
 }
 
 .screenControlButton {
-  margin-left: .5rem;
   z-index: 5;
+  margin-left: .5rem;
+  width: 2.7rem;
   transition-duration: .2s;
   border-radius: .4rem;
 }
