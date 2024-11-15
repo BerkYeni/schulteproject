@@ -415,6 +415,9 @@ a:active {
   padding: 1rem;
   margin-bottom: .6rem;
 }
+.accordion:hover {
+  background-color: var(--color-link-hover);
+}
 
 .accordion p, li {
   margin: 0;
@@ -448,9 +451,6 @@ a:active {
 
 .accordionHeader {
   cursor: pointer;
-}
-.accordionHeader:hover {
-  background-color: var(--color-link-hover);
 }
 
 .accordionWrapperOpen {
