@@ -2,13 +2,14 @@ import React, { FC, useState } from "react";
 import AboutSection from "./AboutSection";
 
 interface AboutProps {
-  // closeAboutButtonCallback: () => void;
+  onCloseAbout: () => void;
+  aboutIsHidden: boolean;
 }
 
 const About: FC<AboutProps> = (props) => {
-  // const { closeAboutButtonCallback } = props;
+  const { onCloseAbout, aboutIsHidden } = props;
   const [openedAccordionIndex, setOpenedAccordionIndex] = useState(0);
-  const [hidden, setHidden] = useState(true);
+  // const [hidden, setHidden] = useState(true);
 
   const aboutSections = [
     {
@@ -63,14 +64,14 @@ const About: FC<AboutProps> = (props) => {
 
   ];
 
-  const closeAboutCallback = () => setHidden((prev) => !prev);
+  // const onCloseAbout = () => setHidden((prev) => !prev);
 
   return (
-    <div className={hidden ? "hidden" : ""}>
-      <div className="aboutBgOverlay" onClick={closeAboutCallback}></div>
+    <div className={aboutIsHidden ? "hidden" : ""}>
+      <div className="aboutBgOverlay" onClick={onCloseAbout}></div>
 
       <div className="about">
-        <button className="closeAboutButton" onClick={closeAboutCallback}>X</button>
+        <button className="closeAboutButton" onClick={onCloseAbout}>X</button>
 
         {aboutSections.map((section, index) => 
           <AboutSection 

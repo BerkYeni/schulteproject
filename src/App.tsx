@@ -58,6 +58,7 @@ const App = () => {
     getMatchesFromLocalStorage(matchesKey)
   );
   const [hidePanels, setHidePanels] = useState<boolean>(false);
+  const [aboutIsHidden, setAboutIsHidden] = useState(true);
   const [gameMode, setGameMode] = useState<GameMode>(GameMode.Vanilla);
 
   const resetMatches = () => setMatches([]);
@@ -487,11 +488,13 @@ const App = () => {
   
   const onExposePanels = () => setHidePanels(false)
   const onHidePanels = () => setHidePanels(true)
+  const onOpenAbout = () => setAboutIsHidden(false);
+  const onCloseAbout = () => setAboutIsHidden(true);
 
   return (
     <div className={`App`}>
-      <ScreenControls onExposePanels={onExposePanels} onHidePanels={onHidePanels} hidden={hidePanels} />
-      <About />
+      <ScreenControls onExposePanels={onExposePanels} onHidePanels={onHidePanels} onOpenAbout={onOpenAbout} hidden={hidePanels} />
+      <About aboutIsHidden={aboutIsHidden} onCloseAbout={onCloseAbout} />
 
 
       <ControlPanel
