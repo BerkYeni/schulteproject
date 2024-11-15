@@ -28,9 +28,7 @@ const About: FC<AboutProps> = (props) => {
       contentFunc: () => (
         <>
         <p>Customize your experience with these flexible settings and features:</p>
-        <ul>
         <ul><li><p><strong>Game Settings Panel</strong>:</p><ul><li><strong>Grid Size</strong>: Choose the number of tiles to suit your preference.</li><li><strong>Game Modes</strong>: Try exciting variations beyond the classic game:<ul><li><strong>Reaction Mode</strong>: Tiles hide, revealing only the one you're supposed to click.</li><li><strong>Memory Mode</strong>: Tiles are briefly visible to help you memorize their positions before they disappear.</li></ul></li><li><strong>Direction</strong>: Select the order of play:<ul><li>Default: Numbers ascend (e.g., 1 → 2 → 3...).</li><li>Reverse: Numbers descend (e.g., 16 → 15 → 14...).</li></ul></li></ul></li><li><p><strong>Personal Statistics</strong>:</p><ul><li>Track your <strong>Personal Best Record</strong>.</li><li>Review the stats of your <strong>most recent game</strong>.</li></ul></li><li><p><strong>Screen Controls</strong>:</p><ul><li>Toggle between <strong>Light</strong> and <strong>Dark themes</strong> for your preferred look.</li><li>Hide the <strong>Settings</strong> and <strong>Statistics panels</strong> for distraction-free gameplay.</li></ul></li></ul>
-        </ul>
         </>
       ),
     },
