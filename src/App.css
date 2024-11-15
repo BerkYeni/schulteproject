@@ -396,7 +396,11 @@ a:active {
 .about {
   z-index: 10;
   position: absolute;
-  inset: 10%;
+  width: min(43rem, 90%);
+  height: 90%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   padding: 2%;
   background-color: var(--color-primary);
   border: var(--border);
@@ -618,15 +622,15 @@ a:active {
 @media screen {
   /* Mobile First Breakpoints */
   @media (max-width: 350px) {
-    :root { font-size: 70%; }
+    :root { font-size: 64%; }
   }
 
   @media (min-width: 350px) {
-    :root { font-size: 87%; }
+    :root { font-size: 82%; }
   }
   
   @media (min-width: 768px) {
-    :root { font-size: 94%; }
+    :root { font-size: 90%; }
   }
   
   @media (min-width: 992px) {
