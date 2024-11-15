@@ -2,7 +2,7 @@ export const aboutSections = [
   {
     title: "🧩 About This Website",
     contentFunc: () => (
-      <p>Welcome to a space designed for <strong>relaxation and fun</strong> through a simple yet engaging game: the <strong>Schulte Table</strong>. Whether you're here to test your cognitive skills or just unwind, this site has something for you! Click below to learn more! 👇</p>
+      <p>Welcome to a space designed for <strong>relaxation and fun</strong> through a simple yet engaging game: the <strong>Schulte Table</strong>. Whether you're here to test your cognitive skills or just unwind, this site has something for you! Click below and scroll down to learn more! 👇</p>
     ),
   },
   {
