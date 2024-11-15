@@ -17,15 +17,17 @@ const About: FC<AboutProps> = (props) => {
 
       <div className="about">
         <button className="closeAboutButton" onClick={onCloseAbout}>X</button>
-
-        {aboutSections.map((section, index) => 
-          <AboutSection 
+        
+        <div className="aboutSections">
+          {aboutSections.map((section, index) => 
+            <AboutSection 
             key={index} 
             titleContent={section.title} 
             sectionContent={section.contentFunc()}
             accordionOpened={openedAccordionIndex === index}
             onAccordionClick={() => setOpenedAccordionIndex((prev) => prev === index ? null : index)}
-          />)}
+            />)}
+        </div>
       </div>
     </div>
   )
