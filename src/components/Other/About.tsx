@@ -2,10 +2,13 @@ import React, { FC, useState } from "react";
 import AboutSection from "./AboutSection";
 
 interface AboutProps {
+  // closeAboutButtonCallback: () => void;
 }
 
 const About: FC<AboutProps> = (props) => {
-  const [openedAccordionIndex, setOpenedAccordionIndex] = useState(0)
+  // const { closeAboutButtonCallback } = props;
+  const [openedAccordionIndex, setOpenedAccordionIndex] = useState(0);
+  const [hidden, setHidden] = useState(true);
 
   const aboutSections = [
     {
@@ -60,12 +63,14 @@ const About: FC<AboutProps> = (props) => {
 
   ];
 
+  const closeAboutCallback = () => setHidden((prev) => !prev);
+
   return (
-    <>
-      <div className="aboutBgOverlay"></div>
+    <div className={hidden ? "hidden" : ""}>
+      <div className="aboutBgOverlay" onClick={closeAboutCallback}></div>
 
       <div className="about">
-        <button className="closeAboutButton">X</button>
+        <button className="closeAboutButton" onClick={closeAboutCallback}>X</button>
 
         {aboutSections.map((section, index) => 
           <AboutSection 
@@ -76,7 +81,7 @@ const About: FC<AboutProps> = (props) => {
             onAccordionClick={() => setOpenedAccordionIndex(index)}
           />)}
       </div>
-    </>
+    </div>
   )
 }
 
