@@ -413,6 +413,7 @@ a:active {
 
 .accordionContent {
   overflow: hidden;
+  text-align: start;
 }
 
 .accordionHeader {
