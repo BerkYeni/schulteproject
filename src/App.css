@@ -50,6 +50,9 @@
   --color-timer-secondary: #d7bbf5;
   --color-replay-svg: #441f9c;
   --color-select-text: var(--color-timer);
+  --color-about-background: #2f1b5b;
+  --color-accordion-background: #161025;
+  --color-accordion-hover: #3f2e63;
 
   --color-overlay: rgba(0, 0, 0, 0.2);
 }
@@ -485,6 +488,7 @@ a:active {
   border-radius: var(--border-radius);
   right: 0;
   top: 0;
+  color: var(--color-tile-text);
 }
 
 .aboutBgOverlay {
