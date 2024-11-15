@@ -464,6 +464,13 @@ a:active {
   border-radius: 10%;
 }
 
+.aboutBgOverlay {
+  z-index: 9;
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-overlay);
+}
+
 
 /* Play Button */
 .playAgain {

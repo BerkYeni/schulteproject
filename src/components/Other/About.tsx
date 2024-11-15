@@ -61,18 +61,22 @@ const About: FC<AboutProps> = (props) => {
   ];
 
   return (
-    <div className="about">
-      <button className="closeAboutButton">X</button>
+    <>
+      <div className="aboutBgOverlay"></div>
 
-      {aboutSections.map((section, index) => 
-        <AboutSection 
-          key={index} 
-          titleContent={section.title} 
-          sectionContent={section.contentFunc()}
-          accordionOpened={openedAccordionIndex === index}
-          onAccordionClick={() => setOpenedAccordionIndex(index)}
-        />)}
-    </div>
+      <div className="about">
+        <button className="closeAboutButton">X</button>
+
+        {aboutSections.map((section, index) => 
+          <AboutSection 
+            key={index} 
+            titleContent={section.title} 
+            sectionContent={section.contentFunc()}
+            accordionOpened={openedAccordionIndex === index}
+            onAccordionClick={() => setOpenedAccordionIndex(index)}
+          />)}
+      </div>
+    </>
   )
 }
 
