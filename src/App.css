@@ -430,6 +430,7 @@ a:active {
 }
 
 .playSvg {
+  fill: var(--color-replay-svg);
   padding-left: 20%;
   width: 100%;
   height: 100%;
