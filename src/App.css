@@ -387,7 +387,23 @@ a:active {
 
 
 /* About Section */
-.aboutSection {
+.about *,
+*::before,
+*::after {
+	position: relative;
+	left: 0;
+	top: 0;
+	box-sizing: border-box;
+}
+
+.about a,
+p,
+h1 {
+	margin: 0;
+}
+
+
+.about {
   z-index: 10;
   position: absolute;
   inset: 10%;

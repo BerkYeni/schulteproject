@@ -11,7 +11,7 @@ const About: FC<AboutProps> = (props) => {
     <strong>Table of Contents</strong>, and more.</span>)
 
   return (
-    <div className="aboutSection">
+    <div className="about">
       <button className="closeAboutButton">X</button>
 
       <AboutSection sectionId="overview" titleContent="Overview" sectionContent={sectionContent()} />
