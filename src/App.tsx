@@ -58,7 +58,9 @@ const App = () => {
     getMatchesFromLocalStorage(matchesKey)
   );
   const [hidePanels, setHidePanels] = useState<boolean>(false);
-  const [aboutIsHidden, setAboutIsHidden] = useState(true);
+  const [aboutIsHidden, setAboutIsHidden] = useState(() => {
+    return matches.length ? true : false; // Show about panel if it's the first time someone is visiting
+  });
   const [gameMode, setGameMode] = useState<GameMode>(GameMode.Vanilla);
 
   const resetMatches = () => setMatches([]);
