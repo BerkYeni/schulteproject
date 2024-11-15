@@ -9,7 +9,7 @@ interface AboutProps {
 
 const About: FC<AboutProps> = (props) => {
   const { onCloseAbout, aboutIsHidden } = props;
-  const [openedAccordionIndex, setOpenedAccordionIndex] = useState(0);
+  const [openedAccordionIndex, setOpenedAccordionIndex] = useState<number | null>(0);
   
   return (
     <div className={aboutIsHidden ? "hidden" : ""}>
@@ -24,7 +24,7 @@ const About: FC<AboutProps> = (props) => {
             titleContent={section.title} 
             sectionContent={section.contentFunc()}
             accordionOpened={openedAccordionIndex === index}
-            onAccordionClick={() => setOpenedAccordionIndex(index)}
+            onAccordionClick={() => setOpenedAccordionIndex((prev) => prev === index ? null : index)}
           />)}
       </div>
     </div>
