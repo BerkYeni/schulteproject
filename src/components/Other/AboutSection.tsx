@@ -16,7 +16,6 @@ const AboutSection: FC<AboutSectionProps> = (props) => {
     <div className="accordion">
       <h1 
         className="accordionHeader" 
-        // onClick={() => setAccordionOpened((prev) => !prev)}
         onClick={() => onAccordionClick()}
       >
         {titleContent}
