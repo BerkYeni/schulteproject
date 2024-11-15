@@ -416,6 +416,7 @@ a:active {
 }
 
 .accordionHeader {
+  background-color: var(--color-clicked);
   cursor: pointer;
 }
 
