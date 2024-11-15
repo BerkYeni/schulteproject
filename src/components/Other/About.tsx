@@ -11,7 +11,6 @@ const About: FC<AboutProps> = (props) => {
   const { onCloseAbout, aboutIsHidden } = props;
   const [openedAccordionIndex, setOpenedAccordionIndex] = useState(0);
   
-
   return (
     <div className={aboutIsHidden ? "hidden" : ""}>
       <div className="aboutBgOverlay" onClick={onCloseAbout}></div>
