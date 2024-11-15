@@ -402,6 +402,11 @@ a:active {
   border: var(--border);
   border-radius: var(--border-radius);
   overflow-y: scroll;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+.about::-webkit-scrollbar {
+  display: none;
 }
 
 .accordion {
