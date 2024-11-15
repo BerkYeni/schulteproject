@@ -24,6 +24,9 @@
   --color-timer-secondary: #3f3649;
   --color-replay-svg: #855de0;
   --color-select-text: var(--color-timer);
+  --color-about-background: var(--color-primary);
+  --color-accordion-background: var(--color-link-hover);
+  --color-accordion-hover: var(--color-link);
 
   --color-overlay: rgba(0, 0, 0, 0.5);
 }
@@ -405,7 +408,7 @@ a:active {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: var(--color-primary);
+  background-color: var(--color-about-background);
   border: var(--border);
   border-radius: var(--border-radius);
 }
@@ -424,13 +427,13 @@ a:active {
 
 .accordion {
   border-radius: var(--border-radius);
-  background-color: var(--color-link);
-  padding: 0 1rem;
+  background-color: var(--color-accordion-background);
+  /* padding: 0 1rem; */
   margin-bottom: .6rem;
 }
-.accordion:hover {
-  background-color: var(--color-link-hover);
-}
+/* .accordion:hover {
+  background-color: var(--color-accordion-hover);
+} */
 
 .accordion p, li {
   margin: 0;
@@ -455,6 +458,7 @@ a:active {
   display: grid;
   grid-template-rows: 0fr;
   transition: grid-template-rows .3s ease-out;
+  padding: 0 1rem;
 }
 
 .accordionContent {
@@ -463,8 +467,12 @@ a:active {
 }
 
 .accordionHeader {
-  padding: 1rem 0;
+  padding: 1rem 1rem;
+  border-radius: var(--border-radius);
   cursor: pointer;
+}
+.accordionHeader:hover {
+  background-color: var(--color-accordion-hover);
 }
 
 .accordionWrapperOpen {
