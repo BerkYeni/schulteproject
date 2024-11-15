@@ -3,18 +3,21 @@ import React, { FC, useState } from "react";
 interface AboutSectionProps {
   titleContent: string;
   sectionContent: string | JSX.Element;
+  accordionOpened: boolean;
+  onAccordionClick: () => void;
 }
 
 const AboutSection: FC<AboutSectionProps> = (props) => {
-  const { sectionContent, titleContent } = props;
+  const { sectionContent, titleContent, accordionOpened, onAccordionClick } = props;
 
-  const [accordionOpened, setAccordionOpened] = useState(false);
+  // const [accordionOpened, setAccordionOpened] = useState(false);
 
   return (
     <div className="accordion">
       <h1 
         className="accordionHeader" 
-        onClick={() => setAccordionOpened((prev) => !prev)}
+        // onClick={() => setAccordionOpened((prev) => !prev)}
+        onClick={() => onAccordionClick()}
       >
         {titleContent}
       </h1>

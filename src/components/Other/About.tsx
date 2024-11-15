@@ -1,10 +1,12 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import AboutSection from "./AboutSection";
 
 interface AboutProps {
 }
 
 const About: FC<AboutProps> = (props) => {
+  const [openedAccordionIndex, setOpenedAccordionIndex] = useState(0)
+
   const aboutSections = [
     {
       title: "🧩 About This Website",
@@ -62,7 +64,14 @@ const About: FC<AboutProps> = (props) => {
     <div className="about">
       <button className="closeAboutButton">X</button>
 
-      {aboutSections.map((section, index) => <AboutSection key={index} titleContent={section.title} sectionContent={section.contentFunc()} />)}
+      {aboutSections.map((section, index) => 
+        <AboutSection 
+          key={index} 
+          titleContent={section.title} 
+          sectionContent={section.contentFunc()}
+          accordionOpened={openedAccordionIndex === index}
+          onAccordionClick={() => setOpenedAccordionIndex(index)}
+        />)}
     </div>
   )
 }
