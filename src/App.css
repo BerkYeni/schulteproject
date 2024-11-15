@@ -393,6 +393,14 @@ a:active {
   inset: 10%;
   padding: 2%;
   background-color: var(--color-link);
+  border: var(--border);
+  border-radius: var(--border-radius);
+}
+
+.closeAboutButton {
+  position: absolute;
+  right: .5rem;
+  top: .5rem;
 }
 
 
