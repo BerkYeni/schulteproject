@@ -398,9 +398,29 @@ a:active {
   position: absolute;
   inset: 10%;
   padding: 2%;
-  background-color: var(--color-link);
+  background-color: var(--color-primary);
   border: var(--border);
   border-radius: var(--border-radius);
+  overflow-y: scroll;
+}
+
+.accordionWrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows .3s ease-out;
+  background-color: var(--color-clicked);
+}
+
+.accordionContent {
+  overflow: hidden;
+}
+
+.accordionHeader {
+  cursor: pointer;
+}
+
+.accordionWrapperOpen {
+  grid-template-rows: 1fr;
 }
 
 .closeAboutButton {

@@ -1,5 +1,4 @@
-import React, { FC } from "react";
-import { JsxElement } from "typescript";
+import React, { FC, useState } from "react";
 
 interface AboutSectionProps {
   sectionId: string;
@@ -10,18 +9,36 @@ interface AboutSectionProps {
 const AboutSection: FC<AboutSectionProps> = (props) => {
   const { sectionContent, sectionId, titleContent } = props;
 
+  const [accordionOpened, setAccordionOpened] = useState(false);
+
   return (
-    <section className="accordion" id={sectionId}>
-      <h1 className="sectionTitle"><a href={`#about-${sectionId}`}>{titleContent}</a></h1>
-      <div className="sectionContent">
-        <div className="sectionContentWrapper">
-          <p>
-            {sectionContent}
-          </p>
+    <div className="accordion" id={sectionId}>
+      <h1 
+        className="accordionHeader" 
+        onClick={() => setAccordionOpened((prev) => !prev)}
+      >
+        {titleContent}
+      </h1>
+      <div className={`accordionWrapper ${accordionOpened ? "accordionWrapperOpen" : ""}`}>
+        <div className="accordionContent">
+          {sectionContent}
         </div>
       </div>
-    </section>
+    </div>
   )
+
+  // return (
+  //   <section className="accordion" id={sectionId}>
+  //     <h1 className="sectionTitle"><a href={`#about-${sectionId}`}>{titleContent}</a></h1>
+  //     <div className="sectionContent">
+  //       <div className="sectionContentWrapper">
+  //         <p>
+  //           {sectionContent}
+  //         </p>
+  //       </div>
+  //     </div>
+  //   </section>
+  // )
 }
 
 
