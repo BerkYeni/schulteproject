@@ -63,6 +63,12 @@ body {
   user-select: none;
 }
 
+html {
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+}
+
 button {
   font-size: x-large;
   background-color: var(--color-tile);
