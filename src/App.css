@@ -386,6 +386,16 @@ a:active {
 }
 
 
+/* About Section */
+.aboutSection {
+  z-index: 10;
+  position: absolute;
+  inset: 10%;
+  padding: 2%;
+  background-color: var(--color-link);
+}
+
+
 /* Play Button */
 .playAgain {
   padding: 20px 20%;

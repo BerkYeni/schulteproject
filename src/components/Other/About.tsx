@@ -5,7 +5,7 @@ interface AboutProps {
 
 const About: FC<AboutProps> = (props) => {
   return (
-    <div>
+    <div className="aboutSection">
       <h1>What is Schulte Project?</h1>
       <div>
         {`This website includes a game. The game is a schulte table. 
