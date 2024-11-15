@@ -25,19 +25,6 @@ const AboutSection: FC<AboutSectionProps> = (props) => {
       </div>
     </div>
   )
-
-  // return (
-  //   <section className="accordion" id={sectionId}>
-  //     <h1 className="sectionTitle"><a href={`#about-${sectionId}`}>{titleContent}</a></h1>
-  //     <div className="sectionContent">
-  //       <div className="sectionContentWrapper">
-  //         <p>
-  //           {sectionContent}
-  //         </p>
-  //       </div>
-  //     </div>
-  //   </section>
-  // )
 }
 
 
