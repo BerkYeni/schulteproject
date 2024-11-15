@@ -425,7 +425,7 @@ a:active {
 .accordion {
   border-radius: var(--border-radius);
   background-color: var(--color-link);
-  padding: 1rem;
+  padding: 0 1rem;
   margin-bottom: .6rem;
 }
 .accordion:hover {
@@ -463,11 +463,13 @@ a:active {
 }
 
 .accordionHeader {
+  padding: 1rem 0;
   cursor: pointer;
 }
 
 .accordionWrapperOpen {
   grid-template-rows: 1fr;
+  padding-bottom: 1rem;
 }
 
 .closeAboutButton {
