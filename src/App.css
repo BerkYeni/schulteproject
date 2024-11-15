@@ -404,11 +404,36 @@ a:active {
   overflow-y: scroll;
 }
 
+.accordion {
+  border-radius: var(--border-radius);
+  background-color: var(--color-link);
+  padding: 1rem;
+  margin-bottom: .6rem;
+}
+
+.accordion p, li {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.accordion p {
+  margin: .5rem .2rem;
+}
+
+.accordion ul {
+  margin: .2rem 0;
+  padding-left: 1.5rem;
+}
+
+.accordion * {
+  list-style-type: disc;
+}
+
 .accordionWrapper {
   display: grid;
   grid-template-rows: 0fr;
   transition: grid-template-rows .3s ease-out;
-  background-color: var(--color-clicked);
 }
 
 .accordionContent {
@@ -417,8 +442,10 @@ a:active {
 }
 
 .accordionHeader {
-  background-color: var(--color-clicked);
   cursor: pointer;
+}
+.accordionHeader:hover {
+  background-color: var(--color-link-hover);
 }
 
 .accordionWrapperOpen {
@@ -429,6 +456,7 @@ a:active {
   position: absolute;
   right: .5rem;
   top: .5rem;
+  border-radius: 10%;
 }
 
 
