@@ -64,15 +64,19 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-body {
+html, body {
   overflow: hidden;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
   user-select: none;
 }
 
-html {
-  overflow: hidden;
-  height: 100%;
-  width: 100%;
+body {
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 button {
