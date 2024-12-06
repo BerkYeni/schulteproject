@@ -126,7 +126,7 @@ const App = () => {
         if (state !== "NotStarted") {
           break;
         }
-        shuffleInPlace(tiles);
+        shuffleInPlace(tiles, gameMode);
         matchRecordDispatch({ type: "Mark" });
         return {
           ...tableState,
@@ -157,7 +157,7 @@ const App = () => {
           break;
         }
         const resettedTable = initializeTableState(gridSize, direction);
-        shuffleInPlace(resettedTable.tiles);
+        shuffleInPlace(resettedTable.tiles, gameMode);
         matchRecordDispatch({ type: "Mark" });
         return { ...resettedTable, state: "Playing" };
 
@@ -352,6 +352,7 @@ const App = () => {
     switch (gameMode) {
       case GameMode.Vanilla:
       case GameMode.Reaction:
+      case GameMode.Line:
         return vanillaTableReducer;
 
       case GameMode.Memory:
@@ -368,6 +369,7 @@ const App = () => {
     switch (gameMode) {
       case GameMode.Vanilla:
       case GameMode.Reaction:
+      case GameMode.Line:
         return initializeTableState();
 
       case GameMode.Memory:

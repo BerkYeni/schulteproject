@@ -118,6 +118,7 @@ export enum GameMode {
   Vanilla,
   Memory,
   Reaction,
+  Line,
 }
 
 export interface GameModeRule {

@@ -10,8 +10,35 @@ import {
   SchulteTile, // Added SchulteTile here
 } from "./interfaces";
 
-export const shuffleInPlace = (array: any[]) => {
-  return array.sort(() => Math.random() - 0.5);
+const sortRandom = (array: any[]) => {
+  array.sort(() => Math.random() - 0.5)
+}
+
+export const shuffleInPlace = (array: any[], gameMode: GameMode = GameMode.Vanilla) => {
+  if (gameMode === GameMode.Line) {
+    const lineIndices = []
+    const lineAmount = Math.sqrt(array.length)
+    const rowAmount = lineAmount
+    let temp = []
+    for (let i = 0; i < lineAmount; i++) {
+      for (let k = 0; k < rowAmount; k++) {
+        temp.push(k + (i * lineAmount))
+      }
+      lineIndices.push(temp)
+      temp = []
+    }
+    for (const line of lineIndices) {
+      sortRandom(line)
+    }
+    const indices = lineIndices.flat(1)
+    const copy = [...array]
+    for (let i = 0; i < array.length; i++) {
+      const indexToWrite = indices[i]
+      array[indexToWrite] = copy[i]
+    }
+  } else {
+    sortRandom(array)
+  }
 };
 
 export const formatMatchDuration = (match: MatchRecord) => {
@@ -129,12 +156,13 @@ const gameModeToDisplayLookUp: { [key in GameMode]: string } = {
   [GameMode.Vanilla]: "Classic",
   [GameMode.Memory]: "Memory",
   [GameMode.Reaction]: "Reaction",
+  [GameMode.Line]: "Line",
 };
 export const gameModeToDisplay = (gameMode: GameMode) =>
   gameModeToDisplayLookUp[gameMode];
 
 export const gridSizes = [GridSize.Size3x3, GridSize.Size4x4, GridSize.Size5x5];
-export const gameModes = [GameMode.Vanilla, GameMode.Reaction, GameMode.Memory];
+export const gameModes = [GameMode.Vanilla, GameMode.Reaction, GameMode.Memory, GameMode.Line];
 export const directions: TableDirection[] = ["Ascending", "Descending"];
 
 const gameStateToChronometerStateLookup: {
@@ -179,6 +207,7 @@ export const renderSchulteTile = (
 ) => {
   switch (gameMode) {
     case GameMode.Vanilla:
+    case GameMode.Line:
       return (
         <button
           className={`tile smoothTransition ${tile.checked ? "clicked" : "unclicked"} ${gameState !== "Playing" ? "dontClick" : ""}`}
